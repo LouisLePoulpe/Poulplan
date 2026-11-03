@@ -10,11 +10,14 @@ import '../../../domain/calendar/day.dart';
 import '../../../domain/calendar/day_layout.dart';
 import '../../../domain/editing/event_draft.dart';
 import '../../../domain/entities/calendar_event.dart';
+import '../../../domain/recurrence/recurrence_rule.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../calendar/presentation/event_actions.dart';
 import '../../calendar/providers/calendar_providers.dart';
 import '../../categories/presentation/color_palette.dart';
 import 'quick_create.dart';
+import 'recurrence_dialog.dart';
+import 'recurrence_text.dart';
 import 'time_zone_picker.dart';
 
 /// Full editor. Edits [eventId] when given, else creates from [initial].
@@ -63,14 +66,25 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
   }
 
   Future<void> _load(String id) async {
-    final event = await ref.read(eventRepositoryProvider).findById(id);
+    final repository = ref.read(eventRepositoryProvider);
+    final event = await repository.findDisplayed(id);
+    // An overridden occurrence does not carry the rule: show the series'.
+    final master = event?.seriesId == null
+        ? null
+        : await repository.findById(event!.seriesId!);
     if (!mounted) return;
     if (event == null) {
       setState(() => _notFound = true);
       return;
     }
     _original = event;
-    _setDraft(EventDraft.fromEvent(event));
+    final draft = EventDraft.fromEvent(event);
+    if (master != null) {
+      draft
+        ..rrule = master.rrule
+        ..holidayRule = master.holidayRule;
+    }
+    _setDraft(draft);
   }
 
   void _setDraft(EventDraft draft) {
@@ -115,10 +129,16 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
       };
     });
     if (error != null) return;
-    if (_original == null) {
+    final original = _original;
+    final repository = ref.read(eventRepositoryProvider);
+    if (original == null) {
       await createFromDraft(ref, draft);
+    } else if (original.seriesId != null) {
+      final scope = await askSeriesScope(context, deleting: false);
+      if (scope == null) return;
+      await repository.saveOccurrence(draft.applyTo(original), scope);
     } else {
-      await ref.read(eventRepositoryProvider).update(draft.applyTo(_original!));
+      await repository.update(draft.applyTo(original));
     }
     if (mounted) context.pop();
   }
@@ -213,8 +233,12 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
                       context.pushReplacement('/event/${copy.id}');
                     }
                   } else if (action == 'delete') {
-                    await deleteEventWithUndo(context, ref, original);
-                    if (context.mounted) context.pop();
+                    final deleted = await deleteEventWithUndo(
+                      context,
+                      ref,
+                      original,
+                    );
+                    if (deleted && context.mounted) context.pop();
                   }
                 },
                 itemBuilder: (context) => [
@@ -293,6 +317,7 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
                       if (zone != null) setState(() => draft.timeZone = zone);
                     },
                   ),
+                _RecurrenceTile(draft: draft, onChanged: () => setState(() {})),
                 _OverlapWarning(draft: draft, ignoreId: _original?.id),
                 const Divider(),
                 ListTile(
@@ -488,6 +513,70 @@ class _OverlapWarning extends ConsumerWidget {
           style: TextStyle(color: scheme.onTertiaryContainer),
         ),
       ),
+    );
+  }
+}
+
+class _RecurrenceTile extends StatelessWidget {
+  const _RecurrenceTile({required this.draft, required this.onChanged});
+
+  final EventDraft draft;
+  final VoidCallback onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    RecurrenceRule? rule;
+    try {
+      rule = draft.rrule == null ? null : RecurrenceRule.parse(draft.rrule!);
+    } on FormatException {
+      rule = null;
+    }
+    return Column(
+      children: [
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: const Icon(Icons.repeat),
+          title: Text(l10n.fieldRecurrence),
+          subtitle: Text(
+            rule == null
+                ? l10n.recurrenceNone
+                : describeRule(rule, draft.startDay, localeOf(context)),
+          ),
+          onTap: () async {
+            final choice = await showRecurrencePicker(
+              context,
+              start: draft.startDay,
+              current: rule,
+            );
+            if (choice == null) return;
+            draft.rrule = choice.rule?.toString();
+            onChanged();
+          },
+        ),
+        if (rule != null)
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.flag_outlined),
+            title: Text(l10n.fieldHolidayRule),
+            trailing: DropdownButton<HolidayRule>(
+              value: draft.holidayRule,
+              onChanged: (v) {
+                draft.holidayRule = v!;
+                onChanged();
+              },
+              items: [
+                for (final (value, label) in [
+                  (HolidayRule.none, l10n.holidayRuleNone),
+                  (HolidayRule.skip, l10n.holidayRuleSkip),
+                  (HolidayRule.nextWorkingDay, l10n.holidayRuleNext),
+                  (HolidayRule.previousWorkingDay, l10n.holidayRulePrevious),
+                ])
+                  DropdownMenuItem(value: value, child: Text(label)),
+              ],
+            ),
+          ),
+      ],
     );
   }
 }

@@ -107,6 +107,7 @@ class _DayCell extends ConsumerWidget {
 
     return DragTarget<CalendarEvent>(
       onAcceptWithDetails: (details) => saveMovedEvent(
+        context,
         ref,
         moveToDay(
           details.data,
@@ -266,14 +267,16 @@ class _ChipBody extends StatelessWidget {
       ),
       child: Row(
         children: [
-          if (overlapping)
+          if (overlapping || eventIcon(event) != null)
             Padding(
               padding: const EdgeInsets.only(right: 2),
               child: Icon(
-                Icons.warning_amber_rounded,
+                overlapping ? Icons.warning_amber_rounded : eventIcon(event),
                 size: 11,
                 color: textStyle?.color,
-                semanticLabel: AppLocalizations.of(context).overlapWarning,
+                semanticLabel: overlapping
+                    ? AppLocalizations.of(context).overlapWarning
+                    : null,
               ),
             ),
           Expanded(

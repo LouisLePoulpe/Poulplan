@@ -7,6 +7,7 @@ import '../../../core/routing/app_router.dart';
 
 import '../../../data/providers.dart';
 import '../../../domain/entities/app_settings.dart';
+import '../../../domain/holidays/school_holidays.dart';
 import '../../../l10n/generated/app_localizations.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -96,6 +97,44 @@ class SettingsPage extends ConsumerWidget {
             subtitle: Text(l10n.settingsCategoriesSubtitle),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push(Routes.categories),
+          ),
+          section(l10n.settingsHolidays),
+          SwitchListTile(
+            secondary: const Icon(Icons.flag_outlined),
+            title: Text(l10n.settingsShowHolidays),
+            value: settings.showHolidays,
+            onChanged: repository.setShowHolidays,
+          ),
+          SwitchListTile(
+            secondary: const Icon(Icons.map_outlined),
+            title: Text(l10n.settingsAlsaceMoselle),
+            subtitle: Text(l10n.settingsAlsaceMoselleSubtitle),
+            value: settings.alsaceMoselle,
+            onChanged: repository.setAlsaceMoselle,
+          ),
+          ListTile(
+            leading: const Icon(Icons.school_outlined),
+            title: Text(l10n.settingsSchoolZone),
+            trailing: DropdownButton<String?>(
+              value: settings.schoolZone,
+              onChanged: repository.setSchoolZone,
+              items: [
+                DropdownMenuItem(value: null, child: Text(l10n.noSchoolZone)),
+                for (final zone in schoolZones)
+                  DropdownMenuItem(
+                    value: zone,
+                    child: Text(
+                      zone.length == 1 ? l10n.schoolZone(zone) : zone,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.cake_outlined),
+            title: Text(l10n.birthdays),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(Routes.birthdays),
           ),
           section(l10n.settingsAbout),
           ListTile(

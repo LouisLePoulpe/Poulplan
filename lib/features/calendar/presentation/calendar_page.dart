@@ -69,6 +69,8 @@ class CalendarPage extends ConsumerWidget {
               views.select(d.$1),
         const SingleActivator(LogicalKeyboardKey.comma, control: true): () =>
             context.push(Routes.settings),
+        const SingleActivator(LogicalKeyboardKey.keyF, control: true): () =>
+            context.push(Routes.search),
       },
       child: Focus(
         autofocus: true,
@@ -96,6 +98,11 @@ class CalendarPage extends ConsumerWidget {
               ],
             ),
             actions: [
+              IconButton(
+                tooltip: l10n.search,
+                icon: const Icon(Icons.search),
+                onPressed: () => context.push(Routes.search),
+              ),
               IconButton(
                 tooltip: l10n.today,
                 icon: const Icon(Icons.today),

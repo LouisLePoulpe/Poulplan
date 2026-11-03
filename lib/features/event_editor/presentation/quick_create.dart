@@ -40,6 +40,8 @@ Future<CalendarEvent> createFromDraft(WidgetRef ref, EventDraft draft) {
         start: times.start,
         end: times.end,
         timeZone: draft.timeZone,
+        rrule: draft.rrule,
+        holidayRule: draft.holidayRule,
       );
 }
 

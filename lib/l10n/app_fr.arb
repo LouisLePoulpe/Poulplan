@@ -108,5 +108,74 @@
         "type": "String"
       }
     }
+  },
+  "ok": "OK",
+  "search": "Rechercher",
+  "searchHint": "Rechercher un événement",
+  "searchPrompt": "Saisissez un mot ou choisissez un filtre.",
+  "searchNoResults": "Aucun résultat.",
+  "saveFilter": "Enregistrer le filtre",
+  "periodAll": "Tout",
+  "periodUpcoming": "À venir",
+  "periodPast": "Passé",
+  "periodCustom": "Période…",
+  "scopeEditTitle": "Modifier l'événement récurrent",
+  "scopeDeleteTitle": "Supprimer l'événement récurrent",
+  "scopeThis": "Cet événement",
+  "scopeFollowing": "Cet événement et les suivants",
+  "scopeAll": "Tous les événements",
+  "fieldRecurrence": "Répétition",
+  "recurrenceNone": "Ne se répète pas",
+  "recurrenceCustom": "Personnaliser…",
+  "recurrenceEvery": "Tous les",
+  "unitDays": "jours",
+  "unitWeeks": "semaines",
+  "unitMonths": "mois",
+  "unitYears": "ans",
+  "monthlyOnDay": "le {day} du mois",
+  "monthlyOnLast": "le dernier {weekday} du mois",
+  "recurrenceEnds": "Fin",
+  "recurrenceNever": "Jamais",
+  "recurrenceAfter": "Après",
+  "recurrenceTimes": "fois",
+  "recurrenceUntil": "Jusqu'au",
+  "fieldHolidayRule": "Jours fériés",
+  "holidayRuleNone": "Sans effet",
+  "holidayRuleSkip": "Sauter",
+  "holidayRuleNext": "Jour ouvré suivant",
+  "holidayRulePrevious": "Jour ouvré précédent",
+  "settingsHolidays": "Jours fériés et vacances",
+  "settingsShowHolidays": "Afficher les jours fériés",
+  "settingsAlsaceMoselle": "Alsace-Moselle",
+  "settingsAlsaceMoselleSubtitle": "Ajoute le Vendredi saint et la Saint-Étienne",
+  "settingsSchoolZone": "Vacances scolaires",
+  "noSchoolZone": "Aucune",
+  "schoolZone": "Zone {zone}",
+  "birthdays": "Anniversaires",
+  "newBirthday": "Nouvel anniversaire",
+  "editBirthday": "Modifier l'anniversaire",
+  "birthdaysEmpty": "Aucun anniversaire. Ajoutez-en avec le bouton +.",
+  "fieldBirthYear": "Année de naissance (facultatif)",
+  "errorInvalidYear": "Année invalide",
+  "@monthlyOnDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "@monthlyOnLast": {
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
+  "@schoolZone": {
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
   }
 }

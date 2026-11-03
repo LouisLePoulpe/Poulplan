@@ -140,7 +140,16 @@ class _AgendaTile extends ConsumerWidget {
             borderRadius: BorderRadius.circular(3),
           ),
         ),
-        title: Text(event.title),
+        title: Row(
+          children: [
+            if (eventIcon(event) != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: Icon(eventIcon(event), size: 16),
+              ),
+            Flexible(child: Text(event.title)),
+          ],
+        ),
         subtitle: Text([time, ?event.location].join(' · ')),
         trailing: overlapping
             ? Tooltip(

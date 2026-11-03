@@ -224,4 +224,156 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get settingsCategoriesSubtitle =>
       'Noms et couleurs des catégories d\'événements';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get search => 'Rechercher';
+
+  @override
+  String get searchHint => 'Rechercher un événement';
+
+  @override
+  String get searchPrompt => 'Saisissez un mot ou choisissez un filtre.';
+
+  @override
+  String get searchNoResults => 'Aucun résultat.';
+
+  @override
+  String get saveFilter => 'Enregistrer le filtre';
+
+  @override
+  String get periodAll => 'Tout';
+
+  @override
+  String get periodUpcoming => 'À venir';
+
+  @override
+  String get periodPast => 'Passé';
+
+  @override
+  String get periodCustom => 'Période…';
+
+  @override
+  String get scopeEditTitle => 'Modifier l\'événement récurrent';
+
+  @override
+  String get scopeDeleteTitle => 'Supprimer l\'événement récurrent';
+
+  @override
+  String get scopeThis => 'Cet événement';
+
+  @override
+  String get scopeFollowing => 'Cet événement et les suivants';
+
+  @override
+  String get scopeAll => 'Tous les événements';
+
+  @override
+  String get fieldRecurrence => 'Répétition';
+
+  @override
+  String get recurrenceNone => 'Ne se répète pas';
+
+  @override
+  String get recurrenceCustom => 'Personnaliser…';
+
+  @override
+  String get recurrenceEvery => 'Tous les';
+
+  @override
+  String get unitDays => 'jours';
+
+  @override
+  String get unitWeeks => 'semaines';
+
+  @override
+  String get unitMonths => 'mois';
+
+  @override
+  String get unitYears => 'ans';
+
+  @override
+  String monthlyOnDay(int day) {
+    return 'le $day du mois';
+  }
+
+  @override
+  String monthlyOnLast(String weekday) {
+    return 'le dernier $weekday du mois';
+  }
+
+  @override
+  String get recurrenceEnds => 'Fin';
+
+  @override
+  String get recurrenceNever => 'Jamais';
+
+  @override
+  String get recurrenceAfter => 'Après';
+
+  @override
+  String get recurrenceTimes => 'fois';
+
+  @override
+  String get recurrenceUntil => 'Jusqu\'au';
+
+  @override
+  String get fieldHolidayRule => 'Jours fériés';
+
+  @override
+  String get holidayRuleNone => 'Sans effet';
+
+  @override
+  String get holidayRuleSkip => 'Sauter';
+
+  @override
+  String get holidayRuleNext => 'Jour ouvré suivant';
+
+  @override
+  String get holidayRulePrevious => 'Jour ouvré précédent';
+
+  @override
+  String get settingsHolidays => 'Jours fériés et vacances';
+
+  @override
+  String get settingsShowHolidays => 'Afficher les jours fériés';
+
+  @override
+  String get settingsAlsaceMoselle => 'Alsace-Moselle';
+
+  @override
+  String get settingsAlsaceMoselleSubtitle =>
+      'Ajoute le Vendredi saint et la Saint-Étienne';
+
+  @override
+  String get settingsSchoolZone => 'Vacances scolaires';
+
+  @override
+  String get noSchoolZone => 'Aucune';
+
+  @override
+  String schoolZone(String zone) {
+    return 'Zone $zone';
+  }
+
+  @override
+  String get birthdays => 'Anniversaires';
+
+  @override
+  String get newBirthday => 'Nouvel anniversaire';
+
+  @override
+  String get editBirthday => 'Modifier l\'anniversaire';
+
+  @override
+  String get birthdaysEmpty =>
+      'Aucun anniversaire. Ajoutez-en avec le bouton +.';
+
+  @override
+  String get fieldBirthYear => 'Année de naissance (facultatif)';
+
+  @override
+  String get errorInvalidYear => 'Année invalide';
 }

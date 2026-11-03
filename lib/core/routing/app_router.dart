@@ -2,15 +2,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../domain/editing/event_draft.dart';
+import '../../features/birthdays/presentation/birthdays_page.dart';
 import '../../features/calendar/presentation/calendar_page.dart';
 import '../../features/categories/presentation/categories_page.dart';
 import '../../features/event_editor/presentation/event_editor_page.dart';
+import '../../features/search/presentation/search_page.dart';
 import '../../features/settings/presentation/settings_page.dart';
 
 abstract final class Routes {
   static const home = '/';
   static const settings = '/settings';
   static const categories = '/settings/categories';
+  static const birthdays = '/settings/birthdays';
+  static const search = '/search';
   static const newEvent = '/event/new';
   static String event(String id) => '/event/$id';
 }
@@ -34,6 +38,14 @@ GoRouter createRouter() => GoRouter(
     GoRoute(
       path: Routes.categories,
       builder: (context, state) => const CategoriesPage(),
+    ),
+    GoRoute(
+      path: Routes.birthdays,
+      builder: (context, state) => const BirthdaysPage(),
+    ),
+    GoRoute(
+      path: Routes.search,
+      builder: (context, state) => const SearchPage(),
     ),
     GoRoute(
       path: Routes.newEvent,

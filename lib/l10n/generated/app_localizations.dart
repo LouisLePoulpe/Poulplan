@@ -495,6 +495,294 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Noms et couleurs des catégories d\'événements'**
   String get settingsCategoriesSubtitle;
+
+  /// No description provided for @ok.
+  ///
+  /// In fr, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @search.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher'**
+  String get search;
+
+  /// No description provided for @searchHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher un événement'**
+  String get searchHint;
+
+  /// No description provided for @searchPrompt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisissez un mot ou choisissez un filtre.'**
+  String get searchPrompt;
+
+  /// No description provided for @searchNoResults.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun résultat.'**
+  String get searchNoResults;
+
+  /// No description provided for @saveFilter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer le filtre'**
+  String get saveFilter;
+
+  /// No description provided for @periodAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout'**
+  String get periodAll;
+
+  /// No description provided for @periodUpcoming.
+  ///
+  /// In fr, this message translates to:
+  /// **'À venir'**
+  String get periodUpcoming;
+
+  /// No description provided for @periodPast.
+  ///
+  /// In fr, this message translates to:
+  /// **'Passé'**
+  String get periodPast;
+
+  /// No description provided for @periodCustom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Période…'**
+  String get periodCustom;
+
+  /// No description provided for @scopeEditTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier l\'événement récurrent'**
+  String get scopeEditTitle;
+
+  /// No description provided for @scopeDeleteTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer l\'événement récurrent'**
+  String get scopeDeleteTitle;
+
+  /// No description provided for @scopeThis.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cet événement'**
+  String get scopeThis;
+
+  /// No description provided for @scopeFollowing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cet événement et les suivants'**
+  String get scopeFollowing;
+
+  /// No description provided for @scopeAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous les événements'**
+  String get scopeAll;
+
+  /// No description provided for @fieldRecurrence.
+  ///
+  /// In fr, this message translates to:
+  /// **'Répétition'**
+  String get fieldRecurrence;
+
+  /// No description provided for @recurrenceNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ne se répète pas'**
+  String get recurrenceNone;
+
+  /// No description provided for @recurrenceCustom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Personnaliser…'**
+  String get recurrenceCustom;
+
+  /// No description provided for @recurrenceEvery.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous les'**
+  String get recurrenceEvery;
+
+  /// No description provided for @unitDays.
+  ///
+  /// In fr, this message translates to:
+  /// **'jours'**
+  String get unitDays;
+
+  /// No description provided for @unitWeeks.
+  ///
+  /// In fr, this message translates to:
+  /// **'semaines'**
+  String get unitWeeks;
+
+  /// No description provided for @unitMonths.
+  ///
+  /// In fr, this message translates to:
+  /// **'mois'**
+  String get unitMonths;
+
+  /// No description provided for @unitYears.
+  ///
+  /// In fr, this message translates to:
+  /// **'ans'**
+  String get unitYears;
+
+  /// No description provided for @monthlyOnDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'le {day} du mois'**
+  String monthlyOnDay(int day);
+
+  /// No description provided for @monthlyOnLast.
+  ///
+  /// In fr, this message translates to:
+  /// **'le dernier {weekday} du mois'**
+  String monthlyOnLast(String weekday);
+
+  /// No description provided for @recurrenceEnds.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fin'**
+  String get recurrenceEnds;
+
+  /// No description provided for @recurrenceNever.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jamais'**
+  String get recurrenceNever;
+
+  /// No description provided for @recurrenceAfter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Après'**
+  String get recurrenceAfter;
+
+  /// No description provided for @recurrenceTimes.
+  ///
+  /// In fr, this message translates to:
+  /// **'fois'**
+  String get recurrenceTimes;
+
+  /// No description provided for @recurrenceUntil.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jusqu\'au'**
+  String get recurrenceUntil;
+
+  /// No description provided for @fieldHolidayRule.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jours fériés'**
+  String get fieldHolidayRule;
+
+  /// No description provided for @holidayRuleNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans effet'**
+  String get holidayRuleNone;
+
+  /// No description provided for @holidayRuleSkip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauter'**
+  String get holidayRuleSkip;
+
+  /// No description provided for @holidayRuleNext.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jour ouvré suivant'**
+  String get holidayRuleNext;
+
+  /// No description provided for @holidayRulePrevious.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jour ouvré précédent'**
+  String get holidayRulePrevious;
+
+  /// No description provided for @settingsHolidays.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jours fériés et vacances'**
+  String get settingsHolidays;
+
+  /// No description provided for @settingsShowHolidays.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher les jours fériés'**
+  String get settingsShowHolidays;
+
+  /// No description provided for @settingsAlsaceMoselle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Alsace-Moselle'**
+  String get settingsAlsaceMoselle;
+
+  /// No description provided for @settingsAlsaceMoselleSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute le Vendredi saint et la Saint-Étienne'**
+  String get settingsAlsaceMoselleSubtitle;
+
+  /// No description provided for @settingsSchoolZone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vacances scolaires'**
+  String get settingsSchoolZone;
+
+  /// No description provided for @noSchoolZone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune'**
+  String get noSchoolZone;
+
+  /// No description provided for @schoolZone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Zone {zone}'**
+  String schoolZone(String zone);
+
+  /// No description provided for @birthdays.
+  ///
+  /// In fr, this message translates to:
+  /// **'Anniversaires'**
+  String get birthdays;
+
+  /// No description provided for @newBirthday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvel anniversaire'**
+  String get newBirthday;
+
+  /// No description provided for @editBirthday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier l\'anniversaire'**
+  String get editBirthday;
+
+  /// No description provided for @birthdaysEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun anniversaire. Ajoutez-en avec le bouton +.'**
+  String get birthdaysEmpty;
+
+  /// No description provided for @fieldBirthYear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Année de naissance (facultatif)'**
+  String get fieldBirthYear;
+
+  /// No description provided for @errorInvalidYear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Année invalide'**
+  String get errorInvalidYear;
 }
 
 class _AppLocalizationsDelegate

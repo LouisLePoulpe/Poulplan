@@ -1,12 +1,13 @@
 name: poulplan
 description: "Calendrier personnel local-first de l'écosystème Poulapp."
 publish_to: 'none'
-version: 0.2.0+2
+version: 0.3.0+3
 
 environment:
   sdk: ^3.13.5
 
 dependencies:
+  collection: ^1.19.1
   drift: ^2.35.3
   drift_flutter: ^0.3.1
   flutter:
@@ -38,6 +39,7 @@ flutter:
   generate: true
   assets:
     - assets/branding/poulplan-logo.png
+    - assets/data/school_holidays_fr.json
 
 # Icône Android : `dart run tool/gen_icons.dart` puis `dart run flutter_launcher_icons`.
 flutter_launcher_icons:

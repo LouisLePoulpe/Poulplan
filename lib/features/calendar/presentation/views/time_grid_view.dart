@@ -223,6 +223,7 @@ class _AllDayRow extends ConsumerWidget {
           Expanded(
             child: DragTarget<CalendarEvent>(
               onAcceptWithDetails: (details) => saveMovedEvent(
+                context,
                 ref,
                 moveToDay(
                   details.data,
@@ -284,6 +285,7 @@ class _DayColumn extends ConsumerWidget {
         final box = context.findRenderObject()! as RenderBox;
         final local = box.globalToLocal(details.offset);
         saveMovedEvent(
+          context,
           ref,
           moveToWallTime(
             details.data,
@@ -393,13 +395,15 @@ class _TimedEventTile extends ConsumerWidget {
           children: [
             Row(
               children: [
-                if (overlapping)
+                if (overlapping || eventIcon(event) != null)
                   Padding(
                     padding: const EdgeInsets.only(right: 2),
                     child: Icon(
-                      Icons.warning_amber_rounded,
+                      overlapping
+                          ? Icons.warning_amber_rounded
+                          : eventIcon(event),
                       size: 12,
-                      semanticLabel: l10n.overlapWarning,
+                      semanticLabel: overlapping ? l10n.overlapWarning : null,
                     ),
                   ),
                 Expanded(

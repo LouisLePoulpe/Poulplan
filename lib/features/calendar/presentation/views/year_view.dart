@@ -6,6 +6,7 @@ import '../../../../core/format/formatters.dart';
 import '../../../../data/providers.dart';
 import '../../../../domain/calendar/day.dart';
 import '../../../../domain/calendar/month_grid.dart';
+import '../../../../domain/entities/calendar_event.dart';
 import '../../providers/calendar_providers.dart';
 
 class YearView extends ConsumerWidget {
@@ -23,7 +24,11 @@ class YearView extends ConsumerWidget {
               )),
             )
             .value
-            ?.keys
+            ?.entries
+            .where(
+              (e) => e.value.any((ev) => ev.kind != EventKind.schoolHoliday),
+            )
+            .map((e) => e.key)
             .toSet() ??
         const <Day>{};
 

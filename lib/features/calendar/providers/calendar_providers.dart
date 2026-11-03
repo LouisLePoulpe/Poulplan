@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -7,6 +8,8 @@ import '../../../domain/calendar/day.dart';
 import '../../../domain/calendar/event_days.dart';
 import '../../../domain/calendar/month_grid.dart';
 import '../../../domain/entities/calendar_event.dart';
+import '../../../domain/holidays/french_holidays.dart';
+import '../../../domain/holidays/school_holidays.dart';
 
 enum CalendarViewType { day, week, month, year, agenda }
 
@@ -80,19 +83,69 @@ final monthGridProvider = Provider<List<Day>>((ref) {
 /// Inclusive range of days.
 typedef DayRange = ({Day first, Day last});
 
-/// Events touching [DayRange], grouped by local day.
+/// Public holidays used by series holiday rules (and displayed if enabled).
+final holidayCalendarProvider = Provider<HolidayCalendar>((ref) {
+  final alsace = ref.watch(settingsProvider.select((s) => s.alsaceMoselle));
+  return HolidayCalendar(alsaceMoselle: alsace);
+});
+
+/// Bundled school holidays.
+final schoolHolidaysProvider = FutureProvider<SchoolHolidayCalendar>((
+  ref,
+) async {
+  try {
+    return SchoolHolidayCalendar.fromJson(
+      await rootBundle.loadString('assets/data/school_holidays_fr.json'),
+    );
+  } catch (_) {
+    return SchoolHolidayCalendar.empty;
+  }
+});
+
+/// Everything to display on [DayRange] (events with recurrences expanded,
+/// holidays, school holidays, birthdays), grouped by local day.
 final eventsByDayProvider =
     StreamProvider.family<Map<Day, List<CalendarEvent>>, DayRange>((
       ref,
       range,
     ) {
       final toLocal = ref.watch(localTimeProvider);
+      final display = ref.watch(displayLocationProvider);
+      final holidays = ref.watch(holidayCalendarProvider);
+      final settings = ref.watch(settingsProvider);
+      final school =
+          ref.watch(schoolHolidaysProvider).value ??
+          SchoolHolidayCalendar.empty;
+      final birthdays = ref.watch(birthdaysProvider).value ?? const [];
+      final extra = [
+        if (settings.showHolidays)
+          for (final MapEntry(key: day, value: name)
+              in holidays.between(range.first, range.last).entries)
+            holidayEvent(day, name),
+        if (settings.schoolZone != null)
+          for (final period in school.between(
+            settings.schoolZone!,
+            range.first,
+            range.last,
+          ))
+            period.toEvent(),
+        for (final b in birthdays) ...b.occurrences(range.first, range.last),
+      ];
       return ref
           .watch(eventRepositoryProvider)
-          .watchBetween(range.first, range.last)
+          .watchBetween(
+            range.first,
+            range.last,
+            display: display,
+            holidays: holidays,
+          )
           .map(
-            (events) =>
-                groupEventsByDay(events, range.first, range.last, toLocal),
+            (events) => groupEventsByDay(
+              [...extra, ...events],
+              range.first,
+              range.last,
+              toLocal,
+            ),
           );
     });
 

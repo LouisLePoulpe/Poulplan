@@ -23,6 +23,7 @@ class EventDragSource extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (event.kind != EventKind.event) return child;
     final dragged = Material(
       color: Colors.transparent,
       child: Opacity(opacity: 0.85, child: feedback),
