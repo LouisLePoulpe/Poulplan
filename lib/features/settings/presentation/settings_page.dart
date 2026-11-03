@@ -37,6 +37,14 @@ class SettingsPage extends ConsumerWidget {
       appBar: AppBar(title: Text(l10n.settings)),
       body: ListView(
         children: [
+          section(l10n.cloud),
+          ListTile(
+            leading: const Icon(Icons.cloud_outlined),
+            title: Text(l10n.account),
+            subtitle: Text(l10n.accountSubtitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(Routes.account),
+          ),
           section(l10n.settingsAppearance),
           ListTile(
             title: Text(l10n.settingsTheme),

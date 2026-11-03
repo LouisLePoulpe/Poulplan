@@ -177,5 +177,63 @@
         "type": "String"
       }
     }
+  },
+  "cloud": "Cloud Poulapp",
+  "account": "Compte Poulapp",
+  "accountSubtitle": "Synchronisation facultative entre vos appareils",
+  "cloudNotConfigured": "Cette version de Poulplan n'est pas reliée au cloud Poulapp. Toutes vos données restent sur cet appareil.",
+  "signInExplanation": "Connectez-vous pour synchroniser votre calendrier entre vos appareils. Sans compte, Poulplan fonctionne entièrement sur cet appareil.",
+  "fieldEmail": "Adresse e-mail",
+  "fieldPassword": "Mot de passe",
+  "signIn": "Se connecter",
+  "signInNoAccess": "Ce compte n'a pas accès à Poulplan.",
+  "signInWrongCredentials": "Adresse ou mot de passe incorrect.",
+  "signInNetworkError": "Connexion impossible. Vérifiez le réseau et réessayez.",
+  "signedInPoulapp": "Connecté au cloud Poulapp",
+  "syncInProgress": "Synchronisation…",
+  "syncOffline": "Hors ligne — les modifications seront envoyées plus tard",
+  "syncDoneAt": "Synchronisé à {time}",
+  "syncNotYet": "Pas encore synchronisé",
+  "syncPending": "{count, plural, =0{Aucune modification en attente} =1{1 modification en attente} other{{count} modifications en attente}}",
+  "syncNow": "Synchroniser maintenant",
+  "signOut": "Se déconnecter",
+  "signOutBody": "Vos données restent sur cet appareil. Les modifications faites hors connexion seront envoyées à la prochaine connexion.",
+  "conflictsCount": "{count, plural, =1{1 conflit à résoudre} other{{count} conflits à résoudre}}",
+  "conflictsTitle": "Conflits de synchronisation",
+  "conflictsNone": "Aucun conflit.",
+  "conflictsExplanation": "Ces informations ont été modifiées différemment sur deux appareils. Choisissez la version à garder ; la plus récente est affichée en attendant.",
+  "conflictField": "{field} modifié des deux côtés",
+  "conflictDeletion": "Supprimé sur un appareil, modifié sur l'autre",
+  "conflictThisDevice": "Cet appareil",
+  "conflictOtherDevice": "Autre appareil",
+  "conflictDeleted": "Supprimé",
+  "conflictKept": "Conservé",
+  "@syncDoneAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@syncPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@conflictsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@conflictField": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
   }
 }

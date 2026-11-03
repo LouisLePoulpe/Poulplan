@@ -4,6 +4,8 @@ import '../domain/entities/app_settings.dart';
 import '../domain/entities/event_category.dart';
 import 'db/app_database.dart';
 import '../domain/entities/birthday.dart';
+import '../domain/sync/hlc.dart';
+import 'sync/change_recorder.dart';
 import 'repositories/birthday_repository.dart';
 import 'repositories/category_repository.dart';
 import 'repositories/saved_filter_repository.dart';
@@ -15,12 +17,30 @@ final databaseProvider = Provider<AppDatabase>(
   (ref) => throw UnimplementedError('databaseProvider must be overridden'),
 );
 
+/// This device's clock; overridden in `main()` with the persisted one.
+final hlcClockProvider = Provider<HlcClock>((ref) => HlcClock('local'));
+
+final changeRecorderProvider = Provider<ChangeRecorder>((ref) {
+  final recorder = ChangeRecorder(
+    ref.watch(databaseProvider),
+    ref.watch(hlcClockProvider),
+  );
+  ref.onDispose(recorder.dispose);
+  return recorder;
+});
+
 final eventRepositoryProvider = Provider(
-  (ref) => EventRepository(ref.watch(databaseProvider)),
+  (ref) => EventRepository(
+    ref.watch(databaseProvider),
+    recorder: ref.watch(changeRecorderProvider),
+  ),
 );
 
 final categoryRepositoryProvider = Provider(
-  (ref) => CategoryRepository(ref.watch(databaseProvider)),
+  (ref) => CategoryRepository(
+    ref.watch(databaseProvider),
+    recorder: ref.watch(changeRecorderProvider),
+  ),
 );
 
 final settingsRepositoryProvider = Provider(
@@ -41,7 +61,10 @@ final categoriesProvider = StreamProvider<List<EventCategory>>(
 );
 
 final birthdayRepositoryProvider = Provider(
-  (ref) => BirthdayRepository(ref.watch(databaseProvider)),
+  (ref) => BirthdayRepository(
+    ref.watch(databaseProvider),
+    recorder: ref.watch(changeRecorderProvider),
+  ),
 );
 
 final birthdaysProvider = StreamProvider<List<Birthday>>(
@@ -49,7 +72,10 @@ final birthdaysProvider = StreamProvider<List<Birthday>>(
 );
 
 final savedFilterRepositoryProvider = Provider(
-  (ref) => SavedFilterRepository(ref.watch(databaseProvider)),
+  (ref) => SavedFilterRepository(
+    ref.watch(databaseProvider),
+    recorder: ref.watch(changeRecorderProvider),
+  ),
 );
 
 final savedFiltersProvider = StreamProvider<List<SavedFilter>>(

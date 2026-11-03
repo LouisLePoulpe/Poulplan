@@ -376,4 +376,123 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get errorInvalidYear => 'Année invalide';
+
+  @override
+  String get cloud => 'Cloud Poulapp';
+
+  @override
+  String get account => 'Compte Poulapp';
+
+  @override
+  String get accountSubtitle =>
+      'Synchronisation facultative entre vos appareils';
+
+  @override
+  String get cloudNotConfigured =>
+      'Cette version de Poulplan n\'est pas reliée au cloud Poulapp. Toutes vos données restent sur cet appareil.';
+
+  @override
+  String get signInExplanation =>
+      'Connectez-vous pour synchroniser votre calendrier entre vos appareils. Sans compte, Poulplan fonctionne entièrement sur cet appareil.';
+
+  @override
+  String get fieldEmail => 'Adresse e-mail';
+
+  @override
+  String get fieldPassword => 'Mot de passe';
+
+  @override
+  String get signIn => 'Se connecter';
+
+  @override
+  String get signInNoAccess => 'Ce compte n\'a pas accès à Poulplan.';
+
+  @override
+  String get signInWrongCredentials => 'Adresse ou mot de passe incorrect.';
+
+  @override
+  String get signInNetworkError =>
+      'Connexion impossible. Vérifiez le réseau et réessayez.';
+
+  @override
+  String get signedInPoulapp => 'Connecté au cloud Poulapp';
+
+  @override
+  String get syncInProgress => 'Synchronisation…';
+
+  @override
+  String get syncOffline =>
+      'Hors ligne — les modifications seront envoyées plus tard';
+
+  @override
+  String syncDoneAt(String time) {
+    return 'Synchronisé à $time';
+  }
+
+  @override
+  String get syncNotYet => 'Pas encore synchronisé';
+
+  @override
+  String syncPending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count modifications en attente',
+      one: '1 modification en attente',
+      zero: 'Aucune modification en attente',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncNow => 'Synchroniser maintenant';
+
+  @override
+  String get signOut => 'Se déconnecter';
+
+  @override
+  String get signOutBody =>
+      'Vos données restent sur cet appareil. Les modifications faites hors connexion seront envoyées à la prochaine connexion.';
+
+  @override
+  String conflictsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count conflits à résoudre',
+      one: '1 conflit à résoudre',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get conflictsTitle => 'Conflits de synchronisation';
+
+  @override
+  String get conflictsNone => 'Aucun conflit.';
+
+  @override
+  String get conflictsExplanation =>
+      'Ces informations ont été modifiées différemment sur deux appareils. Choisissez la version à garder ; la plus récente est affichée en attendant.';
+
+  @override
+  String conflictField(String field) {
+    return '$field modifié des deux côtés';
+  }
+
+  @override
+  String get conflictDeletion =>
+      'Supprimé sur un appareil, modifié sur l\'autre';
+
+  @override
+  String get conflictThisDevice => 'Cet appareil';
+
+  @override
+  String get conflictOtherDevice => 'Autre appareil';
+
+  @override
+  String get conflictDeleted => 'Supprimé';
+
+  @override
+  String get conflictKept => 'Conservé';
 }

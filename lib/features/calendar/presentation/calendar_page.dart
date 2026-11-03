@@ -12,6 +12,8 @@ import '../../../data/providers.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../event_editor/presentation/quick_create.dart';
 import '../providers/calendar_providers.dart';
+import '../../sync/presentation/account_page.dart' show syncIcon;
+import '../../sync/providers/sync_controller.dart';
 import 'demo_events.dart';
 import 'views/agenda_view.dart';
 import 'views/month_view.dart';
@@ -98,6 +100,7 @@ class CalendarPage extends ConsumerWidget {
               ],
             ),
             actions: [
+              const _SyncIndicator(),
               IconButton(
                 tooltip: l10n.search,
                 icon: const Icon(Icons.search),
@@ -253,6 +256,27 @@ class _DebugMenu extends ConsumerWidget {
           },
         ),
       ],
+    );
+  }
+}
+
+/// Cloud status, shown only when signed in.
+class _SyncIndicator extends ConsumerWidget {
+  const _SyncIndicator();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final status = ref.watch(syncControllerProvider);
+    if (!status.signedIn) return const SizedBox();
+    final conflicts = ref.watch(syncConflictsProvider).value?.length ?? 0;
+    return IconButton(
+      tooltip: AppLocalizations.of(context).account,
+      icon: Badge(
+        isLabelVisible: conflicts > 0,
+        label: Text('$conflicts'),
+        child: Icon(syncIcon(status.phase)),
+      ),
+      onPressed: () => context.push(Routes.account),
     );
   }
 }

@@ -783,6 +783,186 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Année invalide'**
   String get errorInvalidYear;
+
+  /// No description provided for @cloud.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cloud Poulapp'**
+  String get cloud;
+
+  /// No description provided for @account.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte Poulapp'**
+  String get account;
+
+  /// No description provided for @accountSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Synchronisation facultative entre vos appareils'**
+  String get accountSubtitle;
+
+  /// No description provided for @cloudNotConfigured.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette version de Poulplan n\'est pas reliée au cloud Poulapp. Toutes vos données restent sur cet appareil.'**
+  String get cloudNotConfigured;
+
+  /// No description provided for @signInExplanation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Connectez-vous pour synchroniser votre calendrier entre vos appareils. Sans compte, Poulplan fonctionne entièrement sur cet appareil.'**
+  String get signInExplanation;
+
+  /// No description provided for @fieldEmail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse e-mail'**
+  String get fieldEmail;
+
+  /// No description provided for @fieldPassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe'**
+  String get fieldPassword;
+
+  /// No description provided for @signIn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se connecter'**
+  String get signIn;
+
+  /// No description provided for @signInNoAccess.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce compte n\'a pas accès à Poulplan.'**
+  String get signInNoAccess;
+
+  /// No description provided for @signInWrongCredentials.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse ou mot de passe incorrect.'**
+  String get signInWrongCredentials;
+
+  /// No description provided for @signInNetworkError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Connexion impossible. Vérifiez le réseau et réessayez.'**
+  String get signInNetworkError;
+
+  /// No description provided for @signedInPoulapp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Connecté au cloud Poulapp'**
+  String get signedInPoulapp;
+
+  /// No description provided for @syncInProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Synchronisation…'**
+  String get syncInProgress;
+
+  /// No description provided for @syncOffline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors ligne — les modifications seront envoyées plus tard'**
+  String get syncOffline;
+
+  /// No description provided for @syncDoneAt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Synchronisé à {time}'**
+  String syncDoneAt(String time);
+
+  /// No description provided for @syncNotYet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore synchronisé'**
+  String get syncNotYet;
+
+  /// No description provided for @syncPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune modification en attente} =1{1 modification en attente} other{{count} modifications en attente}}'**
+  String syncPending(int count);
+
+  /// No description provided for @syncNow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Synchroniser maintenant'**
+  String get syncNow;
+
+  /// No description provided for @signOut.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se déconnecter'**
+  String get signOut;
+
+  /// No description provided for @signOutBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vos données restent sur cet appareil. Les modifications faites hors connexion seront envoyées à la prochaine connexion.'**
+  String get signOutBody;
+
+  /// No description provided for @conflictsCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 conflit à résoudre} other{{count} conflits à résoudre}}'**
+  String conflictsCount(int count);
+
+  /// No description provided for @conflictsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Conflits de synchronisation'**
+  String get conflictsTitle;
+
+  /// No description provided for @conflictsNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun conflit.'**
+  String get conflictsNone;
+
+  /// No description provided for @conflictsExplanation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ces informations ont été modifiées différemment sur deux appareils. Choisissez la version à garder ; la plus récente est affichée en attendant.'**
+  String get conflictsExplanation;
+
+  /// No description provided for @conflictField.
+  ///
+  /// In fr, this message translates to:
+  /// **'{field} modifié des deux côtés'**
+  String conflictField(String field);
+
+  /// No description provided for @conflictDeletion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimé sur un appareil, modifié sur l\'autre'**
+  String get conflictDeletion;
+
+  /// No description provided for @conflictThisDevice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cet appareil'**
+  String get conflictThisDevice;
+
+  /// No description provided for @conflictOtherDevice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autre appareil'**
+  String get conflictOtherDevice;
+
+  /// No description provided for @conflictDeleted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimé'**
+  String get conflictDeleted;
+
+  /// No description provided for @conflictKept.
+  ///
+  /// In fr, this message translates to:
+  /// **'Conservé'**
+  String get conflictKept;
 }
 
 class _AppLocalizationsDelegate

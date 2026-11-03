@@ -5,6 +5,7 @@ import 'package:poulplan/data/db/app_database.dart';
 import 'package:poulplan/data/repositories/category_repository.dart';
 import 'package:poulplan/data/repositories/event_repository.dart';
 import 'package:poulplan/data/sync/change_recorder.dart';
+import 'package:poulplan/data/sync/conflict_resolver.dart';
 import 'package:poulplan/data/sync/sync_engine.dart';
 import 'package:poulplan/data/sync/sync_remote.dart';
 import 'package:poulplan/domain/calendar/day.dart';
@@ -218,6 +219,30 @@ void main() {
       expect((await b.events.findById(created.id))!.title, 'Orthodontiste');
     },
   );
+
+  test('the user choice in a conflict wins on every device', () async {
+    final created = await meeting(a);
+    await a.sync();
+    await b.sync();
+    await a.events.update(created.copyWith(title: 'Dentiste'));
+    b.now += 5000;
+    final onB = (await b.events.findById(created.id))!;
+    await b.events.update(onB.copyWith(title: 'Orthodontiste'));
+    await a.sync();
+    await b.sync();
+
+    // On B, keep the other device's value (the older one).
+    final conflict = (await b.conflicts()).single;
+    await ConflictResolver(
+      b.db,
+      b.recorder,
+    ).resolve(conflict, keepLocal: false);
+    expect(await b.conflicts(), isEmpty);
+    await b.sync();
+    await a.sync();
+    expect((await a.events.findById(created.id))!.title, 'Dentiste');
+    expect((await b.events.findById(created.id))!.title, 'Dentiste');
+  });
 
   test('a deletion propagates', () async {
     final created = await meeting(a);

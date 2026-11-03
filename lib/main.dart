@@ -7,6 +7,7 @@ import 'core/debug/screenshot_extension.dart';
 import 'core/time/device_time_zone.dart';
 import 'data/db/app_database.dart';
 import 'data/db/connection.dart';
+import 'data/sync/change_recorder.dart';
 import 'data/providers.dart';
 
 Future<void> main() async {
@@ -14,9 +15,11 @@ Future<void> main() async {
   await initializeDateFormatting('fr');
   final timeZone = await initTimeZones();
   final database = AppDatabase(openAppDatabaseConnection());
+  final clock = await loadHlcClock(database);
   final container = ProviderContainer(
     overrides: [
       databaseProvider.overrideWithValue(database),
+      hlcClockProvider.overrideWithValue(clock),
       deviceTimeZoneProvider.overrideWithValue(timeZone),
     ],
   );
