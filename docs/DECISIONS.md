@@ -26,6 +26,11 @@ Une ligne par décision : date — décision — raison.
 - 2026-11-03 — Accès cloud : mêmes conventions que Poulpoints (table existante `poulapp_access(user_id, app_id, approved_at)`) — RLS `user_id = auth.uid()` et `exists(poulapp_access … app_id = 'poulplan')`, droits explicites `select/insert/update`, pas de suppression réelle côté client (pierres tombales), fonctions internes dans le schéma `private`.
 - 2026-11-03 — Récupération des changements par `rev` (séquence) avec recouvrement : l'app redemande une marge de révisions déjà vues, car une transaction plus ancienne peut être validée après une plus récente ; fusion idempotente, donc sans effet de bord.
 - 2026-11-03 — Configuration Supabase (URL + clé anon) dans `.env` local ignoré par git, jamais dans le code.
+- 2026-11-03 — Client cloud : paquet `supabase` pur Dart plutôt que `supabase_flutter` — pas de greffons natifs (liens profonds, stockage) inutiles pour une connexion par mot de passe ; meilleur pour F-Droid.
+- 2026-11-03 — Session cloud : seul le jeton de rafraîchissement est conservé (table `settings`), jamais le mot de passe ; à protéger en v0.7 (stockage sécurisé/verrouillage).
+- 2026-11-03 — Versions par champ : horloge logique hybride (`ms:compteur:appareil`, triable comme texte), données de suivi dans `sync_meta` plutôt que dans chaque table — schéma métier inchangé, file d'envoi persistante = lignes `dirty`.
+- 2026-11-03 — Catégories par défaut créées avec `createdAt = 0` — identiques sur tous les appareils, donc jamais en conflit une fois synchronisées.
+- 2026-11-03 — Configuration cloud injectée à la compilation (`--dart-define-from-file=.env`) ; sans elle (CI, F-Droid), l'écran Compte indique que la version n'est pas reliée au cloud.
 - À traiter en v1.0 : `sqlite3` 3.x télécharge par défaut des bibliothèques SQLite précompilées (hook de build) ; pour F-Droid, compiler depuis la source (`hooks: user_defines: sqlite3: source: source`) ou utiliser la bibliothèque système.
 - À décider : moteur de cartes/routage libre hors ligne (jalon v0.8.0).
 - À décider : stratégie exacte de rappels sous Linux (démon en arrière-plan vs service utilisateur systemd).

@@ -6,9 +6,9 @@ Dernière mise à jour : 2026-11-03
 |---|---|
 | Conception / cahier des charges | Terminé (`SPEC.md`) |
 | v0.1.0 Fondations | **Terminé** — critères vérifiés sur Linux et Pixel 10 |
-| v0.2.0 Événements | **Terminé** — vérifié sous Linux et par tests ; contrôle sur Pixel à refaire (appareil débranché) |
-| v0.3.0 Calendrier avancé | **Terminé** — vérifié sous Linux et par tests ; Pixel débranché |
-| v0.4.0 Cloud Poulapp | **En attente de Louis** : scripts SQL prêts dans `supabase/`, URL + clé anon à fournir |
+| v0.2.0 Événements | **Terminé** — vérifié sous Linux, par tests et sur le Pixel (glisser-déposer tactile réel) |
+| v0.3.0 Calendrier avancé | **Terminé** — vérifié sous Linux, par tests et sur le Pixel |
+| v0.4.0 Cloud Poulapp | **Code terminé, non tagué** — scénario deux appareils validé avec serveur simulé ; test réel (connexion + deux appareils) à faire par Louis |
 | v0.5.0 → v1.0.0 | À faire |
 
 ## Reprendre le travail à froid
@@ -17,7 +17,8 @@ export PATH=$HOME/flutter/bin:$HOME/Android/Sdk/platform-tools:$PATH
 flutter pub get
 dart run build_runner build --delete-conflicting-outputs
 flutter analyze && flutter test
-flutter run -d linux            # ou -d 58021FDCR009YL (Pixel 10)
+flutter run -d linux --dart-define-from-file=.env   # ou -d 58021FDCR009YL (Pixel 10)
+# sans --dart-define-from-file : version sans cloud (comme F-Droid)
 ```
 - Captures limitées à la fenêtre de l'app (mode debug) : `tool/app_screenshot.sh <URL du Dart VM Service> <fichier.png> [view=day|week|month|year|agenda] [day=2026-11-03] [route=/settings]`.
   Sur Android, donner un chemin `/data/data/org.poulapp.poulplan/cache/shot.png` puis
@@ -100,18 +101,33 @@ Mini-plan : tests de récurrence d'abord (RRULE, dates invalides, DST, COUNT/UNT
   - « cette occurrence et les suivantes » supprime les exceptions postérieures à la coupure ;
   - les « Début des vacances d'été » publiés sans date de fin s'affichent sur un seul jour.
 
-## v0.4.0 — Cloud Poulapp (préparé, en attente)
-Mini-plan :
-1. ✅ Scripts SQL (`supabase/migrations/0001…0003`, `verify.sql`) + procédure (`supabase/README.md`).
-2. ⏸ Louis exécute les scripts, crée le compte, accorde l'accès, fournit URL + clé anon → `.env` local.
-3. Tests d'abord : fusion champ par champ (horloge logique hybride par champ), détection des vrais conflits (même champ modifié des deux côtés depuis la dernière synchro), file d'opérations persistante.
-4. Table locale `sync_outbox` + métadonnées de synchro (révision serveur vue, versions par champ).
-5. Client Supabase (`supabase_flutter`, MIT) : connexion e-mail/mot de passe facultative, vérification `poulapp_access`, envoi `poulplan_push` (concurrence optimiste), récupération `rev > dernière`.
-6. Écran Compte / Synchronisation + écran de résolution des vrais conflits.
-7. Scénario deux appareils (Linux + Pixel, ou deux bases Linux) et fonctionnement avec Supabase coupé.
+## v0.4.0 — Cloud Poulapp
+Mini-plan : scripts SQL alignés sur Poulpoints (fait avec Louis) → tests d'abord (horloge hybride, fusion par champ, conflits) → schéma v3 (métadonnées de synchro, conflits) → enregistreur de changements dans les dépôts → moteur (tirer, fusionner, pousser avec concurrence optimiste) → serveur simulé + scénario deux appareils → client Supabase, connexion, écrans → vérification.
+
+- Fait :
+  - Supabase installé par Louis (tables `poulplan_records`, fonction `poulplan_push`, bucket privé, accès accordé) ; vérifié par `verify.sql` ;
+  - chaque écriture locale date ses champs modifiés (horloge logique hybride) et marque l'enregistrement « à envoyer » (file persistante = `sync_meta.dirty`) ;
+  - synchro : tirage par révision avec recouvrement, fusion champ par champ, vrais conflits stockés pour l'utilisateur, envoi conditionnel (`base_rev`), nouvelle tentative après conflit ;
+  - connexion facultative e-mail + mot de passe (paquet `supabase` pur Dart, MIT), vérification `poulapp_access`, session restaurée par le jeton de rafraîchissement ;
+  - déclencheurs : connexion, 3 s après une modification, toutes les 5 min, retour au premier plan ; erreurs réseau sans effet sur l'usage local ;
+  - écrans Compte Poulapp et Conflits (choisir « Cet appareil » / « Autre appareil ») ; icône d'état avec pastille de conflits.
+- Testé :
+  - 193 tests verts dont 15 de fusion/horloge et **12 tests deux appareils** (serveur simulé fidèle à `poulplan_push`) : création, suppression, champs différents fusionnés, même champ = conflit, choix de l'utilisateur propagé, suppression contre modification, hors ligne → file conservée → redémarrage → envoi, app utilisable cloud coupé, séries avec exceptions, envoi par lots, relecture du recouvrement sans effet ;
+  - migrations v1→v2→v3 (drift + intégrité) ; base v1 réelle du Pixel migrée en v3 sans perte ;
+  - serveur réel, clé publique seule : lecture `poulplan_records` refusée (401), `poulplan_push` refusé (« permission denied ») ;
+  - Linux : écran Compte avec configuration cloud ; Pixel : vues, éditeur, glisser-déposer tactile réel.
+- **Non testé (à faire par Louis)** : connexion réelle, synchro réelle entre Linux et Pixel, conflit réel (voir la liste de tests dans le bilan de session).
+- Limites connues :
+  - jeton de rafraîchissement stocké en clair dans la base locale (chiffrement / stockage sécurisé prévu en v0.7 avec le verrouillage) ;
+  - pas de détection de connectivité : nouvel essai toutes les 5 min et au retour au premier plan ;
+  - les paramètres (thème, zone scolaire…) ne sont pas synchronisés (choix volontaire : propres à chaque appareil).
+
+## v0.5.0 — Notifications
+Mini-plan : modèle de rappels (table, plusieurs par événement, occurrences de séries) → calcul des prochains déclenchements (tests d'abord : séries, fuseaux, journées entières) → Android : `flutter_local_notifications` (alarmes exactes, re-planification au démarrage de l'appareil, bouton « Reporter ») → Linux : notifications D-Bus + processus en arrière-plan → éditeur (rappels) → **arrêt : liste de tests manuels pour Louis**.
 
 ## Journal
 - 2026-11-03 : dépôt initialisé (CLAUDE.md, spec, roadmap, CI, licence GPL-3.0).
+- 2026-11-03 : v0.4.0 codée (Supabase installé avec Louis) ; tag en attente du test réel de connexion.
 - 2026-11-03 : v0.3.0 tagué ; arrêt au point prévu avant v0.4.0 (Supabase).
 - 2026-11-03 : v0.2.0 tagué (Pixel non revérifié, débranché).
 - 2026-11-03 : v0.1.0. Incident : au premier `flutter run` sur le Pixel, une ancienne app `org.poulapp.poulplan` (versionCode 3, d'origine inconnue) bloquait l'installation ; `flutter run` l'a **désinstallée automatiquement** avec ses données, sans confirmation. L'ancienne base Linux `~/.local/share/org.poulapp.poulplan/poulplan.sqlite` est conservée intacte (non utilisée).

@@ -16,7 +16,8 @@ flutter pub get
 dart run build_runner build --delete-conflicting-outputs
 flutter analyze
 flutter test
-flutter run -d linux
+flutter run -d linux                                   # sans cloud
+flutter run -d linux --dart-define-from-file=.env      # avec le cloud Poulapp (.env local, voir .env.example)
 ```
 
 ## Licence
