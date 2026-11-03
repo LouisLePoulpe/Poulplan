@@ -1,0 +1,27 @@
+{
+  "@@locale": "fr",
+  "appTitle": "Poulplan",
+  "today": "Aujourd'hui",
+  "previousMonth": "Mois précédent",
+  "nextMonth": "Mois suivant",
+  "settings": "Paramètres",
+  "settingsAppearance": "Apparence",
+  "settingsTheme": "Thème",
+  "themeSystem": "Système",
+  "themeLight": "Clair",
+  "themeDark": "Sombre",
+  "settingsCalendar": "Calendrier",
+  "settingsFirstDayOfWeek": "Premier jour de la semaine",
+  "settingsAbout": "À propos",
+  "aboutDescription": "Calendrier personnel de l'écosystème Poulapp. Libre (GPL-3.0), utilisable sans compte ni connexion.",
+  "aboutLicenses": "Licences des composants",
+  "moreEvents": "+{count}",
+  "@moreEvents": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "allDay": "Toute la journée",
+  "debugInsertDemo": "Insérer des événements de démonstration",
+  "debugDemoInserted": "Événements de démonstration ajoutés"
+}
