@@ -118,6 +118,8 @@ class _QuickCreateDialogState extends ConsumerState<_QuickCreateDialog> {
               '${formatMinutes(_draft.endMinute)}';
 
     return AlertDialog(
+      // Scrolls when the on-screen keyboard leaves little room.
+      scrollable: true,
       title: Text(l10n.newEvent),
       content: SizedBox(
         width: 400,
@@ -164,17 +166,21 @@ class _QuickCreateDialogState extends ConsumerState<_QuickCreateDialog> {
                   ),
               ],
             ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                icon: const Icon(Icons.tune),
+                label: Text(l10n.moreOptions),
+                onPressed: () {
+                  _draft.title = _title.text;
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ),
           ],
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: () {
-            _draft.title = _title.text;
-            Navigator.of(context).pop(true);
-          },
-          child: Text(l10n.moreOptions),
-        ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
           child: Text(l10n.cancel),

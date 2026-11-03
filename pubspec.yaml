@@ -1,7 +1,7 @@
 name: poulplan
 description: "Calendrier personnel local-first de l'écosystème Poulapp."
 publish_to: 'none'
-version: 0.5.0+5
+version: 0.5.1+6
 
 environment:
   sdk: ^3.13.5

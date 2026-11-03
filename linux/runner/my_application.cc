@@ -184,8 +184,14 @@ MyApplication* my_application_new() {
   g_set_prgname(APPLICATION_ID);
 
   // Unique application: a second launch activates the running instance
-  // (which may be running hidden, for reminders).
+  // (which may be running hidden, for reminders). Debug builds are not
+  // unique, so that they can run next to an installed release.
+#ifdef NDEBUG
+  const GApplicationFlags flags = G_APPLICATION_DEFAULT_FLAGS;
+#else
+  const GApplicationFlags flags = G_APPLICATION_NON_UNIQUE;
+#endif
   return MY_APPLICATION(g_object_new(my_application_get_type(),
                                      "application-id", APPLICATION_ID, "flags",
-                                     G_APPLICATION_DEFAULT_FLAGS, nullptr));
+                                     flags, nullptr));
 }

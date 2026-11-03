@@ -567,4 +567,21 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get quitAppSubtitle =>
       'Plus aucun rappel tant que l\'application n\'est pas relancée';
+
+  @override
+  String signInServerError(String message) {
+    return 'Le serveur a refusé la connexion : $message';
+  }
+
+  @override
+  String get enterTime => 'Saisir une heure';
+
+  @override
+  String get timeHour => 'Heure';
+
+  @override
+  String get timeMinute => 'Minute';
+
+  @override
+  String get invalidTime => 'Heure invalide (00:00 à 23:59)';
 }

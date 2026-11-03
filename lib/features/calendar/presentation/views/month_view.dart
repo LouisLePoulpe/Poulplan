@@ -135,9 +135,11 @@ class _DayCell extends ConsumerWidget {
                     : inMonth
                     ? null
                     : scheme.surfaceContainerLow,
+                // Width 0: hairline of exactly one physical pixel, crisp at
+                // any pixel ratio (0.5 logical px vanished on 1x screens).
                 border: Border(
-                  right: BorderSide(color: theme.dividerColor, width: 0.5),
-                  bottom: BorderSide(color: theme.dividerColor, width: 0.5),
+                  right: BorderSide(color: theme.dividerColor, width: 0),
+                  bottom: BorderSide(color: theme.dividerColor, width: 0),
                 ),
               ),
               child: LayoutBuilder(

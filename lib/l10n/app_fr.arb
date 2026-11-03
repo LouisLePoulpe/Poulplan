@@ -257,5 +257,17 @@
   "settingsAutostart": "Lancer à l'ouverture de session",
   "settingsAutostartSubtitle": "Poulplan démarre sans fenêtre pour afficher les rappels",
   "quitApp": "Quitter Poulplan",
-  "quitAppSubtitle": "Plus aucun rappel tant que l'application n'est pas relancée"
+  "quitAppSubtitle": "Plus aucun rappel tant que l'application n'est pas relancée",
+  "signInServerError": "Le serveur a refusé la connexion : {message}",
+  "@signInServerError": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "enterTime": "Saisir une heure",
+  "timeHour": "Heure",
+  "timeMinute": "Minute",
+  "invalidTime": "Heure invalide (00:00 à 23:59)"
 }

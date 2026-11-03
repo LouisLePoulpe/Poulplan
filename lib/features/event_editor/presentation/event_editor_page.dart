@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/format/formatters.dart';
+import '../../../core/input/time_entry.dart';
 import '../../../core/time/device_time_zone.dart';
 import '../../../data/providers.dart';
 import '../../../domain/calendar/day.dart';
@@ -172,9 +173,9 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
   Future<void> _pickTime({required bool start}) async {
     final draft = _draft!;
     final minutes = start ? draft.startMinute : draft.endMinute;
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60),
+    final picked = await pickTime(
+      context,
+      TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60),
     );
     if (picked == null) return;
     final value = picked.hour * 60 + picked.minute;

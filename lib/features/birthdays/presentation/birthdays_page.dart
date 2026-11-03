@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/input/digits_formatter.dart';
 import '../../../core/format/formatters.dart';
 import '../../../data/providers.dart';
 import '../../../domain/calendar/day.dart';
@@ -184,6 +185,7 @@ class _BirthdayDialogState extends State<_BirthdayDialog> {
             TextField(
               controller: _year,
               keyboardType: TextInputType.number,
+              inputFormatters: const [DigitsInputFormatter()],
               decoration: InputDecoration(
                 labelText: l10n.fieldBirthYear,
                 errorText: _yearError,

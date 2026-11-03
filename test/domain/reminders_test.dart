@@ -162,6 +162,69 @@ void main() {
     expect(missed.map((f) => f.event.id), ['missed']);
   });
 
+  group('remindersToShowNow', () {
+    List<ReminderFire> all(List<CalendarEvent> events) =>
+        allReminders(events, display: paris);
+
+    test('a reminder already past for an event not yet started shows now', () {
+      // Created at 09:57 for 10:00 with « 10 min avant » (09:50).
+      final fires = all([timed('a', DateTime.utc(2026, 3, 10, 10))]);
+      final now = DateTime.utc(2026, 3, 10, 9, 57);
+      expect(
+        remindersToShowNow(fires, now: now, known: {}).map((f) => f.event.id),
+        ['a'],
+      );
+    });
+
+    test('known reminders (shown or given to the system) are not repeated', () {
+      final fires = all([timed('a', DateTime.utc(2026, 3, 10, 10))]);
+      final now = DateTime.utc(2026, 3, 10, 9, 57);
+      expect(
+        remindersToShowNow(fires, now: now, known: {reminderKey(fires.single)}),
+        isEmpty,
+      );
+    });
+
+    test('future reminders and finished events are left out', () {
+      final fires = all([
+        timed('future', DateTime.utc(2026, 3, 10, 12)),
+        timed('finished', DateTime.utc(2026, 3, 10, 7)), // ended at 08:00
+      ]);
+      final now = DateTime.utc(2026, 3, 10, 9);
+      expect(remindersToShowNow(fires, now: now, known: {}), isEmpty);
+    });
+
+    test('a long event still running shows a missed reminder, but not one '
+        'older than the allowed lateness', () {
+      final running = CalendarEvent(
+        id: 'conf',
+        title: 'Congrès',
+        start: DateTime.utc(2026, 3, 9, 8),
+        end: DateTime.utc(2026, 3, 12, 18),
+        timeZone: 'UTC',
+        reminders: const [0],
+        createdAt: created,
+        updatedAt: created,
+      );
+      final fires = all([running]);
+      expect(
+        remindersToShowNow(fires, now: DateTime.utc(2026, 3, 9, 20), known: {}),
+        hasLength(1),
+      );
+      expect(
+        remindersToShowNow(fires, now: DateTime.utc(2026, 3, 11, 9), known: {}),
+        isEmpty,
+      );
+    });
+
+    test('the key changes when the event moves', () {
+      final before = all([timed('a', DateTime.utc(2026, 3, 10, 10))]).single;
+      final after = all([timed('a', DateTime.utc(2026, 3, 10, 11))]).single;
+      expect(before.notificationId, after.notificationId);
+      expect(reminderKey(before), isNot(reminderKey(after)));
+    });
+  });
+
   group('describeReminder', () {
     test('timed events', () {
       expect(describeReminder(0, allDay: false), "À l'heure de début");

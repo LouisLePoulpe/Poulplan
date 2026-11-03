@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/input/digits_formatter.dart';
 import '../../../core/format/formatters.dart';
 import '../../../domain/calendar/day.dart';
 import '../../../domain/recurrence/recurrence_rule.dart';
@@ -180,6 +181,7 @@ class _CustomRuleDialogState extends State<_CustomRuleDialog> {
                     child: TextField(
                       controller: _interval,
                       keyboardType: TextInputType.number,
+                      inputFormatters: const [DigitsInputFormatter()],
                       textAlign: TextAlign.center,
                       onChanged: (_) => setState(() {}),
                     ),
@@ -264,6 +266,7 @@ class _CustomRuleDialogState extends State<_CustomRuleDialog> {
                             child: TextField(
                               controller: _count,
                               keyboardType: TextInputType.number,
+                              inputFormatters: const [DigitsInputFormatter()],
                               textAlign: TextAlign.center,
                               onTap: () =>
                                   setState(() => _end = _EndMode.count),

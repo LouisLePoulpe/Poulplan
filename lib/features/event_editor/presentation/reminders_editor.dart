@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/input/digits_formatter.dart';
 import '../../../domain/editing/event_draft.dart';
 import '../../../domain/reminders/reminders.dart';
 import '../../../l10n/generated/app_localizations.dart';
@@ -120,6 +121,7 @@ class _CustomReminderDialogState extends State<_CustomReminderDialog> {
               controller: _value,
               autofocus: true,
               keyboardType: TextInputType.number,
+              inputFormatters: const [DigitsInputFormatter()],
               textAlign: TextAlign.center,
             ),
           ),

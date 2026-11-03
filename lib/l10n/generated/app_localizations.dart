@@ -1095,6 +1095,36 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Plus aucun rappel tant que l\'application n\'est pas relancée'**
   String get quitAppSubtitle;
+
+  /// No description provided for @signInServerError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le serveur a refusé la connexion : {message}'**
+  String signInServerError(String message);
+
+  /// No description provided for @enterTime.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisir une heure'**
+  String get enterTime;
+
+  /// No description provided for @timeHour.
+  ///
+  /// In fr, this message translates to:
+  /// **'Heure'**
+  String get timeHour;
+
+  /// No description provided for @timeMinute.
+  ///
+  /// In fr, this message translates to:
+  /// **'Minute'**
+  String get timeMinute;
+
+  /// No description provided for @invalidTime.
+  ///
+  /// In fr, this message translates to:
+  /// **'Heure invalide (00:00 à 23:59)'**
+  String get invalidTime;
 }
 
 class _AppLocalizationsDelegate

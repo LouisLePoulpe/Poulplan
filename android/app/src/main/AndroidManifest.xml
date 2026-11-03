@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Optional Poulapp cloud sync (debug builds get it implicitly; release
+         builds must declare it). -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Reminders: notifications, exact alarms (calendar app), and
          rescheduling after a reboot or an app update. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supabase/supabase.dart' show AuthException;
+import 'package:supabase/supabase.dart'
+    show AuthApiException, AuthRetryableFetchException;
 
 import '../../../core/format/formatters.dart';
 import '../../../core/routing/app_router.dart';
@@ -88,8 +89,13 @@ class _SignInFormState extends ConsumerState<_SignInForm> {
           .signIn(_email.text.trim(), _password.text);
     } on NoPoulplanAccessException {
       _error = l10n.signInNoAccess;
-    } on AuthException {
-      _error = l10n.signInWrongCredentials;
+    } on AuthRetryableFetchException {
+      // Network failure, reported by gotrue as an AuthException.
+      _error = l10n.signInNetworkError;
+    } on AuthApiException catch (e) {
+      _error = e.statusCode == '400' || e.code == 'invalid_credentials'
+          ? l10n.signInWrongCredentials
+          : l10n.signInServerError(e.message);
     } catch (_) {
       _error = l10n.signInNetworkError;
     }

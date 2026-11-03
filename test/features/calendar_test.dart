@@ -341,6 +341,25 @@ void main() {
     await unmount(tester);
   });
 
+  testWidgets('quick creation on a phone with the keyboard open', (
+    tester,
+  ) async {
+    await pumpApp(tester, size: const Size(1080, 2424));
+    tester.view.devicePixelRatio = 2.6;
+    // On-screen keyboard: about half of the screen.
+    tester.view.viewInsets = const FakeViewPadding(bottom: 1100);
+    addTearDown(tester.view.resetViewInsets);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Nouvel événement'));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    await tester.ensureVisible(find.text("Plus d'options"));
+    await tester.tap(find.text("Plus d'options"));
+    await tester.pumpAndSettle();
+    expect(find.text('Nouvel événement'), findsOneWidget); // full editor
+    await unmount(tester);
+  });
+
   testWidgets('week view on a phone does not overflow', (tester) async {
     await pumpApp(tester, size: const Size(412, 900));
     await insert(

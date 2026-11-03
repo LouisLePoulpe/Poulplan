@@ -29,6 +29,9 @@ class _PoulplanAppState extends ConsumerState<PoulplanApp> {
       DesktopIntegration.showWindow();
       ref.read(routerProvider).push(Routes.event(id));
     });
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => ref.read(reminderSchedulerProvider).askPermissionOnce(),
+    );
   }
 
   @override

@@ -470,9 +470,10 @@ class _GridPainter extends CustomPainter {
     if (highlight != null) {
       canvas.drawRect(Offset.zero & size, Paint()..color = highlight!);
     }
+    // Stroke width 0: one physical pixel, crisp at any pixel ratio.
     final paint = Paint()
       ..color = line
-      ..strokeWidth = 0.5;
+      ..strokeWidth = 0;
     for (var h = 0; h <= 24; h++) {
       final y = h * _hourHeight;
       canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);

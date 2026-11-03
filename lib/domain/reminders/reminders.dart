@@ -133,3 +133,34 @@ String _duration(int minutes) {
   }
   return '$minutes min';
 }
+
+/// All reminders of [events], soonest first.
+List<ReminderFire> allReminders(
+  Iterable<CalendarEvent> events, {
+  required tz.Location display,
+}) => _sorted(_fires(events, display));
+
+/// Identifies one firing of a reminder (it changes when the event moves).
+String reminderKey(ReminderFire fire) =>
+    '${fire.notificationId}@${fire.fireAt.millisecondsSinceEpoch}';
+
+/// Reminders to show right away: their time has passed, they were never
+/// shown nor handed to the system ([known] holds their [reminderKey]), the
+/// event is not over and they are at most [maxLateness] late.
+///
+/// Covers events created or moved after their reminder time (an event in
+/// 3 minutes with « 10 min avant ») and, on Linux, reminders missed while
+/// the app was not running.
+List<ReminderFire> remindersToShowNow(
+  Iterable<ReminderFire> fires, {
+  required DateTime now,
+  required Set<String> known,
+  Duration maxLateness = const Duration(hours: 24),
+}) => [
+  for (final fire in fires)
+    if (!fire.fireAt.isAfter(now) &&
+        now.difference(fire.fireAt) <= maxLateness &&
+        fire.event.end.isAfter(now) &&
+        !known.contains(reminderKey(fire)))
+      fire,
+];

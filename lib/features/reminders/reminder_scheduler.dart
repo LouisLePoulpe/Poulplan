@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/foundation.dart';
@@ -54,8 +55,10 @@ String reminderBody(
 ///
 /// - Android: exact system alarms for the next [horizon] (they fire with the
 ///   app closed and are restored after a reboot by the plugin).
-/// - Linux: the running app checks every [_tick] and shows due reminders;
-///   at startup it also shows those missed during the last 24 h.
+/// - Linux: the running app checks every [_tick] and shows due reminders.
+/// - Both: a reminder whose time has already passed when it becomes known
+///   (event created or moved late, Linux app not running) is shown at once
+///   if the event is not over (see `remindersToShowNow`).
 class ReminderScheduler {
   ReminderScheduler(this._ref);
 
@@ -63,15 +66,20 @@ class ReminderScheduler {
   static const horizon = Duration(days: 30);
   static const _tick = Duration(seconds: 30);
   static const _resubscribe = Duration(hours: 6);
-  static const _checkedKey = 'reminders_checked_at';
+  static const _knownKey = 'reminders_known';
   static const _askedKey = 'notification_permission_asked';
-  static const _maxCatchUp = Duration(hours: 24);
+  static const _keepKnown = Duration(days: 3);
 
   StreamSubscription<List<CalendarEvent>>? _events;
   Timer? _debounce;
   Timer? _ticker;
   Timer? _window;
   List<CalendarEvent> _latest = const [];
+  bool _loaded = false;
+
+  /// [reminderKey]s already shown or handed to the system.
+  Set<String> _known = {};
+  bool _running = false;
 
   NotificationService get _service => _ref.read(notificationServiceProvider);
   AppDatabase get _db => _ref.read(databaseProvider);
@@ -80,18 +88,19 @@ class ReminderScheduler {
   Future<void> start() async {
     if (!NotificationService.supported) return;
     await _service.init();
-    if (NotificationService.systemScheduling) await _askPermissionOnce();
+    _known = await _loadKnown();
     _subscribe();
     _window = Timer.periodic(_resubscribe, (_) => _subscribe());
     if (!NotificationService.systemScheduling) {
-      await _checkDue(startup: true);
-      _ticker = Timer.periodic(_tick, (_) => _checkDue());
+      _ticker = Timer.periodic(_tick, (_) => _update());
     }
   }
 
   /// Android 13+: the notification permission is asked once, at the first
-  /// launch; afterwards only from the settings.
-  Future<void> _askPermissionOnce() async {
+  /// launch; afterwards only from the settings. Must run once the UI is
+  /// displayed (the system dialog needs the activity).
+  Future<void> askPermissionOnce() async {
+    if (!NotificationService.systemScheduling) return;
     final asked = await (_db.select(
       _db.settings,
     )..where((s) => s.key.equals(_askedKey))).getSingleOrNull();
@@ -102,6 +111,35 @@ class ReminderScheduler {
           SettingsCompanion.insert(key: _askedKey, value: 'true'),
         );
     await _service.requestPermission();
+  }
+
+  Future<Set<String>> _loadKnown() async {
+    final row = await (_db.select(
+      _db.settings,
+    )..where((s) => s.key.equals(_knownKey))).getSingleOrNull();
+    if (row == null) return {};
+    try {
+      return {...(jsonDecode(row.value) as List).cast<String>()};
+    } on Object {
+      return {};
+    }
+  }
+
+  Future<void> _saveKnown(DateTime now) async {
+    // Forget firings older than a few days (keys end with their time).
+    final limit = now.subtract(_keepKnown).millisecondsSinceEpoch;
+    _known.removeWhere((key) {
+      final at = int.tryParse(key.split('@').last) ?? 0;
+      return at < limit;
+    });
+    await _db
+        .into(_db.settings)
+        .insertOnConflictUpdate(
+          SettingsCompanion(
+            key: const Value(_knownKey),
+            value: Value(jsonEncode(_known.toList())),
+          ),
+        );
   }
 
   void _subscribe() {
@@ -119,8 +157,9 @@ class ReminderScheduler {
         )
         .listen((events) {
           _latest = events;
+          _loaded = true;
           _debounce?.cancel();
-          _debounce = Timer(const Duration(seconds: 1), _reschedule);
+          _debounce = Timer(const Duration(seconds: 1), _update);
         });
   }
 
@@ -130,49 +169,36 @@ class ReminderScheduler {
     (utc) => tz.TZDateTime.from(utc, _display),
   );
 
-  Future<void> _reschedule() async {
-    if (!NotificationService.systemScheduling) return;
+  /// Shows late reminders, then (Android) hands the future ones to the
+  /// system. Runs after each change of the events, and every [_tick] on
+  /// Linux.
+  Future<void> _update() async {
+    if (!_loaded || _running) return;
+    _running = true;
     try {
-      await _service.scheduleAll(
-        upcomingReminders(
+      final now = DateTime.now().toUtc();
+      final fires = allReminders(_latest, display: _display);
+      for (final fire in remindersToShowNow(fires, now: now, known: _known)) {
+        await _service.show(fire, _body(fire));
+        _known.add(reminderKey(fire));
+        if (kDebugMode) debugPrint('Reminder shown: ${fire.event.title}');
+      }
+      if (NotificationService.systemScheduling) {
+        final upcoming = upcomingReminders(
           _latest,
-          now: DateTime.now().toUtc(),
+          now: now,
           horizon: horizon,
           display: _display,
-        ),
-        _body,
-      );
-    } catch (error) {
-      debugPrint('Reminder scheduling failed: $error');
-    }
-  }
-
-  Future<void> _checkDue({bool startup = false}) async {
-    final now = DateTime.now().toUtc();
-    final row = await (_db.select(
-      _db.settings,
-    )..where((s) => s.key.equals(_checkedKey))).getSingleOrNull();
-    var since = DateTime.tryParse(row?.value ?? '') ?? now;
-    if (since.isBefore(now.subtract(_maxCatchUp))) {
-      since = now.subtract(_maxCatchUp);
-    }
-    for (final fire in dueReminders(
-      _latest,
-      since: since,
-      now: now,
-      display: _display,
-    )) {
-      await _service.show(fire, _body(fire));
-      if (kDebugMode) debugPrint('Reminder shown: ${fire.event.title}');
-    }
-    await _db
-        .into(_db.settings)
-        .insertOnConflictUpdate(
-          SettingsCompanion(
-            key: const Value(_checkedKey),
-            value: Value(now.toIso8601String()),
-          ),
         );
+        await _service.scheduleAll(upcoming, _body);
+        _known.addAll(upcoming.map(reminderKey));
+      }
+      await _saveKnown(now);
+    } catch (error) {
+      debugPrint('Reminder update failed: $error');
+    } finally {
+      _running = false;
+    }
   }
 
   /// Shows a test notification now (and, on Android, another one through
