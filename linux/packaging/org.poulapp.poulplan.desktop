@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Poulplan
+GenericName=Calendrier
+Comment=Calendrier personnel local-first de l'écosystème Poulapp
+Icon=org.poulapp.poulplan
+Exec=poulplan
+Terminal=false
+Categories=Office;Calendar;
+Keywords=calendrier;agenda;événement;rappel;
+StartupWMClass=org.poulapp.poulplan
