@@ -7,8 +7,9 @@ Dernière mise à jour : 2026-11-03
 | Conception / cahier des charges | Terminé (`SPEC.md`) |
 | v0.1.0 Fondations | **Terminé** — critères vérifiés sur Linux et Pixel 10 |
 | v0.2.0 Événements | **Terminé** — vérifié sous Linux et par tests ; contrôle sur Pixel à refaire (appareil débranché) |
-| v0.3.0 Calendrier avancé | En cours |
-| v0.4.0 → v1.0.0 | À faire |
+| v0.3.0 Calendrier avancé | **Terminé** — vérifié sous Linux et par tests ; Pixel débranché |
+| v0.4.0 Cloud Poulapp | **En attente de Louis** : scripts SQL prêts dans `supabase/`, URL + clé anon à fournir |
+| v0.5.0 → v1.0.0 | À faire |
 
 ## Reprendre le travail à froid
 ```bash
@@ -77,7 +78,40 @@ Mini-plan : domaine d'abord (placement horaire en colonnes, chevauchements, dép
   - interactions souris réelles sous Linux (pas d'injection d'entrées sous Wayland depuis le conteneur) : couvertes uniquement par les tests d'interface.
 - Corrigé en cours de route : double-tap sur les cellules du mois qui retardait de 300 ms l'ouverture d'un événement ; bandeaux « supprimé » mis en file derrière le précédent ; horodatages en microsecondes non relus à l'identique.
 
+## v0.3.0 — Calendrier avancé
+Mini-plan : tests de récurrence d'abord (RRULE, dates invalides, DST, COUNT/UNTIL) → moteur → jours fériés et règle par série → dépliage avec exceptions → coupure de série → schéma v2 + migration testée → dépôts (portées, recherche) → interface → vérification.
+
+- Fait :
+  - récurrences quotidiennes/hebdo/mensuelles/annuelles, intervalle, jours de semaine, « n-ième / dernier jour X du mois », « n-ième jour X de tel mois », fin jamais / après N / jusqu'au ; préréglages + dialogue « Personnaliser » ; description en français ;
+  - exceptions : modifier/supprimer **cette occurrence**, **cette occurrence et les suivantes** (coupure de série), **toutes** ; glisser-déposer d'une occurrence avec choix de la portée ; « Annuler » après suppression ;
+  - jours fériés français calculés (Pâques), option Alsace-Moselle ; règle par série (sans effet / sauter / jour ouvré suivant / précédent) ;
+  - vacances scolaires zones A, B, C, Corse (2024 → 2028) embarquées, affichées selon la zone choisie ;
+  - anniversaires saisis à la main (âge affiché, 29 février fêté le 28 les années non bissextiles) ;
+  - recherche insensible aux accents (Ctrl+F) avec filtres catégories et période, filtres enregistrables ;
+  - schéma Drift v2 avec migration v1 → v2 (testée par drift + test d'intégrité des données).
+- Testé :
+  - 163 tests verts : 29 tests de règles (dont dernier vendredi, tous les 3 jours, 29 février, 31 du mois, COUNT/UNTIL, performance sur 130 ans), dépliage (changement d'heure, exceptions, occurrence déplacée, fériés), coupure de série, fériés 2026 et Pâques, portées d'édition/suppression en base, recherche, **recherche et affichage d'un mois sur 10 000 événements (< 500 ms, en pratique quelques ms)**, 8 tests d'interface v0.3 ;
+  - Linux, base réelle v1 migrée en v2 au démarrage sans erreur ; capture : série hebdomadaire avec règle « sauter » qui saute bien le 11 novembre, vacances de la Toussaint zone A, fériés affichés.
+- Non testé :
+  - **Pixel** (toujours débranché) : v0.2 et v0.3 à vérifier sur l'appareil ;
+  - vacances scolaires des DOM-TOM (non embarquées).
+- Limites connues :
+  - les règles RRULE exotiques (BYSETPOS, BYWEEKNO, BYYEARDAY, BYHOUR…) ne sont pas gérées : une règle illisible est affichée comme un événement simple ;
+  - « cette occurrence et les suivantes » supprime les exceptions postérieures à la coupure ;
+  - les « Début des vacances d'été » publiés sans date de fin s'affichent sur un seul jour.
+
+## v0.4.0 — Cloud Poulapp (préparé, en attente)
+Mini-plan :
+1. ✅ Scripts SQL (`supabase/migrations/0001…0003`, `verify.sql`) + procédure (`supabase/README.md`).
+2. ⏸ Louis exécute les scripts, crée le compte, accorde l'accès, fournit URL + clé anon → `.env` local.
+3. Tests d'abord : fusion champ par champ (horloge logique hybride par champ), détection des vrais conflits (même champ modifié des deux côtés depuis la dernière synchro), file d'opérations persistante.
+4. Table locale `sync_outbox` + métadonnées de synchro (révision serveur vue, versions par champ).
+5. Client Supabase (`supabase_flutter`, MIT) : connexion e-mail/mot de passe facultative, vérification `poulapp_access`, envoi `poulplan_push` (concurrence optimiste), récupération `rev > dernière`.
+6. Écran Compte / Synchronisation + écran de résolution des vrais conflits.
+7. Scénario deux appareils (Linux + Pixel, ou deux bases Linux) et fonctionnement avec Supabase coupé.
+
 ## Journal
 - 2026-11-03 : dépôt initialisé (CLAUDE.md, spec, roadmap, CI, licence GPL-3.0).
+- 2026-11-03 : v0.3.0 tagué ; arrêt au point prévu avant v0.4.0 (Supabase).
 - 2026-11-03 : v0.2.0 tagué (Pixel non revérifié, débranché).
 - 2026-11-03 : v0.1.0. Incident : au premier `flutter run` sur le Pixel, une ancienne app `org.poulapp.poulplan` (versionCode 3, d'origine inconnue) bloquait l'installation ; `flutter run` l'a **désinstallée automatiquement** avec ses données, sans confirmation. L'ancienne base Linux `~/.local/share/org.poulapp.poulplan/poulplan.sqlite` est conservée intacte (non utilisée).

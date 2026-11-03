@@ -21,6 +21,10 @@ Une ligne par décision : date — décision — raison.
 - 2026-11-03 — Jours fériés français calculés (Pâques par l'algorithme grégorien anonyme), option Alsace-Moselle ; règle par série : aucune / sauter / jour ouvré suivant / précédent.
 - 2026-11-03 — Vacances scolaires : extrait embarqué (`assets/data/school_holidays_fr.json`) des données ouvertes de l'Éducation nationale (Licence Ouverte 2.0), régénéré par `tool/update_school_holidays.dart` — aucun accès réseau à l'exécution.
 - 2026-11-03 — Recherche : colonne `searchText` normalisée (minuscules, sans accents) + `LIKE` par mot, plutôt que FTS5 — insensible aux accents, sans dépendre des options de compilation de SQLite.
+- 2026-11-03 — Cloud : une table générique `poulplan_records` (entity, id, data jsonb, deleted, rev) plutôt qu'une table par entité — schéma serveur stable quand l'app évolue, contenu opaque compatible avec un futur chiffrement de bout en bout.
+- 2026-11-03 — Synchro : révision serveur monotone (`rev`, séquence) pour récupérer les changements ; envoi par `poulplan_push` avec concurrence optimiste (`base_rev`) — pas d'écrasement silencieux ; fusion champ par champ côté app, intervention de l'utilisateur seulement si le même champ a changé des deux côtés.
+- 2026-11-03 — Accès cloud : RLS `user_id = auth.uid()` **et** `poulapp_has_access('poulplan')` ; `poulapp_access` modifiable seulement depuis le tableau de bord.
+- 2026-11-03 — Configuration Supabase (URL + clé anon) dans `.env` local ignoré par git, jamais dans le code.
 - À traiter en v1.0 : `sqlite3` 3.x télécharge par défaut des bibliothèques SQLite précompilées (hook de build) ; pour F-Droid, compiler depuis la source (`hooks: user_defines: sqlite3: source: source`) ou utiliser la bibliothèque système.
 - À décider : moteur de cartes/routage libre hors ligne (jalon v0.8.0).
 - À décider : stratégie exacte de rappels sous Linux (démon en arrière-plan vs service utilisateur systemd).
