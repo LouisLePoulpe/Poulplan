@@ -8,8 +8,8 @@ Dernière mise à jour : 2026-11-03
 | v0.1.0 Fondations | **Terminé** — critères vérifiés sur Linux et Pixel 10 |
 | v0.2.0 Événements | **Terminé** — vérifié sous Linux, par tests et sur le Pixel (glisser-déposer tactile réel) |
 | v0.3.0 Calendrier avancé | **Terminé** — vérifié sous Linux, par tests et sur le Pixel |
-| v0.4.0 Cloud Poulapp | **Code terminé, non tagué** — scénario deux appareils validé avec serveur simulé ; test réel (connexion + deux appareils) à faire par Louis |
-| v0.5.0 Notifications | **Code terminé, non tagué** — en attente des tests manuels de Louis (`docs/TESTS_MANUELS.md`) |
+| v0.4.0 Cloud Poulapp | **Terminé** — validé par Louis : connexion et synchro Linux ↔ Pixel |
+| v0.5.0 Notifications | **Terminé** — validé par Louis : Pixel (déverrouillé, verrouillé) et Linux (KDE) |
 | v0.6.0 → v1.0.0 | À faire |
 
 ## Reprendre le travail à froid
@@ -117,7 +117,7 @@ Mini-plan : scripts SQL alignés sur Poulpoints (fait avec Louis) → tests d'ab
   - migrations v1→v2→v3 (drift + intégrité) ; base v1 réelle du Pixel migrée en v3 sans perte ;
   - serveur réel, clé publique seule : lecture `poulplan_records` refusée (401), `poulplan_push` refusé (« permission denied ») ;
   - Linux : écran Compte avec configuration cloud ; Pixel : vues, éditeur, glisser-déposer tactile réel.
-- **Non testé (à faire par Louis)** : connexion réelle, synchro réelle entre Linux et Pixel, conflit réel (voir la liste de tests dans le bilan de session).
+- Testé par Louis : connexion réelle et synchro entre Linux et le Pixel ✅ (après ajout de la permission INTERNET en release). Conflit réel volontaire non signalé comme testé.
 - Limites connues :
   - jeton de rafraîchissement stocké en clair dans la base locale (chiffrement / stockage sécurisé prévu en v0.7 avec le verrouillage) ;
   - pas de détection de connectivité : nouvel essai toutes les 5 min et au retour au premier plan ;
@@ -137,7 +137,7 @@ Mini-plan : tests d'abord (calcul des déclenchements) → rappels sur l'événe
   - **Linux réel** : notification de test acceptée par KDE (D-Bus) ; rappel d'un événement inséré en base affiché à l'heure par le programmateur ; second lancement → réactive l'instance existante (code 0) ;
   - **Pixel réel** : build release installé ; alarme exacte vérifiée dans `dumpsys alarm` (`RTC_WAKEUP`, fenêtre 0, autorisée par `USE_EXACT_ALARM`) ; récepteur de démarrage déclaré.
 - Corrigé en cours de route : `getNotificationAppLaunchDetails()` non implémenté sous Linux faisait échouer le démarrage du programmateur (aucun rappel Linux n'aurait sonné).
-- **Non testé (Louis)** : tout `docs/TESTS_MANUELS.md` — affichage réel, écran verrouillé, app fermée, redémarrage, boutons, fenêtre fermée sous KDE.
+- Testé par Louis : notifications Pixel écran déverrouillé et verrouillé ✅, notifications Linux ✅. Non signalés comme testés : app fermée, redémarrage du téléphone, boutons « Reporter », démarrage de session Linux.
 - Limites connues :
   - seuls les rappels des **30 prochains jours** sont confiés à Android (re-calculés à chaque ouverture et modification) : sans ouvrir l'app pendant plus de 30 jours, les rappels suivants ne sont pas programmés (piste : tâche périodique WorkManager) ;
   - un rappel reporté sous Linux est perdu si l'app est quittée pendant le report ;
@@ -145,6 +145,7 @@ Mini-plan : tests d'abord (calcul des déclenchements) → rappels sur l'événe
 
 ## Journal
 - 2026-11-03 : dépôt initialisé (CLAUDE.md, spec, roadmap, CI, licence GPL-3.0).
+- 2026-11-03 : tour 2 des tests manuels : création rapide avec clavier ✅, notifications Pixel déverrouillé/verrouillé ✅, chiffres AZERTY ✅, synchro partout ✅ ; traits de grille et notifications Linux ✅ après correction (grille dessinée d'un seul tenant, `07e99da`) et arrêt de l'ancienne instance. v0.4.0 et v0.5.0 taguées.
 - 2026-11-03 : tour 1 des tests manuels de Louis : synchro Linux ✅ ; connexion Pixel ❌ (pas de permission INTERNET en release), notification de test Pixel ❌ (icône supprimée par la minification), pas de demande d'autorisation au lancement ❌, création rapide chevauchée par le clavier ❌, traits de grille discontinus ❌, chiffres impossibles à taper (AZERTY sans Maj) ❌, pas de rappel pour un événement créé moins de 10 min avant ❌ → tous corrigés en 0.5.1 (`52a62bb`), tour 2 à faire.
 - 2026-11-03 : v0.5.0 codée ; arrêt pour les tests manuels (cloud + notifications).
 - 2026-11-03 : v0.4.0 codée (Supabase installé avec Louis) ; tag en attente du test réel de connexion.
