@@ -33,4 +33,6 @@ Une ligne par décision : date — décision — raison.
 - 2026-11-03 — Configuration cloud injectée à la compilation (`--dart-define-from-file=.env`) ; sans elle (CI, F-Droid), l'écran Compte indique que la version n'est pas reliée au cloud.
 - À traiter en v1.0 : `sqlite3` 3.x télécharge par défaut des bibliothèques SQLite précompilées (hook de build) ; pour F-Droid, compiler depuis la source (`hooks: user_defines: sqlite3: source: source`) ou utiliser la bibliothèque système.
 - À décider : moteur de cartes/routage libre hors ligne (jalon v0.8.0).
-- À décider : stratégie exacte de rappels sous Linux (démon en arrière-plan vs service utilisateur systemd).
+- 2026-11-03 — Rappels Linux : l'application elle-même, unique (GApplication), reste en arrière-plan quand la fenêtre est fermée et peut démarrer cachée (`--background`, fichier XDG autostart ; portail Background en Flatpak) — pas de service systemd séparé, un seul code de rappels.
+- 2026-11-03 — Rappels Android : `USE_EXACT_ALARM` (application calendrier) + `SCHEDULE_EXACT_ALARM` jusqu'à l'API 32 ; 30 jours de rappels confiés au système, recalculés à chaque modification ; permission de notifications demandée une seule fois au premier lancement.
+- 2026-11-03 — Rappels « journée entière » calculés à heure murale (J-n à 9 h) et non en soustrayant des minutes — « la veille à 9 h » reste à 9 h au changement d'heure.

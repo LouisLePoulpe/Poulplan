@@ -9,7 +9,8 @@ Dernière mise à jour : 2026-11-03
 | v0.2.0 Événements | **Terminé** — vérifié sous Linux, par tests et sur le Pixel (glisser-déposer tactile réel) |
 | v0.3.0 Calendrier avancé | **Terminé** — vérifié sous Linux, par tests et sur le Pixel |
 | v0.4.0 Cloud Poulapp | **Code terminé, non tagué** — scénario deux appareils validé avec serveur simulé ; test réel (connexion + deux appareils) à faire par Louis |
-| v0.5.0 → v1.0.0 | À faire |
+| v0.5.0 Notifications | **Code terminé, non tagué** — en attente des tests manuels de Louis (`docs/TESTS_MANUELS.md`) |
+| v0.6.0 → v1.0.0 | À faire |
 
 ## Reprendre le travail à froid
 ```bash
@@ -123,10 +124,28 @@ Mini-plan : scripts SQL alignés sur Poulpoints (fait avec Louis) → tests d'ab
   - les paramètres (thème, zone scolaire…) ne sont pas synchronisés (choix volontaire : propres à chaque appareil).
 
 ## v0.5.0 — Notifications
-Mini-plan : modèle de rappels (table, plusieurs par événement, occurrences de séries) → calcul des prochains déclenchements (tests d'abord : séries, fuseaux, journées entières) → Android : `flutter_local_notifications` (alarmes exactes, re-planification au démarrage de l'appareil, bouton « Reporter ») → Linux : notifications D-Bus + processus en arrière-plan → éditeur (rappels) → **arrêt : liste de tests manuels pour Louis**.
+Mini-plan : tests d'abord (calcul des déclenchements) → rappels sur l'événement (schéma v4) → service de notifications (Android + Linux) → programmateur → éditeur et paramètres → vérification → **arrêt : tests manuels**.
+
+- Fait :
+  - plusieurs rappels par événement (minutes avant ; journée entière : relatif à 9 h, « la veille à 9 h »…), synchronisés comme les autres champs ; rappel par défaut (10 min) pour les nouveaux événements avec horaire ;
+  - Android : `flutter_local_notifications` (BSD-3), alarmes exactes (`USE_EXACT_ALARM`), re-planification après redémarrage/mise à jour (récepteur du greffon), notifications persistantes avec « C'est noté » / « Reporter 10 min » (aussi app fermée), ouverture de l'événement au toucher, permission demandée une fois au premier lancement ;
+  - Linux : notifications D-Bus « critiques » (restent affichées sous KDE) avec boutons, vérification toutes les 30 s, rappels manqués (24 h) affichés au lancement, application **unique** qui **reste en arrière-plan** quand on ferme la fenêtre (paramètre), lancement `--background` et démarrage de session (fichier XDG autostart), « Quitter Poulplan » ;
+  - paramètres « Rappels » : autorisation, rappel par défaut, notification de test (Android : une immédiate + une alarme système dans 1 min).
+- Testé :
+  - 205 tests verts dont 10 sur le calcul (journée entière au changement d'heure, séries, identifiants stables, rappels manqués), texte des notifications, éditeur de rappels ;
+  - migration v1→v4 (drift + intégrité) ; correction : l'étape v1→v2 passée en SQL brut (sinon cassée par les colonnes ajoutées ensuite) ;
+  - **Linux réel** : notification de test acceptée par KDE (D-Bus) ; rappel d'un événement inséré en base affiché à l'heure par le programmateur ; second lancement → réactive l'instance existante (code 0) ;
+  - **Pixel réel** : build release installé ; alarme exacte vérifiée dans `dumpsys alarm` (`RTC_WAKEUP`, fenêtre 0, autorisée par `USE_EXACT_ALARM`) ; récepteur de démarrage déclaré.
+- Corrigé en cours de route : `getNotificationAppLaunchDetails()` non implémenté sous Linux faisait échouer le démarrage du programmateur (aucun rappel Linux n'aurait sonné).
+- **Non testé (Louis)** : tout `docs/TESTS_MANUELS.md` — affichage réel, écran verrouillé, app fermée, redémarrage, boutons, fenêtre fermée sous KDE.
+- Limites connues :
+  - seuls les rappels des **30 prochains jours** sont confiés à Android (re-calculés à chaque ouverture et modification) : sans ouvrir l'app pendant plus de 30 jours, les rappels suivants ne sont pas programmés (piste : tâche périodique WorkManager) ;
+  - un rappel reporté sous Linux est perdu si l'app est quittée pendant le report ;
+  - sur Android 14+, l'utilisateur peut balayer une notification « persistante » (règle du système).
 
 ## Journal
 - 2026-11-03 : dépôt initialisé (CLAUDE.md, spec, roadmap, CI, licence GPL-3.0).
+- 2026-11-03 : v0.5.0 codée ; arrêt pour les tests manuels (cloud + notifications).
 - 2026-11-03 : v0.4.0 codée (Supabase installé avec Louis) ; tag en attente du test réel de connexion.
 - 2026-11-03 : v0.3.0 tagué ; arrêt au point prévu avant v0.4.0 (Supabase).
 - 2026-11-03 : v0.2.0 tagué (Pixel non revérifié, débranché).
