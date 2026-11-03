@@ -389,48 +389,55 @@ class _TimedEventTile extends ConsumerWidget {
         borderRadius: BorderRadius.circular(4),
         border: Border(left: BorderSide(color: color, width: 3)),
       ),
+      // Narrow or short tiles: the content is clipped instead of
+      // overflowing.
       child: ClipRect(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                if (overlapping || eventIcon(event) != null)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 2),
-                    child: Icon(
-                      overlapping
-                          ? Icons.warning_amber_rounded
-                          : eventIcon(event),
-                      size: 12,
-                      semanticLabel: overlapping ? l10n.overlapWarning : null,
+        child: OverflowBox(
+          alignment: Alignment.topLeft,
+          maxHeight: double.infinity,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  if (overlapping || eventIcon(event) != null)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 2),
+                      child: Icon(
+                        overlapping
+                            ? Icons.warning_amber_rounded
+                            : eventIcon(event),
+                        size: 12,
+                        semanticLabel: overlapping ? l10n.overlapWarning : null,
+                      ),
+                    ),
+                  Expanded(
+                    child: Text(
+                      event.title,
+                      maxLines: size.height > 40 ? 2 : 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.labelMedium,
                     ),
                   ),
-                Expanded(
-                  child: Text(
-                    event.title,
-                    maxLines: size.height > 40 ? 2 : 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.labelMedium,
-                  ),
+                ],
+              ),
+              if (size.height > 34 && time != null)
+                Text(
+                  time,
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
+                  style: theme.textTheme.labelSmall,
                 ),
-              ],
-            ),
-            if (size.height > 34 && time != null)
-              Text(
-                time,
-                maxLines: 1,
-                overflow: TextOverflow.clip,
-                style: theme.textTheme.labelSmall,
-              ),
-            if (size.height > 60 && event.location != null)
-              Text(
-                event.location!,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.labelSmall,
-              ),
-          ],
+              if (size.height > 60 && event.location != null)
+                Text(
+                  event.location!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.labelSmall,
+                ),
+            ],
+          ),
         ),
       ),
     );

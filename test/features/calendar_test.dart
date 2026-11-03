@@ -341,6 +341,27 @@ void main() {
     await unmount(tester);
   });
 
+  testWidgets('week view on a phone does not overflow', (tester) async {
+    await pumpApp(tester, size: const Size(412, 900));
+    await insert(
+      tester,
+      "Réunion d'équipe hebdomadaire",
+      DateTime.utc(2026, 11, 3, 9),
+      DateTime.utc(2026, 11, 3, 10),
+    );
+    await insert(
+      tester,
+      'Appel',
+      DateTime.utc(2026, 11, 3, 11),
+      DateTime.utc(2026, 11, 3, 11, 15),
+    );
+    await tester.tap(find.byIcon(Icons.view_week_outlined));
+    await tester.pumpAndSettle();
+    // A RenderFlex overflow would have thrown during layout.
+    expect(tester.takeException(), isNull);
+    await unmount(tester);
+  });
+
   testWidgets('settings: theme, first day of week and categories', (
     tester,
   ) async {
