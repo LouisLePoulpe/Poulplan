@@ -145,6 +145,7 @@ Mini-plan : tests d'abord (calcul des déclenchements) → rappels sur l'événe
 
 ## Journal
 - 2026-11-03 : dépôt initialisé (CLAUDE.md, spec, roadmap, CI, licence GPL-3.0).
+- 2026-11-03 : tour 1 des tests manuels de Louis : synchro Linux ✅ ; connexion Pixel ❌ (pas de permission INTERNET en release), notification de test Pixel ❌ (icône supprimée par la minification), pas de demande d'autorisation au lancement ❌, création rapide chevauchée par le clavier ❌, traits de grille discontinus ❌, chiffres impossibles à taper (AZERTY sans Maj) ❌, pas de rappel pour un événement créé moins de 10 min avant ❌ → tous corrigés en 0.5.1 (`52a62bb`), tour 2 à faire.
 - 2026-11-03 : v0.5.0 codée ; arrêt pour les tests manuels (cloud + notifications).
 - 2026-11-03 : v0.4.0 codée (Supabase installé avec Louis) ; tag en attente du test réel de connexion.
 - 2026-11-03 : v0.3.0 tagué ; arrêt au point prévu avant v0.4.0 (Supabase).

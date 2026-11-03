@@ -1,5 +1,24 @@
 # Tests manuels — v0.4.0 (cloud) et v0.5.0 (notifications)
 
+## Tour 2 (version 0.5.1) — après les retours du tour 1
+
+Corrigé depuis le tour 1 :
+- **Connexion impossible sur le Pixel** : la version release Android n'avait pas la permission Internet ; une erreur réseau est maintenant affichée comme telle.
+- **Pas de notification de test sur le Pixel** : l'icône de notification était supprimée par l'optimisation des builds release.
+- **Pas de demande d'autorisation au lancement** : demandée trop tôt (avant l'affichage). ⚠️ Sur ton Pixel, la demande a déjà été « consommée » au tour 1 et tu as accordé l'autorisation depuis les paramètres : il n'y aura donc pas de nouvelle demande, c'est normal.
+- **Création rapide qui se chevauche avec le clavier** : le dialogue défile et « Plus d'options » est passé au-dessus des boutons.
+- **Traits du calendrier discontinus** (Linux) : traits d'un pixel physique.
+- **Impossible de taper des chiffres** (Linux) : nouvelle saisie d'heure au clavier ; la rangée du haut AZERTY **sans Maj** (`&é"'(-è_çà`) est acceptée comme chiffres, ainsi que le pavé numérique.
+- **Pas de notification pour les événements** (Linux) : un événement créé moins de 10 minutes avant son début avait un rappel « 10 min avant » déjà passé, jamais affiché. Désormais, un rappel déjà passé s'affiche aussitôt si l'événement n'est pas terminé.
+
+Avant de commencer :
+- **Linux** : l'ancienne version tourne encore en arrière-plan (fenêtre fermée). La quitter d'abord : Paramètres → Rappels → **Quitter Poulplan** (ou `pkill -f bundle/poulplan`), puis lancer la nouvelle avec la même commande.
+- **Pixel** : le brancher en USB, je réinstalle la version 0.5.1 (ou `adb install -r build/app/outputs/flutter-apk/app-release.apk` depuis le dossier du projet).
+
+À refaire en priorité : **C** (connexion sur le Pixel), **A2** à **A6**, **B** en entier.
+
+---
+
 À faire par Louis sur le Pixel 10 et sous Linux (KDE). Cocher chaque ligne, noter ce qui ne va pas (capture bienvenue).
 Les versions à tester sont déjà installées / construites :
 

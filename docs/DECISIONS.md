@@ -31,6 +31,9 @@ Une ligne par décision : date — décision — raison.
 - 2026-11-03 — Versions par champ : horloge logique hybride (`ms:compteur:appareil`, triable comme texte), données de suivi dans `sync_meta` plutôt que dans chaque table — schéma métier inchangé, file d'envoi persistante = lignes `dirty`.
 - 2026-11-03 — Catégories par défaut créées avec `createdAt = 0` — identiques sur tous les appareils, donc jamais en conflit une fois synchronisées.
 - 2026-11-03 — Configuration cloud injectée à la compilation (`--dart-define-from-file=.env`) ; sans elle (CI, F-Droid), l'écran Compte indique que la version n'est pas reliée au cloud.
+- 2026-11-03 — Rappels déjà passés au moment où ils deviennent connus (événement créé/déplacé tard, app Linux fermée) : affichés aussitôt si l'événement n'est pas terminé (24 h max), une seule fois grâce à l'ensemble persistant des rappels déjà affichés ou confiés au système.
+- 2026-11-03 — Saisie d'heure : sélecteur tactile Material sur Android ; sur ordinateur, deux champs au clavier ; tous les champs numériques acceptent la rangée du haut AZERTY sans Maj.
+- 2026-11-03 — Linux : builds release/profile à instance unique, builds debug non uniques (développement à côté d'une version installée).
 - À traiter en v1.0 : `sqlite3` 3.x télécharge par défaut des bibliothèques SQLite précompilées (hook de build) ; pour F-Droid, compiler depuis la source (`hooks: user_defines: sqlite3: source: source`) ou utiliser la bibliothèque système.
 - À décider : moteur de cartes/routage libre hors ligne (jalon v0.8.0).
 - 2026-11-03 — Rappels Linux : l'application elle-même, unique (GApplication), reste en arrière-plan quand la fenêtre est fermée et peut démarrer cachée (`--background`, fichier XDG autostart ; portail Background en Flatpak) — pas de service systemd séparé, un seul code de rappels.
