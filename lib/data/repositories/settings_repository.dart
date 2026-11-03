@@ -8,6 +8,9 @@ class SettingsRepository {
 
   static const _themeMode = 'theme_mode';
   static const _firstDayOfWeek = 'first_day_of_week';
+  static const _showHolidays = 'show_holidays';
+  static const _alsaceMoselle = 'alsace_moselle';
+  static const _schoolZone = 'school_zone';
 
   Stream<AppSettings> watch() => _db.select(_db.settings).watch().map((rows) {
     final values = {for (final r in rows) r.key: r.value};
@@ -18,6 +21,11 @@ class SettingsRepository {
       firstDayOfWeek:
           _parseWeekday(values[_firstDayOfWeek]) ??
           AppSettings.defaults.firstDayOfWeek,
+      showHolidays: values[_showHolidays] != 'false',
+      alsaceMoselle: values[_alsaceMoselle] == 'true',
+      schoolZone: values[_schoolZone]?.isEmpty ?? true
+          ? null
+          : values[_schoolZone],
     );
   });
 
@@ -27,6 +35,12 @@ class SettingsRepository {
     assert(weekday >= DateTime.monday && weekday <= DateTime.sunday);
     return _set(_firstDayOfWeek, '$weekday');
   }
+
+  Future<void> setShowHolidays(bool value) => _set(_showHolidays, '$value');
+
+  Future<void> setAlsaceMoselle(bool value) => _set(_alsaceMoselle, '$value');
+
+  Future<void> setSchoolZone(String? zone) => _set(_schoolZone, zone ?? '');
 
   Future<void> _set(String key, String value) => _db
       .into(_db.settings)
