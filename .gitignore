@@ -28,6 +28,7 @@ linux/flutter/ephemeral/
 # Secrets
 .env
 .env.*
+!.env.example
 supabase/.temp/
 *.pem
 
