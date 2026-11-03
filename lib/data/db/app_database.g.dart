@@ -2790,6 +2790,912 @@ class SavedFiltersCompanion extends UpdateCompanion<SavedFilterRow> {
   }
 }
 
+class $SyncMetaTable extends SyncMeta
+    with TableInfo<$SyncMetaTable, SyncMetaRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SyncMetaTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _entityMeta = const VerificationMeta('entity');
+  @override
+  late final GeneratedColumn<String> entity = GeneratedColumn<String>(
+    'entity',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _recordIdMeta = const VerificationMeta(
+    'recordId',
+  );
+  @override
+  late final GeneratedColumn<String> recordId = GeneratedColumn<String>(
+    'record_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldValuesMeta = const VerificationMeta(
+    'fieldValues',
+  );
+  @override
+  late final GeneratedColumn<String> fieldValues = GeneratedColumn<String>(
+    'field_values',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionsMeta = const VerificationMeta(
+    'versions',
+  );
+  @override
+  late final GeneratedColumn<String> versions = GeneratedColumn<String>(
+    'versions',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _baseVersionsMeta = const VerificationMeta(
+    'baseVersions',
+  );
+  @override
+  late final GeneratedColumn<String> baseVersions = GeneratedColumn<String>(
+    'base_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _serverRevMeta = const VerificationMeta(
+    'serverRev',
+  );
+  @override
+  late final GeneratedColumn<int> serverRev = GeneratedColumn<int>(
+    'server_rev',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dirtyMeta = const VerificationMeta('dirty');
+  @override
+  late final GeneratedColumn<bool> dirty = GeneratedColumn<bool>(
+    'dirty',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("dirty" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    entity,
+    recordId,
+    fieldValues,
+    versions,
+    baseVersions,
+    serverRev,
+    dirty,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sync_meta';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SyncMetaRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('entity')) {
+      context.handle(
+        _entityMeta,
+        entity.isAcceptableOrUnknown(data['entity']!, _entityMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityMeta);
+    }
+    if (data.containsKey('record_id')) {
+      context.handle(
+        _recordIdMeta,
+        recordId.isAcceptableOrUnknown(data['record_id']!, _recordIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_recordIdMeta);
+    }
+    if (data.containsKey('field_values')) {
+      context.handle(
+        _fieldValuesMeta,
+        fieldValues.isAcceptableOrUnknown(
+          data['field_values']!,
+          _fieldValuesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_fieldValuesMeta);
+    }
+    if (data.containsKey('versions')) {
+      context.handle(
+        _versionsMeta,
+        versions.isAcceptableOrUnknown(data['versions']!, _versionsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_versionsMeta);
+    }
+    if (data.containsKey('base_versions')) {
+      context.handle(
+        _baseVersionsMeta,
+        baseVersions.isAcceptableOrUnknown(
+          data['base_versions']!,
+          _baseVersionsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('server_rev')) {
+      context.handle(
+        _serverRevMeta,
+        serverRev.isAcceptableOrUnknown(data['server_rev']!, _serverRevMeta),
+      );
+    }
+    if (data.containsKey('dirty')) {
+      context.handle(
+        _dirtyMeta,
+        dirty.isAcceptableOrUnknown(data['dirty']!, _dirtyMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {entity, recordId};
+  @override
+  SyncMetaRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SyncMetaRow(
+      entity: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity'],
+      )!,
+      recordId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}record_id'],
+      )!,
+      fieldValues: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_values'],
+      )!,
+      versions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}versions'],
+      )!,
+      baseVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}base_versions'],
+      ),
+      serverRev: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_rev'],
+      ),
+      dirty: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}dirty'],
+      )!,
+    );
+  }
+
+  @override
+  $SyncMetaTable createAlias(String alias) {
+    return $SyncMetaTable(attachedDatabase, alias);
+  }
+}
+
+class SyncMetaRow extends DataClass implements Insertable<SyncMetaRow> {
+  final String entity;
+  final String recordId;
+
+  /// JSON of the fields as last recorded locally.
+  final String fieldValues;
+
+  /// JSON field → HLC version of the last change of each field.
+  final String versions;
+
+  /// JSON of [versions] at the last successful synchronization.
+  final String? baseVersions;
+  final int? serverRev;
+  final bool dirty;
+  const SyncMetaRow({
+    required this.entity,
+    required this.recordId,
+    required this.fieldValues,
+    required this.versions,
+    this.baseVersions,
+    this.serverRev,
+    required this.dirty,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['entity'] = Variable<String>(entity);
+    map['record_id'] = Variable<String>(recordId);
+    map['field_values'] = Variable<String>(fieldValues);
+    map['versions'] = Variable<String>(versions);
+    if (!nullToAbsent || baseVersions != null) {
+      map['base_versions'] = Variable<String>(baseVersions);
+    }
+    if (!nullToAbsent || serverRev != null) {
+      map['server_rev'] = Variable<int>(serverRev);
+    }
+    map['dirty'] = Variable<bool>(dirty);
+    return map;
+  }
+
+  SyncMetaCompanion toCompanion(bool nullToAbsent) {
+    return SyncMetaCompanion(
+      entity: Value(entity),
+      recordId: Value(recordId),
+      fieldValues: Value(fieldValues),
+      versions: Value(versions),
+      baseVersions: baseVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(baseVersions),
+      serverRev: serverRev == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverRev),
+      dirty: Value(dirty),
+    );
+  }
+
+  factory SyncMetaRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SyncMetaRow(
+      entity: serializer.fromJson<String>(json['entity']),
+      recordId: serializer.fromJson<String>(json['recordId']),
+      fieldValues: serializer.fromJson<String>(json['fieldValues']),
+      versions: serializer.fromJson<String>(json['versions']),
+      baseVersions: serializer.fromJson<String?>(json['baseVersions']),
+      serverRev: serializer.fromJson<int?>(json['serverRev']),
+      dirty: serializer.fromJson<bool>(json['dirty']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'entity': serializer.toJson<String>(entity),
+      'recordId': serializer.toJson<String>(recordId),
+      'fieldValues': serializer.toJson<String>(fieldValues),
+      'versions': serializer.toJson<String>(versions),
+      'baseVersions': serializer.toJson<String?>(baseVersions),
+      'serverRev': serializer.toJson<int?>(serverRev),
+      'dirty': serializer.toJson<bool>(dirty),
+    };
+  }
+
+  SyncMetaRow copyWith({
+    String? entity,
+    String? recordId,
+    String? fieldValues,
+    String? versions,
+    Value<String?> baseVersions = const Value.absent(),
+    Value<int?> serverRev = const Value.absent(),
+    bool? dirty,
+  }) => SyncMetaRow(
+    entity: entity ?? this.entity,
+    recordId: recordId ?? this.recordId,
+    fieldValues: fieldValues ?? this.fieldValues,
+    versions: versions ?? this.versions,
+    baseVersions: baseVersions.present ? baseVersions.value : this.baseVersions,
+    serverRev: serverRev.present ? serverRev.value : this.serverRev,
+    dirty: dirty ?? this.dirty,
+  );
+  SyncMetaRow copyWithCompanion(SyncMetaCompanion data) {
+    return SyncMetaRow(
+      entity: data.entity.present ? data.entity.value : this.entity,
+      recordId: data.recordId.present ? data.recordId.value : this.recordId,
+      fieldValues: data.fieldValues.present
+          ? data.fieldValues.value
+          : this.fieldValues,
+      versions: data.versions.present ? data.versions.value : this.versions,
+      baseVersions: data.baseVersions.present
+          ? data.baseVersions.value
+          : this.baseVersions,
+      serverRev: data.serverRev.present ? data.serverRev.value : this.serverRev,
+      dirty: data.dirty.present ? data.dirty.value : this.dirty,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncMetaRow(')
+          ..write('entity: $entity, ')
+          ..write('recordId: $recordId, ')
+          ..write('fieldValues: $fieldValues, ')
+          ..write('versions: $versions, ')
+          ..write('baseVersions: $baseVersions, ')
+          ..write('serverRev: $serverRev, ')
+          ..write('dirty: $dirty')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    entity,
+    recordId,
+    fieldValues,
+    versions,
+    baseVersions,
+    serverRev,
+    dirty,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SyncMetaRow &&
+          other.entity == this.entity &&
+          other.recordId == this.recordId &&
+          other.fieldValues == this.fieldValues &&
+          other.versions == this.versions &&
+          other.baseVersions == this.baseVersions &&
+          other.serverRev == this.serverRev &&
+          other.dirty == this.dirty);
+}
+
+class SyncMetaCompanion extends UpdateCompanion<SyncMetaRow> {
+  final Value<String> entity;
+  final Value<String> recordId;
+  final Value<String> fieldValues;
+  final Value<String> versions;
+  final Value<String?> baseVersions;
+  final Value<int?> serverRev;
+  final Value<bool> dirty;
+  final Value<int> rowid;
+  const SyncMetaCompanion({
+    this.entity = const Value.absent(),
+    this.recordId = const Value.absent(),
+    this.fieldValues = const Value.absent(),
+    this.versions = const Value.absent(),
+    this.baseVersions = const Value.absent(),
+    this.serverRev = const Value.absent(),
+    this.dirty = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SyncMetaCompanion.insert({
+    required String entity,
+    required String recordId,
+    required String fieldValues,
+    required String versions,
+    this.baseVersions = const Value.absent(),
+    this.serverRev = const Value.absent(),
+    this.dirty = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : entity = Value(entity),
+       recordId = Value(recordId),
+       fieldValues = Value(fieldValues),
+       versions = Value(versions);
+  static Insertable<SyncMetaRow> custom({
+    Expression<String>? entity,
+    Expression<String>? recordId,
+    Expression<String>? fieldValues,
+    Expression<String>? versions,
+    Expression<String>? baseVersions,
+    Expression<int>? serverRev,
+    Expression<bool>? dirty,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (entity != null) 'entity': entity,
+      if (recordId != null) 'record_id': recordId,
+      if (fieldValues != null) 'field_values': fieldValues,
+      if (versions != null) 'versions': versions,
+      if (baseVersions != null) 'base_versions': baseVersions,
+      if (serverRev != null) 'server_rev': serverRev,
+      if (dirty != null) 'dirty': dirty,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SyncMetaCompanion copyWith({
+    Value<String>? entity,
+    Value<String>? recordId,
+    Value<String>? fieldValues,
+    Value<String>? versions,
+    Value<String?>? baseVersions,
+    Value<int?>? serverRev,
+    Value<bool>? dirty,
+    Value<int>? rowid,
+  }) {
+    return SyncMetaCompanion(
+      entity: entity ?? this.entity,
+      recordId: recordId ?? this.recordId,
+      fieldValues: fieldValues ?? this.fieldValues,
+      versions: versions ?? this.versions,
+      baseVersions: baseVersions ?? this.baseVersions,
+      serverRev: serverRev ?? this.serverRev,
+      dirty: dirty ?? this.dirty,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (entity.present) {
+      map['entity'] = Variable<String>(entity.value);
+    }
+    if (recordId.present) {
+      map['record_id'] = Variable<String>(recordId.value);
+    }
+    if (fieldValues.present) {
+      map['field_values'] = Variable<String>(fieldValues.value);
+    }
+    if (versions.present) {
+      map['versions'] = Variable<String>(versions.value);
+    }
+    if (baseVersions.present) {
+      map['base_versions'] = Variable<String>(baseVersions.value);
+    }
+    if (serverRev.present) {
+      map['server_rev'] = Variable<int>(serverRev.value);
+    }
+    if (dirty.present) {
+      map['dirty'] = Variable<bool>(dirty.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncMetaCompanion(')
+          ..write('entity: $entity, ')
+          ..write('recordId: $recordId, ')
+          ..write('fieldValues: $fieldValues, ')
+          ..write('versions: $versions, ')
+          ..write('baseVersions: $baseVersions, ')
+          ..write('serverRev: $serverRev, ')
+          ..write('dirty: $dirty, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SyncConflictsTable extends SyncConflicts
+    with TableInfo<$SyncConflictsTable, SyncConflictRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SyncConflictsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _entityMeta = const VerificationMeta('entity');
+  @override
+  late final GeneratedColumn<String> entity = GeneratedColumn<String>(
+    'entity',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _recordIdMeta = const VerificationMeta(
+    'recordId',
+  );
+  @override
+  late final GeneratedColumn<String> recordId = GeneratedColumn<String>(
+    'record_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldMeta = const VerificationMeta('field');
+  @override
+  late final GeneratedColumn<String> field = GeneratedColumn<String>(
+    'field',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _localValueMeta = const VerificationMeta(
+    'localValue',
+  );
+  @override
+  late final GeneratedColumn<String> localValue = GeneratedColumn<String>(
+    'local_value',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _remoteValueMeta = const VerificationMeta(
+    'remoteValue',
+  );
+  @override
+  late final GeneratedColumn<String> remoteValue = GeneratedColumn<String>(
+    'remote_value',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _detectedAtMeta = const VerificationMeta(
+    'detectedAt',
+  );
+  @override
+  late final GeneratedColumn<int> detectedAt = GeneratedColumn<int>(
+    'detected_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    entity,
+    recordId,
+    field,
+    localValue,
+    remoteValue,
+    detectedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sync_conflicts';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SyncConflictRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('entity')) {
+      context.handle(
+        _entityMeta,
+        entity.isAcceptableOrUnknown(data['entity']!, _entityMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityMeta);
+    }
+    if (data.containsKey('record_id')) {
+      context.handle(
+        _recordIdMeta,
+        recordId.isAcceptableOrUnknown(data['record_id']!, _recordIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_recordIdMeta);
+    }
+    if (data.containsKey('field')) {
+      context.handle(
+        _fieldMeta,
+        field.isAcceptableOrUnknown(data['field']!, _fieldMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_fieldMeta);
+    }
+    if (data.containsKey('local_value')) {
+      context.handle(
+        _localValueMeta,
+        localValue.isAcceptableOrUnknown(data['local_value']!, _localValueMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_localValueMeta);
+    }
+    if (data.containsKey('remote_value')) {
+      context.handle(
+        _remoteValueMeta,
+        remoteValue.isAcceptableOrUnknown(
+          data['remote_value']!,
+          _remoteValueMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_remoteValueMeta);
+    }
+    if (data.containsKey('detected_at')) {
+      context.handle(
+        _detectedAtMeta,
+        detectedAt.isAcceptableOrUnknown(data['detected_at']!, _detectedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_detectedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {entity, recordId, field};
+  @override
+  SyncConflictRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SyncConflictRow(
+      entity: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity'],
+      )!,
+      recordId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}record_id'],
+      )!,
+      field: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field'],
+      )!,
+      localValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}local_value'],
+      )!,
+      remoteValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}remote_value'],
+      )!,
+      detectedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}detected_at'],
+      )!,
+    );
+  }
+
+  @override
+  $SyncConflictsTable createAlias(String alias) {
+    return $SyncConflictsTable(attachedDatabase, alias);
+  }
+}
+
+class SyncConflictRow extends DataClass implements Insertable<SyncConflictRow> {
+  final String entity;
+  final String recordId;
+  final String field;
+
+  /// JSON-encoded values.
+  final String localValue;
+  final String remoteValue;
+  final int detectedAt;
+  const SyncConflictRow({
+    required this.entity,
+    required this.recordId,
+    required this.field,
+    required this.localValue,
+    required this.remoteValue,
+    required this.detectedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['entity'] = Variable<String>(entity);
+    map['record_id'] = Variable<String>(recordId);
+    map['field'] = Variable<String>(field);
+    map['local_value'] = Variable<String>(localValue);
+    map['remote_value'] = Variable<String>(remoteValue);
+    map['detected_at'] = Variable<int>(detectedAt);
+    return map;
+  }
+
+  SyncConflictsCompanion toCompanion(bool nullToAbsent) {
+    return SyncConflictsCompanion(
+      entity: Value(entity),
+      recordId: Value(recordId),
+      field: Value(field),
+      localValue: Value(localValue),
+      remoteValue: Value(remoteValue),
+      detectedAt: Value(detectedAt),
+    );
+  }
+
+  factory SyncConflictRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SyncConflictRow(
+      entity: serializer.fromJson<String>(json['entity']),
+      recordId: serializer.fromJson<String>(json['recordId']),
+      field: serializer.fromJson<String>(json['field']),
+      localValue: serializer.fromJson<String>(json['localValue']),
+      remoteValue: serializer.fromJson<String>(json['remoteValue']),
+      detectedAt: serializer.fromJson<int>(json['detectedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'entity': serializer.toJson<String>(entity),
+      'recordId': serializer.toJson<String>(recordId),
+      'field': serializer.toJson<String>(field),
+      'localValue': serializer.toJson<String>(localValue),
+      'remoteValue': serializer.toJson<String>(remoteValue),
+      'detectedAt': serializer.toJson<int>(detectedAt),
+    };
+  }
+
+  SyncConflictRow copyWith({
+    String? entity,
+    String? recordId,
+    String? field,
+    String? localValue,
+    String? remoteValue,
+    int? detectedAt,
+  }) => SyncConflictRow(
+    entity: entity ?? this.entity,
+    recordId: recordId ?? this.recordId,
+    field: field ?? this.field,
+    localValue: localValue ?? this.localValue,
+    remoteValue: remoteValue ?? this.remoteValue,
+    detectedAt: detectedAt ?? this.detectedAt,
+  );
+  SyncConflictRow copyWithCompanion(SyncConflictsCompanion data) {
+    return SyncConflictRow(
+      entity: data.entity.present ? data.entity.value : this.entity,
+      recordId: data.recordId.present ? data.recordId.value : this.recordId,
+      field: data.field.present ? data.field.value : this.field,
+      localValue: data.localValue.present
+          ? data.localValue.value
+          : this.localValue,
+      remoteValue: data.remoteValue.present
+          ? data.remoteValue.value
+          : this.remoteValue,
+      detectedAt: data.detectedAt.present
+          ? data.detectedAt.value
+          : this.detectedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncConflictRow(')
+          ..write('entity: $entity, ')
+          ..write('recordId: $recordId, ')
+          ..write('field: $field, ')
+          ..write('localValue: $localValue, ')
+          ..write('remoteValue: $remoteValue, ')
+          ..write('detectedAt: $detectedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(entity, recordId, field, localValue, remoteValue, detectedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SyncConflictRow &&
+          other.entity == this.entity &&
+          other.recordId == this.recordId &&
+          other.field == this.field &&
+          other.localValue == this.localValue &&
+          other.remoteValue == this.remoteValue &&
+          other.detectedAt == this.detectedAt);
+}
+
+class SyncConflictsCompanion extends UpdateCompanion<SyncConflictRow> {
+  final Value<String> entity;
+  final Value<String> recordId;
+  final Value<String> field;
+  final Value<String> localValue;
+  final Value<String> remoteValue;
+  final Value<int> detectedAt;
+  final Value<int> rowid;
+  const SyncConflictsCompanion({
+    this.entity = const Value.absent(),
+    this.recordId = const Value.absent(),
+    this.field = const Value.absent(),
+    this.localValue = const Value.absent(),
+    this.remoteValue = const Value.absent(),
+    this.detectedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SyncConflictsCompanion.insert({
+    required String entity,
+    required String recordId,
+    required String field,
+    required String localValue,
+    required String remoteValue,
+    required int detectedAt,
+    this.rowid = const Value.absent(),
+  }) : entity = Value(entity),
+       recordId = Value(recordId),
+       field = Value(field),
+       localValue = Value(localValue),
+       remoteValue = Value(remoteValue),
+       detectedAt = Value(detectedAt);
+  static Insertable<SyncConflictRow> custom({
+    Expression<String>? entity,
+    Expression<String>? recordId,
+    Expression<String>? field,
+    Expression<String>? localValue,
+    Expression<String>? remoteValue,
+    Expression<int>? detectedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (entity != null) 'entity': entity,
+      if (recordId != null) 'record_id': recordId,
+      if (field != null) 'field': field,
+      if (localValue != null) 'local_value': localValue,
+      if (remoteValue != null) 'remote_value': remoteValue,
+      if (detectedAt != null) 'detected_at': detectedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SyncConflictsCompanion copyWith({
+    Value<String>? entity,
+    Value<String>? recordId,
+    Value<String>? field,
+    Value<String>? localValue,
+    Value<String>? remoteValue,
+    Value<int>? detectedAt,
+    Value<int>? rowid,
+  }) {
+    return SyncConflictsCompanion(
+      entity: entity ?? this.entity,
+      recordId: recordId ?? this.recordId,
+      field: field ?? this.field,
+      localValue: localValue ?? this.localValue,
+      remoteValue: remoteValue ?? this.remoteValue,
+      detectedAt: detectedAt ?? this.detectedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (entity.present) {
+      map['entity'] = Variable<String>(entity.value);
+    }
+    if (recordId.present) {
+      map['record_id'] = Variable<String>(recordId.value);
+    }
+    if (field.present) {
+      map['field'] = Variable<String>(field.value);
+    }
+    if (localValue.present) {
+      map['local_value'] = Variable<String>(localValue.value);
+    }
+    if (remoteValue.present) {
+      map['remote_value'] = Variable<String>(remoteValue.value);
+    }
+    if (detectedAt.present) {
+      map['detected_at'] = Variable<int>(detectedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncConflictsCompanion(')
+          ..write('entity: $entity, ')
+          ..write('recordId: $recordId, ')
+          ..write('field: $field, ')
+          ..write('localValue: $localValue, ')
+          ..write('remoteValue: $remoteValue, ')
+          ..write('detectedAt: $detectedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2798,6 +3704,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SettingsTable settings = $SettingsTable(this);
   late final $BirthdaysTable birthdays = $BirthdaysTable(this);
   late final $SavedFiltersTable savedFilters = $SavedFiltersTable(this);
+  late final $SyncMetaTable syncMeta = $SyncMetaTable(this);
+  late final $SyncConflictsTable syncConflicts = $SyncConflictsTable(this);
   late final Index eventsRange = Index(
     'events_range',
     'CREATE INDEX events_range ON events (start_utc, end_utc)',
@@ -2816,6 +3724,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     settings,
     birthdays,
     savedFilters,
+    syncMeta,
+    syncConflicts,
     eventsRange,
     eventsSeries,
   ];
@@ -4431,6 +5341,486 @@ typedef $$SavedFiltersTableProcessedTableManager =
       SavedFilterRow,
       PrefetchHooks Function()
     >;
+typedef $$SyncMetaTableCreateCompanionBuilder = SyncMetaCompanion Function({
+  required String entity,
+  required String recordId,
+  required String fieldValues,
+  required String versions,
+  Value<String?> baseVersions,
+  Value<int?> serverRev,
+  Value<bool> dirty,
+  Value<int> rowid,
+});
+typedef $$SyncMetaTableUpdateCompanionBuilder = SyncMetaCompanion Function({
+  Value<String> entity,
+  Value<String> recordId,
+  Value<String> fieldValues,
+  Value<String> versions,
+  Value<String?> baseVersions,
+  Value<int?> serverRev,
+  Value<bool> dirty,
+  Value<int> rowid,
+});
+
+class $$SyncMetaTableFilterComposer
+    extends Composer<_$AppDatabase, $SyncMetaTable> {
+  $$SyncMetaTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get recordId => $composableBuilder(
+    column: $table.recordId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldValues => $composableBuilder(
+    column: $table.fieldValues,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get versions => $composableBuilder(
+    column: $table.versions,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get baseVersions => $composableBuilder(
+    column: $table.baseVersions,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get serverRev => $composableBuilder(
+    column: $table.serverRev,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get dirty => $composableBuilder(
+    column: $table.dirty,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SyncMetaTableOrderingComposer
+    extends Composer<_$AppDatabase, $SyncMetaTable> {
+  $$SyncMetaTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get recordId => $composableBuilder(
+    column: $table.recordId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldValues => $composableBuilder(
+    column: $table.fieldValues,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get versions => $composableBuilder(
+    column: $table.versions,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get baseVersions => $composableBuilder(
+    column: $table.baseVersions,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get serverRev => $composableBuilder(
+    column: $table.serverRev,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get dirty => $composableBuilder(
+    column: $table.dirty,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SyncMetaTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SyncMetaTable> {
+  $$SyncMetaTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get entity =>
+      $composableBuilder(column: $table.entity, builder: (column) => column);
+
+  GeneratedColumn<String> get recordId =>
+      $composableBuilder(column: $table.recordId, builder: (column) => column);
+
+  GeneratedColumn<String> get fieldValues => $composableBuilder(
+    column: $table.fieldValues,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get versions =>
+      $composableBuilder(column: $table.versions, builder: (column) => column);
+
+  GeneratedColumn<String> get baseVersions => $composableBuilder(
+    column: $table.baseVersions,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get serverRev =>
+      $composableBuilder(column: $table.serverRev, builder: (column) => column);
+
+  GeneratedColumn<bool> get dirty =>
+      $composableBuilder(column: $table.dirty, builder: (column) => column);
+}
+
+class $$SyncMetaTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SyncMetaTable,
+          SyncMetaRow,
+          $$SyncMetaTableFilterComposer,
+          $$SyncMetaTableOrderingComposer,
+          $$SyncMetaTableAnnotationComposer,
+          $$SyncMetaTableCreateCompanionBuilder,
+          $$SyncMetaTableUpdateCompanionBuilder,
+          (
+            SyncMetaRow,
+            BaseReferences<_$AppDatabase, $SyncMetaTable, SyncMetaRow>,
+          ),
+          SyncMetaRow,
+          PrefetchHooks Function()
+        > {
+  $$SyncMetaTableTableManager(_$AppDatabase db, $SyncMetaTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SyncMetaTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SyncMetaTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SyncMetaTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> entity = const Value.absent(),
+                Value<String> recordId = const Value.absent(),
+                Value<String> fieldValues = const Value.absent(),
+                Value<String> versions = const Value.absent(),
+                Value<String?> baseVersions = const Value.absent(),
+                Value<int?> serverRev = const Value.absent(),
+                Value<bool> dirty = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SyncMetaCompanion(
+                entity: entity,
+                recordId: recordId,
+                fieldValues: fieldValues,
+                versions: versions,
+                baseVersions: baseVersions,
+                serverRev: serverRev,
+                dirty: dirty,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String entity,
+                required String recordId,
+                required String fieldValues,
+                required String versions,
+                Value<String?> baseVersions = const Value.absent(),
+                Value<int?> serverRev = const Value.absent(),
+                Value<bool> dirty = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SyncMetaCompanion.insert(
+                entity: entity,
+                recordId: recordId,
+                fieldValues: fieldValues,
+                versions: versions,
+                baseVersions: baseVersions,
+                serverRev: serverRev,
+                dirty: dirty,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SyncMetaTable, SyncMetaRow>(table),
+                  BaseReferences<_$AppDatabase, $SyncMetaTable, SyncMetaRow>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SyncMetaTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SyncMetaTable,
+      SyncMetaRow,
+      $$SyncMetaTableFilterComposer,
+      $$SyncMetaTableOrderingComposer,
+      $$SyncMetaTableAnnotationComposer,
+      $$SyncMetaTableCreateCompanionBuilder,
+      $$SyncMetaTableUpdateCompanionBuilder,
+      (SyncMetaRow, BaseReferences<_$AppDatabase, $SyncMetaTable, SyncMetaRow>),
+      SyncMetaRow,
+      PrefetchHooks Function()
+    >;
+typedef $$SyncConflictsTableCreateCompanionBuilder =
+    SyncConflictsCompanion Function({
+      required String entity,
+      required String recordId,
+      required String field,
+      required String localValue,
+      required String remoteValue,
+      required int detectedAt,
+      Value<int> rowid,
+    });
+typedef $$SyncConflictsTableUpdateCompanionBuilder =
+    SyncConflictsCompanion Function({
+      Value<String> entity,
+      Value<String> recordId,
+      Value<String> field,
+      Value<String> localValue,
+      Value<String> remoteValue,
+      Value<int> detectedAt,
+      Value<int> rowid,
+    });
+
+class $$SyncConflictsTableFilterComposer
+    extends Composer<_$AppDatabase, $SyncConflictsTable> {
+  $$SyncConflictsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get recordId => $composableBuilder(
+    column: $table.recordId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get field => $composableBuilder(
+    column: $table.field,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get localValue => $composableBuilder(
+    column: $table.localValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get remoteValue => $composableBuilder(
+    column: $table.remoteValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get detectedAt => $composableBuilder(
+    column: $table.detectedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SyncConflictsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SyncConflictsTable> {
+  $$SyncConflictsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get recordId => $composableBuilder(
+    column: $table.recordId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get field => $composableBuilder(
+    column: $table.field,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get localValue => $composableBuilder(
+    column: $table.localValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get remoteValue => $composableBuilder(
+    column: $table.remoteValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get detectedAt => $composableBuilder(
+    column: $table.detectedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SyncConflictsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SyncConflictsTable> {
+  $$SyncConflictsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get entity =>
+      $composableBuilder(column: $table.entity, builder: (column) => column);
+
+  GeneratedColumn<String> get recordId =>
+      $composableBuilder(column: $table.recordId, builder: (column) => column);
+
+  GeneratedColumn<String> get field =>
+      $composableBuilder(column: $table.field, builder: (column) => column);
+
+  GeneratedColumn<String> get localValue => $composableBuilder(
+    column: $table.localValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get remoteValue => $composableBuilder(
+    column: $table.remoteValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get detectedAt => $composableBuilder(
+    column: $table.detectedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$SyncConflictsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SyncConflictsTable,
+          SyncConflictRow,
+          $$SyncConflictsTableFilterComposer,
+          $$SyncConflictsTableOrderingComposer,
+          $$SyncConflictsTableAnnotationComposer,
+          $$SyncConflictsTableCreateCompanionBuilder,
+          $$SyncConflictsTableUpdateCompanionBuilder,
+          (
+            SyncConflictRow,
+            BaseReferences<_$AppDatabase, $SyncConflictsTable, SyncConflictRow>,
+          ),
+          SyncConflictRow,
+          PrefetchHooks Function()
+        > {
+  $$SyncConflictsTableTableManager(_$AppDatabase db, $SyncConflictsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SyncConflictsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SyncConflictsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SyncConflictsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> entity = const Value.absent(),
+                Value<String> recordId = const Value.absent(),
+                Value<String> field = const Value.absent(),
+                Value<String> localValue = const Value.absent(),
+                Value<String> remoteValue = const Value.absent(),
+                Value<int> detectedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SyncConflictsCompanion(
+                entity: entity,
+                recordId: recordId,
+                field: field,
+                localValue: localValue,
+                remoteValue: remoteValue,
+                detectedAt: detectedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String entity,
+                required String recordId,
+                required String field,
+                required String localValue,
+                required String remoteValue,
+                required int detectedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => SyncConflictsCompanion.insert(
+                entity: entity,
+                recordId: recordId,
+                field: field,
+                localValue: localValue,
+                remoteValue: remoteValue,
+                detectedAt: detectedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SyncConflictsTable, SyncConflictRow>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $SyncConflictsTable,
+                    SyncConflictRow
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SyncConflictsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SyncConflictsTable,
+      SyncConflictRow,
+      $$SyncConflictsTableFilterComposer,
+      $$SyncConflictsTableOrderingComposer,
+      $$SyncConflictsTableAnnotationComposer,
+      $$SyncConflictsTableCreateCompanionBuilder,
+      $$SyncConflictsTableUpdateCompanionBuilder,
+      (
+        SyncConflictRow,
+        BaseReferences<_$AppDatabase, $SyncConflictsTable, SyncConflictRow>,
+      ),
+      SyncConflictRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -4445,4 +5835,8 @@ class $AppDatabaseManager {
       $$BirthdaysTableTableManager(_db, _db.birthdays);
   $$SavedFiltersTableTableManager get savedFilters =>
       $$SavedFiltersTableTableManager(_db, _db.savedFilters);
+  $$SyncMetaTableTableManager get syncMeta =>
+      $$SyncMetaTableTableManager(_db, _db.syncMeta);
+  $$SyncConflictsTableTableManager get syncConflicts =>
+      $$SyncConflictsTableTableManager(_db, _db.syncConflicts);
 }

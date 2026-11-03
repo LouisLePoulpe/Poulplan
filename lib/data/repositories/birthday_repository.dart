@@ -3,13 +3,17 @@ import 'package:uuid/uuid.dart';
 
 import '../../domain/entities/birthday.dart';
 import '../db/app_database.dart';
+import '../sync/change_recorder.dart';
 
 class BirthdayRepository {
-  BirthdayRepository(this._db, {DateTime Function()? clock})
+  BirthdayRepository(this._db, {DateTime Function()? clock, this.recorder})
     : _clock = clock ?? DateTime.now;
 
   final AppDatabase _db;
   final DateTime Function() _clock;
+  final ChangeRecorder? recorder;
+
+  Future<void> _changed(String id) async => recorder?.record('birthday', [id]);
   static const _uuid = Uuid();
 
   int _now() => _clock().toUtc().millisecondsSinceEpoch;
@@ -42,6 +46,7 @@ class BirthdayRepository {
       updatedAt: now,
     );
     await _db.into(_db.birthdays).insert(row);
+    await _changed(row.id.value);
     return _toEntity(
       await (_db.select(
         _db.birthdays,
@@ -61,6 +66,7 @@ class BirthdayRepository {
         updatedAt: Value(_now()),
       ),
     );
+    await _changed(birthday.id);
   }
 
   Future<void> delete(String id) async {
@@ -68,6 +74,7 @@ class BirthdayRepository {
     await (_db.update(_db.birthdays)..where((b) => b.id.equals(id))).write(
       BirthdaysCompanion(deletedAt: Value(now), updatedAt: Value(now)),
     );
+    await _changed(id);
   }
 
   static Birthday _toEntity(BirthdayRow r) => Birthday(

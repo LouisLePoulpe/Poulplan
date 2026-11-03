@@ -11,16 +11,29 @@ import '../../domain/recurrence/recurrence_rule.dart';
 import '../../domain/recurrence/series_edit.dart';
 import '../../domain/search/search_query.dart';
 import '../db/app_database.dart';
+import '../sync/change_recorder.dart';
 
 /// Which occurrences of a series an edit or a deletion applies to.
 enum SeriesScope { thisOccurrence, thisAndFollowing, all }
 
 class EventRepository {
-  EventRepository(this._db, {DateTime Function()? clock})
+  EventRepository(this._db, {DateTime Function()? clock, this.recorder})
     : _clock = clock ?? DateTime.now;
 
   final AppDatabase _db;
   final DateTime Function() _clock;
+  final ChangeRecorder? recorder;
+
+  Future<void> _changed(Iterable<String> ids) async =>
+      recorder?.record('event', ids);
+
+  /// Ids of [id] and of the overrides of the series [id].
+  Future<List<String>> _withOverrides(String id) =>
+      (_db.selectOnly(_events)
+            ..addColumns([_events.id])
+            ..where(_events.id.equals(id) | _events.seriesId.equals(id)))
+          .map((r) => r.read(_events.id)!)
+          .get();
   static const _uuid = Uuid();
 
   /// Truncated to milliseconds, the precision stored in the database.
@@ -64,7 +77,7 @@ class EventRepository {
                 e.seriesId.isInQuery(masters)),
       )
       ..orderBy([(e) => OrderingTerm.asc(e.startUtc)]);
-    return query.watch().map((rows) => rows.map(_toEntity).toList());
+    return query.watch().map((rows) => rows.map(rowToEvent).toList());
   }
 
   /// Events to display between [first] and [last] (recurrences expanded).
@@ -87,7 +100,7 @@ class EventRepository {
     final row = await (_db.select(
       _events,
     )..where((e) => e.id.equals(id) & e.deletedAt.isNull())).getSingleOrNull();
-    return row == null ? null : _toEntity(row);
+    return row == null ? null : rowToEvent(row);
   }
 
   /// Resolves an id shown in the views: a stored event, or a generated
@@ -107,7 +120,7 @@ class EventRepository {
                   e.deletedAt.isNull(),
             ))
             .getSingleOrNull();
-    if (override != null) return _toEntity(override);
+    if (override != null) return rowToEvent(override);
     return master.copyWith(
       id: id,
       start: occurrence.originalStart,
@@ -158,7 +171,8 @@ class EventRepository {
       createdAt: now,
       updatedAt: now,
     );
-    await _db.into(_events).insert(_toCompanion(event));
+    await _db.into(_events).insert(eventToCompanion(event));
+    await _changed([event.id]);
     return event;
   }
 
@@ -168,7 +182,8 @@ class EventRepository {
     final updated = event.copyWith(updatedAt: _nowUtc());
     await (_db.update(
       _events,
-    )..where((e) => e.id.equals(event.id))).write(_toCompanion(updated));
+    )..where((e) => e.id.equals(event.id))).write(eventToCompanion(updated));
+    await _changed([event.id]);
   }
 
   /// Copy of [event] with a new id, same times (a single, non-recurring
@@ -191,6 +206,7 @@ class EventRepository {
 
   /// Undoes [delete].
   Future<void> restore(String id) async {
+    final ids = await _withOverrides(id);
     await (_db.update(
       _events,
     )..where((e) => e.id.equals(id) | e.seriesId.equals(id))).write(
@@ -199,15 +215,18 @@ class EventRepository {
         updatedAt: Value(_nowUtc().millisecondsSinceEpoch),
       ),
     );
+    await _changed(ids);
   }
 
   /// Soft delete: keeps a tombstone for the sync. Deleting a master also
   /// deletes its overrides.
   Future<void> delete(String id) async {
+    final ids = await _withOverrides(id);
     final now = _nowUtc().millisecondsSinceEpoch;
     await (_db.update(_events)
           ..where((e) => e.id.equals(id) | e.seriesId.equals(id)))
         .write(EventsCompanion(deletedAt: Value(now), updatedAt: Value(now)));
+    await _changed(ids);
   }
 
   /// Saves [edited], an occurrence of a series (generated or overridden),
@@ -281,6 +300,7 @@ class EventRepository {
         updatedAt: Value(_nowUtc().millisecondsSinceEpoch),
       ),
     );
+    await _changed([overrideId]);
   }
 
   /// Ends [master] before [originalStart] and removes the overrides from
@@ -300,14 +320,21 @@ class EventRepository {
     if (halves.beforeIsEmpty) return null;
     await update(master.copyWith(rrule: () => halves.before.toString()));
     final now = _nowUtc().millisecondsSinceEpoch;
-    await (_db.update(_events)..where(
-          (e) =>
-              e.seriesId.equals(master.id) &
-              e.originalStartUtc.isBiggerOrEqualValue(
-                originalStart.millisecondsSinceEpoch,
-              ),
-        ))
-        .write(EventsCompanion(deletedAt: Value(now), updatedAt: Value(now)));
+    Expression<bool> later($EventsTable e) =>
+        e.seriesId.equals(master.id) &
+        e.originalStartUtc.isBiggerOrEqualValue(
+          originalStart.millisecondsSinceEpoch,
+        );
+    final ids =
+        await (_db.selectOnly(_events)
+              ..addColumns([_events.id])
+              ..where(later(_events)))
+            .map((r) => r.read(_events.id)!)
+            .get();
+    await (_db.update(_events)..where(later)).write(
+      EventsCompanion(deletedAt: Value(now), updatedAt: Value(now)),
+    );
+    await _changed(ids);
     return halves.after.toString();
   }
 
@@ -361,11 +388,12 @@ class EventRepository {
         updatedAt: _nowUtc(),
       );
       await (_db.update(_events)..where((e) => e.id.equals(existing.id))).write(
-        _toCompanion(values).copyWith(
+        eventToCompanion(values).copyWith(
           createdAt: Value(existing.createdAt),
           deletedAt: const Value(null),
         ),
       );
+      await _changed([existing.id]);
       return existing.id;
     }
     final created = await create(
@@ -420,13 +448,13 @@ class EventRepository {
       })
       ..orderBy([(e) => OrderingTerm.desc(e.startUtc)])
       ..limit(limit);
-    return select.get().then((rows) => rows.map(_toEntity).toList());
+    return select.get().then((rows) => rows.map(rowToEvent).toList());
   }
 
   static String _escape(String token) =>
       token.replaceAll('%', '').replaceAll('_', '');
 
-  static CalendarEvent _toEntity(EventRow r) => CalendarEvent(
+  static CalendarEvent rowToEvent(EventRow r) => CalendarEvent(
     id: r.id,
     title: r.title,
     description: r.description,
@@ -451,7 +479,7 @@ class EventRepository {
     updatedAt: _utc(r.updatedAt),
   );
 
-  static EventsCompanion _toCompanion(CalendarEvent e) => EventsCompanion(
+  static EventsCompanion eventToCompanion(CalendarEvent e) => EventsCompanion(
     id: Value(e.id),
     title: Value(e.title),
     description: Value(e.description),

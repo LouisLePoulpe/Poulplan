@@ -87,6 +87,44 @@ class SavedFilters extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+/// Synchronization state of a record (schema v3). The pending-changes queue
+/// is the set of rows with `dirty = true`: it survives restarts.
+@DataClassName('SyncMetaRow')
+class SyncMeta extends Table {
+  TextColumn get entity => text()();
+  TextColumn get recordId => text()();
+
+  /// JSON of the fields as last recorded locally.
+  TextColumn get fieldValues => text()();
+
+  /// JSON field → HLC version of the last change of each field.
+  TextColumn get versions => text()();
+
+  /// JSON of [versions] at the last successful synchronization.
+  TextColumn get baseVersions => text().nullable()();
+  IntColumn get serverRev => integer().nullable()();
+  BoolColumn get dirty => boolean().withDefault(const Constant(false))();
+
+  @override
+  Set<Column> get primaryKey => {entity, recordId};
+}
+
+/// Fields changed differently on two devices, waiting for the user.
+@DataClassName('SyncConflictRow')
+class SyncConflicts extends Table {
+  TextColumn get entity => text()();
+  TextColumn get recordId => text()();
+  TextColumn get field => text()();
+
+  /// JSON-encoded values.
+  TextColumn get localValue => text()();
+  TextColumn get remoteValue => text()();
+  IntColumn get detectedAt => integer()();
+
+  @override
+  Set<Column> get primaryKey => {entity, recordId, field};
+}
+
 /// Local, device-specific preferences (not synced).
 @DataClassName('SettingRow')
 class Settings extends Table {

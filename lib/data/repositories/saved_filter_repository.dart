@@ -5,13 +5,18 @@ import 'package:uuid/uuid.dart';
 
 import '../../domain/search/search_query.dart';
 import '../db/app_database.dart';
+import '../sync/change_recorder.dart';
 
 typedef SavedFilter = ({String id, String name, SearchQuery query});
 
 class SavedFilterRepository {
-  SavedFilterRepository(this._db);
+  SavedFilterRepository(this._db, {this.recorder});
 
   final AppDatabase _db;
+  final ChangeRecorder? recorder;
+
+  Future<void> _changed(String id) async =>
+      recorder?.record('saved_filter', [id]);
   static const _uuid = Uuid();
 
   int _now() => DateTime.now().toUtc().millisecondsSinceEpoch;
@@ -36,17 +41,19 @@ class SavedFilterRepository {
 
   Future<void> save(String name, SearchQuery query) async {
     final now = _now();
+    final id = _uuid.v4();
     await _db
         .into(_db.savedFilters)
         .insert(
           SavedFiltersCompanion.insert(
-            id: _uuid.v4(),
+            id: id,
             name: name,
             query: jsonEncode(query.toJson()),
             createdAt: now,
             updatedAt: now,
           ),
         );
+    await _changed(id);
   }
 
   Future<void> delete(String id) async {
@@ -54,5 +61,6 @@ class SavedFilterRepository {
     await (_db.update(_db.savedFilters)..where((f) => f.id.equals(id))).write(
       SavedFiltersCompanion(deletedAt: Value(now), updatedAt: Value(now)),
     );
+    await _changed(id);
   }
 }

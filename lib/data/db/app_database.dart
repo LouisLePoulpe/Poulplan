@@ -15,12 +15,22 @@ const defaultCategories = [
   (id: 'default-health', name: 'Santé', color: 0xFFE53935),
 ];
 
-@DriftDatabase(tables: [Categories, Events, Settings, Birthdays, SavedFilters])
+@DriftDatabase(
+  tables: [
+    Categories,
+    Events,
+    Settings,
+    Birthdays,
+    SavedFilters,
+    SyncMeta,
+    SyncConflicts,
+  ],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -42,6 +52,10 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(savedFilters);
         await _fillSearchText();
       }
+      if (from < 3) {
+        await m.createTable(syncMeta);
+        await m.createTable(syncConflicts);
+      }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -49,7 +63,9 @@ class AppDatabase extends _$AppDatabase {
   );
 
   Future<void> _seedDefaultCategories() async {
-    final now = DateTime.now().toUtc().millisecondsSinceEpoch;
+    // Same values on every device, so that seeding twice never conflicts
+    // once synchronized.
+    const now = 0;
     await batch((b) {
       for (final (i, c) in defaultCategories.indexed) {
         b.insert(

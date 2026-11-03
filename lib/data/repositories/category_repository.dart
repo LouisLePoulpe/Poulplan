@@ -3,13 +3,17 @@ import 'package:uuid/uuid.dart';
 
 import '../../domain/entities/event_category.dart';
 import '../db/app_database.dart';
+import '../sync/change_recorder.dart';
 
 class CategoryRepository {
-  CategoryRepository(this._db, {DateTime Function()? clock})
+  CategoryRepository(this._db, {DateTime Function()? clock, this.recorder})
     : _clock = clock ?? DateTime.now;
 
   final AppDatabase _db;
   final DateTime Function() _clock;
+  final ChangeRecorder? recorder;
+
+  Future<void> _changed(String id) async => recorder?.record('category', [id]);
   static const _uuid = Uuid();
 
   int _now() => _clock().toUtc().millisecondsSinceEpoch;
@@ -42,6 +46,7 @@ class CategoryRepository {
       updatedAt: now,
     );
     await _db.into(_db.categories).insert(row);
+    await _changed(row.id.value);
     return EventCategory(
       id: row.id.value,
       name: name,
@@ -70,6 +75,7 @@ class CategoryRepository {
     await (_db.update(_db.categories)..where((c) => c.id.equals(id))).write(
       CategoriesCompanion(deletedAt: Value(now), updatedAt: Value(now)),
     );
+    await _changed(id);
   }
 
   static EventCategory _toEntity(CategoryRow r) => EventCategory(
