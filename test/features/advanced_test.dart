@@ -13,6 +13,7 @@ import 'package:poulplan/data/repositories/event_repository.dart';
 import 'package:poulplan/data/repositories/settings_repository.dart';
 import 'package:poulplan/domain/calendar/day.dart';
 import 'package:poulplan/domain/holidays/school_holidays.dart';
+import 'package:poulplan/features/calendar/presentation/views/month_view.dart';
 import 'package:poulplan/features/calendar/providers/calendar_providers.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 
@@ -85,8 +86,16 @@ void main() {
     await tester.runAsync(() => SettingsRepository(db).setSchoolZone('B'));
     await pumpApp(tester);
     // Toussaint holidays 2026 end on Sunday 1 November: the grid starts on
-    // Monday 26 October, so 7 days are covered.
-    expect(find.text('Vacances de la Toussaint'), findsNWidgets(7));
+    // Monday 26 October, so one bar covers the whole first week.
+    expect(find.text('Vacances de la Toussaint'), findsOneWidget);
+    final bar = tester.getSize(
+      find.ancestor(
+        of: find.text('Vacances de la Toussaint'),
+        matching: find.byType(MonthEventChip),
+      ),
+    );
+    final cell = (1200 - 80) / 7; // window minus the navigation rail
+    expect(bar.width, greaterThan(cell * 6.5));
     await unmount(tester);
   });
 

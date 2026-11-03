@@ -35,7 +35,7 @@ void main() {
     );
     expect(
       nextEventDescription(snapshot([entry(Day(2026, 11, 4), null)]), today),
-      'Prochain : Dentiste — Demain',
+      'Prochain : Dentiste — Demain · Journée',
     );
     expect(
       nextEventDescription(

@@ -171,7 +171,7 @@ String nextEventDescription(WidgetSnapshot snapshot, Day today) {
       : next.localDay == today.addDays(1)
       ? 'Demain'
       : DateFormat.MMMEd('fr').format(next.localDay.toLocalMidnight());
-  final time = next.time == null ? '' : ' à ${next.time}';
+  final time = next.time == null ? ' · Journée' : ' à ${next.time}';
   return 'Prochain : ${next.title} — $day$time';
 }
 

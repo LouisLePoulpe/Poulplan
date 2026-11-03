@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Home screen widgets only accept a fixed set of views (no plain View):
+     the colour bars are FrameLayouts. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -30,7 +32,7 @@
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:visibility="gone">
-        <View
+        <FrameLayout
             android:id="@+id/row_0_bar"
             android:layout_width="4dp"
             android:layout_height="match_parent"
@@ -66,7 +68,7 @@
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:visibility="gone">
-        <View
+        <FrameLayout
             android:id="@+id/row_1_bar"
             android:layout_width="4dp"
             android:layout_height="match_parent"
@@ -102,7 +104,7 @@
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:visibility="gone">
-        <View
+        <FrameLayout
             android:id="@+id/row_2_bar"
             android:layout_width="4dp"
             android:layout_height="match_parent"
@@ -138,7 +140,7 @@
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:visibility="gone">
-        <View
+        <FrameLayout
             android:id="@+id/row_3_bar"
             android:layout_width="4dp"
             android:layout_height="match_parent"
@@ -174,7 +176,7 @@
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:visibility="gone">
-        <View
+        <FrameLayout
             android:id="@+id/row_4_bar"
             android:layout_width="4dp"
             android:layout_height="match_parent"
@@ -210,7 +212,7 @@
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:visibility="gone">
-        <View
+        <FrameLayout
             android:id="@+id/row_5_bar"
             android:layout_width="4dp"
             android:layout_height="match_parent"

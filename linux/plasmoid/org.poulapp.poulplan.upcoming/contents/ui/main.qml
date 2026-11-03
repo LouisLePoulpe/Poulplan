@@ -79,7 +79,7 @@ PlasmoidItem {
             const date = new Date(parts[0], parts[1] - 1, parts[2]);
             day = Qt.locale("fr_FR").toString(date, "ddd d MMM");
         }
-        return entry.time ? day + " à " + entry.time : day;
+        return entry.time ? day + " à " + entry.time : day + " · Journée";
     }
 
     function open(entry) {
@@ -98,12 +98,20 @@ PlasmoidItem {
     }
 
     fullRepresentation: ColumnLayout {
+        readonly property real rowHeight: Kirigami.Units.gridUnit * 2.6
+        // The popup takes the size of its content (header + rows), the list
+        // scrolls beyond, and nothing is drawn outside of it.
         Layout.minimumWidth: Kirigami.Units.gridUnit * 14
-        Layout.minimumHeight: Kirigami.Units.gridUnit * 10
-        Layout.preferredWidth: Kirigami.Units.gridUnit * 18
+        Layout.preferredWidth: Kirigami.Units.gridUnit * 20
+        Layout.minimumHeight: Kirigami.Units.gridUnit * 6
+        Layout.preferredHeight: heading.implicitHeight + Kirigami.Units.largeSpacing * 2
+            + Math.max(1, Math.min(root.entries.length, Plasmoid.configuration.maxEvents)) * rowHeight
+        Layout.maximumHeight: Kirigami.Units.gridUnit * 40
         spacing: Kirigami.Units.smallSpacing
+        clip: true
 
         PlasmaExtras.Heading {
+            id: heading
             level: 4
             text: "À venir"
             Layout.fillWidth: true
@@ -119,43 +127,49 @@ PlasmoidItem {
             opacity: 0.7
         }
 
-        Repeater {
-            model: root.entries
-            delegate: PlasmaComponents.ItemDelegate {
-                required property var modelData
-                Layout.fillWidth: true
-                onClicked: root.open(modelData)
-                contentItem: RowLayout {
-                    Rectangle {
-                        Layout.preferredWidth: 4
-                        Layout.fillHeight: true
-                        radius: 2
-                        // Exported as ARGB integer.
-                        color: "#" + (modelData.color >>> 0).toString(16).padStart(8, "0").slice(2)
-                    }
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 0
-                        PlasmaComponents.Label {
-                            text: modelData.title
-                            elide: Text.ElideRight
-                            Layout.fillWidth: true
+        PlasmaComponents.ScrollView {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            visible: root.entries.length > 0
+
+            ListView {
+                id: list
+                clip: true
+                model: root.entries
+                delegate: PlasmaComponents.ItemDelegate {
+                    required property var modelData
+                    width: ListView.view.width
+                    height: rowHeight
+                    onClicked: root.open(modelData)
+                    contentItem: RowLayout {
+                        spacing: Kirigami.Units.smallSpacing
+                        Rectangle {
+                            Layout.preferredWidth: 4
+                            Layout.fillHeight: true
+                            radius: 2
+                            // Exported as an ARGB integer.
+                            color: "#" + (modelData.color >>> 0).toString(16).padStart(8, "0").slice(2)
                         }
-                        PlasmaComponents.Label {
-                            text: root.whenText(modelData)
-                                + (modelData.location ? " · " + modelData.location : "")
-                            elide: Text.ElideRight
-                            opacity: 0.7
-                            font.pointSize: Kirigami.Theme.smallFont.pointSize
+                        ColumnLayout {
                             Layout.fillWidth: true
+                            spacing: 0
+                            PlasmaComponents.Label {
+                                text: modelData.title
+                                elide: Text.ElideRight
+                                Layout.fillWidth: true
+                            }
+                            PlasmaComponents.Label {
+                                text: root.whenText(modelData)
+                                    + (modelData.location ? " · " + modelData.location : "")
+                                elide: Text.ElideRight
+                                opacity: 0.7
+                                font.pointSize: Kirigami.Theme.smallFont.pointSize
+                                Layout.fillWidth: true
+                            }
                         }
                     }
                 }
             }
-        }
-
-        Item {
-            Layout.fillHeight: true
         }
     }
 }

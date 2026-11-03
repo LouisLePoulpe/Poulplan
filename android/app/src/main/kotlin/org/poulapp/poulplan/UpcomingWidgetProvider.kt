@@ -57,7 +57,7 @@ class UpcomingWidgetProvider : HomeWidgetProvider() {
                 views.setViewVisibility(row, View.VISIBLE)
                 views.setTextViewText(title, entry.title)
                 val day = dayLabel(entry.localDay, today)
-                val time = entry.time?.let { " · $it" } ?: ""
+                val time = " · " + (entry.time ?: "Journée")
                 val place = entry.location?.takeIf { it.isNotBlank() }?.let { " · $it" } ?: ""
                 views.setTextViewText(whenView, "$day$time$place")
                 views.setInt(bars[i], "setBackgroundColor", entry.color)

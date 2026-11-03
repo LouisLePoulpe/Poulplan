@@ -10,6 +10,7 @@ import 'package:poulplan/data/providers.dart';
 import 'package:poulplan/data/repositories/event_repository.dart';
 import 'package:poulplan/domain/calendar/day.dart';
 import 'package:poulplan/domain/entities/calendar_event.dart';
+import 'package:poulplan/features/calendar/presentation/views/month_view.dart';
 import 'package:poulplan/features/calendar/providers/calendar_providers.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 
@@ -244,8 +245,15 @@ void main() {
     expect(saved.allDay, isTrue);
     expect(saved.start, DateTime.utc(2026, 11, 3));
     expect(saved.end, DateTime.utc(2026, 11, 7));
-    // Shown on each of the 4 days.
-    expect(find.text('Vacances'), findsNWidgets(4));
+    // One continuous bar over the 4 days.
+    expect(find.text('Vacances'), findsOneWidget);
+    final bar = tester.getSize(
+      find.ancestor(
+        of: find.text('Vacances'),
+        matching: find.byType(MonthEventChip),
+      ),
+    );
+    expect(bar.width, greaterThan(3.5 * (1200 - 80) / 7));
     await unmount(tester);
   });
 

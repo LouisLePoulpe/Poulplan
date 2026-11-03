@@ -8,6 +8,7 @@ import '../../../../core/format/formatters.dart';
 import '../../../../domain/calendar/day.dart';
 import '../../../../domain/calendar/day_layout.dart';
 import '../../../../domain/calendar/event_timing.dart';
+import '../../../../domain/calendar/week_lanes.dart';
 import '../../../../domain/entities/calendar_event.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../event_editor/presentation/quick_create.dart';
@@ -183,28 +184,40 @@ class _Header extends ConsumerWidget {
   }
 }
 
-/// All-day events (and drop zone to move events by whole days).
+/// All-day events (and drop zone to move events by whole days); multi-day
+/// ones are drawn as continuous bars over the columns.
 class _AllDayRow extends ConsumerWidget {
   const _AllDayRow({required this.days, required this.eventsByDay});
 
   final List<Day> days;
   final Map<Day, List<CalendarEvent>> eventsByDay;
 
+  static const _chip = 18.0;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
-    final allDay = {
-      for (final day in days)
-        day: (eventsByDay[day] ?? const <CalendarEvent>[])
-            .where((e) => e.allDay)
-            .toList(),
-    };
-    final rows = allDay.values.fold(
+    final layout = layoutWeek(
+      days,
+      eventsByDay,
+      ref.watch(localTimeProvider),
+      onlyAllDay: true,
+    );
+    final lanes = layout.laneCount.clamp(0, _allDayRowMaxChips);
+    final singlesRows = layout.singles.values.fold(
       0,
       (max, list) => list.length > max ? list.length : max,
     );
-    final visibleRows = rows.clamp(0, _allDayRowMaxChips);
+    final rows = (lanes + singlesRows).clamp(0, _allDayRowMaxChips);
+    final hidden = [
+      for (var i = 0; i < days.length; i++)
+        layout.spans
+            .where(
+              (s) => s.lane >= lanes && s.startColumn <= i && s.endColumn >= i,
+            )
+            .length,
+    ];
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,43 +233,109 @@ class _AllDayRow extends ConsumerWidget {
             ),
           ),
         ),
-        for (final day in days)
-          Expanded(
-            child: DragTarget<CalendarEvent>(
-              onAcceptWithDetails: (details) => saveMovedEvent(
-                context,
-                ref,
-                moveToDay(
-                  details.data,
-                  day,
-                  display: ref.read(displayLocationProvider),
-                ),
-              ),
-              builder: (context, candidates, rejected) => Container(
-                constraints: BoxConstraints(minHeight: 20 + visibleRows * 18.0),
-                color: candidates.isNotEmpty
-                    ? scheme.primaryContainer.withValues(alpha: 0.5)
-                    : null,
-                padding: const EdgeInsets.only(top: 2),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    for (final e in allDay[day]!.take(_allDayRowMaxChips))
-                      MonthEventChip(event: e),
-                    if (allDay[day]!.length > _allDayRowMaxChips)
-                      Text(
-                        l10n.moreEvents(
-                          allDay[day]!.length - _allDayRowMaxChips,
+        Expanded(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final columnWidth = constraints.maxWidth / days.length;
+              return Stack(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (var i = 0; i < days.length; i++)
+                        Expanded(
+                          child: _AllDayCell(
+                            day: days[i],
+                            singles: layout.singles[days[i]] ?? const [],
+                            reservedRows: lanes,
+                            totalRows: rows,
+                            hiddenSpans: hidden[i],
+                            highlight: scheme.primaryContainer.withValues(
+                              alpha: 0.5,
+                            ),
+                          ),
                         ),
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.labelSmall,
+                    ],
+                  ),
+                  for (final span in layout.spans)
+                    if (span.lane < lanes)
+                      Positioned(
+                        left: columnWidth * span.startColumn,
+                        width:
+                            columnWidth *
+                            (span.endColumn - span.startColumn + 1),
+                        top: 2 + span.lane * _chip,
+                        height: _chip,
+                        child: MonthEventChip(
+                          event: span.event,
+                          continuesBefore: span.continuesBefore,
+                          continuesAfter: span.continuesAfter,
+                        ),
                       ),
-                  ],
-                ),
-              ),
-            ),
+                ],
+              );
+            },
           ),
+        ),
       ],
+    );
+  }
+}
+
+class _AllDayCell extends ConsumerWidget {
+  const _AllDayCell({
+    required this.day,
+    required this.singles,
+    required this.reservedRows,
+    required this.totalRows,
+    required this.hiddenSpans,
+    required this.highlight,
+  });
+
+  final Day day;
+  final List<CalendarEvent> singles;
+  final int reservedRows;
+  final int totalRows;
+  final int hiddenSpans;
+  final Color highlight;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final room = (totalRows - reservedRows).clamp(0, _allDayRowMaxChips);
+    final overflow = singles.length > room || hiddenSpans > 0;
+    final shown = overflow ? (room - 1).clamp(0, room) : room;
+    final more = hiddenSpans + (singles.length - shown).clamp(0, 999);
+    return DragTarget<CalendarEvent>(
+      onAcceptWithDetails: (details) => saveMovedEvent(
+        context,
+        ref,
+        moveToDay(
+          details.data,
+          day,
+          display: ref.read(displayLocationProvider),
+        ),
+      ),
+      builder: (context, candidates, rejected) => Container(
+        constraints: BoxConstraints(
+          minHeight: 20 + totalRows * _AllDayRow._chip,
+        ),
+        color: candidates.isNotEmpty ? highlight : null,
+        padding: const EdgeInsets.only(top: 2),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(height: reservedRows * _AllDayRow._chip),
+            for (final e in singles.take(shown)) MonthEventChip(event: e),
+            if (overflow && more > 0)
+              Text(
+                l10n.moreEvents(more),
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
+          ],
+        ),
+      ),
     );
   }
 }
