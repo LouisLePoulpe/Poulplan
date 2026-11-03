@@ -34,6 +34,10 @@ Une ligne par décision : date — décision — raison.
 - 2026-11-03 — Rappels déjà passés au moment où ils deviennent connus (événement créé/déplacé tard, app Linux fermée) : affichés aussitôt si l'événement n'est pas terminé (24 h max), une seule fois grâce à l'ensemble persistant des rappels déjà affichés ou confiés au système.
 - 2026-11-03 — Saisie d'heure : sélecteur tactile Material sur Android ; sur ordinateur, deux champs au clavier ; tous les champs numériques acceptent la rangée du haut AZERTY sans Maj.
 - 2026-11-03 — Linux : builds release/profile à instance unique, builds debug non uniques (développement à côté d'une version installée).
+- 2026-11-04 — Widgets : un instantané JSON commun (prochains événements + jours occupés) écrit par l'app ; les widgets natifs (Kotlin, QML) le relisent et recalculent la date du jour eux-mêmes — à jour après minuit sans l'app, aucune logique de récurrence dupliquée.
+- 2026-11-04 — Zone de notification Linux : StatusNotifierItem + dbusmenu implémentés en Dart sur le paquet `dbus` (MPL-2.0) plutôt que `tray_manager` (libayatana-appindicator) — aucune bibliothèque native à empaqueter (Flatpak, CI).
+- 2026-11-04 — Widget KDE : plasmoïde QML qui lit `widget.json` via la source « executable » de Plasma 5 Support, commande de lancement configurable (Flatpak par défaut, distrobox en développement).
+- 2026-11-04 — Fuseau Linux : réponse du greffon et fichiers système acceptés seulement s'ils correspondent à l'heure locale (maintenant et à +6 mois) ; `/etc/localtime` copié reconnu par contenu.
 - À traiter en v1.0 : `sqlite3` 3.x télécharge par défaut des bibliothèques SQLite précompilées (hook de build) ; pour F-Droid, compiler depuis la source (`hooks: user_defines: sqlite3: source: source`) ou utiliser la bibliothèque système.
 - À décider : moteur de cartes/routage libre hors ligne (jalon v0.8.0).
 - 2026-11-03 — Rappels Linux : l'application elle-même, unique (GApplication), reste en arrière-plan quand la fenêtre est fermée et peut démarrer cachée (`--background`, fichier XDG autostart ; portail Background en Flatpak) — pas de service systemd séparé, un seul code de rappels.

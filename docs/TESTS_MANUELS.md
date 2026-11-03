@@ -99,3 +99,42 @@ Sur **Linux** et sur le **Pixel** :
 
 ## Retour attendu
 Pour chaque section : ✅ / ❌ + description. Les échecs seront corrigés avant les tags v0.4.0 et v0.5.0.
+
+---
+
+# Tests manuels — v0.6.0 (intégrations)
+
+Préparation :
+- **Linux** : quitter l'instance en cours (icône Poulplan de la zone de notification → **Quitter**, ou Paramètres → Rappels → **Quitter Poulplan**), puis relancer `~/dev/Poulplan/build/linux/x64/release/bundle/poulplan`.
+- **Pixel** : le brancher ; j'installe la 0.6.0 (ou `adb install -r build/app/outputs/flutter-apk/app-release.apk`).
+
+## D1. Heure sous Linux (bug trouvé et corrigé)
+- [ ] Un même événement affiche **la même heure** sous Linux et sur le Pixel (avant : une heure de moins sous Linux, affichage en UTC).
+
+## D2. Zone de notification Linux
+- [ ] Une icône Poulplan (logo jaune) apparaît dans la zone de notification KDE.
+- [ ] Le survol affiche « Prochain : <titre> — Aujourd'hui à HH:MM ».
+- [ ] Clic gauche : la fenêtre s'affiche (même après l'avoir fermée).
+- [ ] Clic droit : menu **Ouvrir Poulplan** / **Quitter** ; Quitter ferme vraiment l'application (l'icône disparaît).
+
+## D3. Widget KDE Plasma (plasmoïde)
+- [ ] Installer (sur Bazzite, hors distrobox) :
+  ```bash
+  kpackagetool6 -t Plasma/Applet -i ~/dev/Poulplan/linux/plasmoid/org.poulapp.poulplan.upcoming
+  ```
+  (mise à jour plus tard : `-u` au lieu de `-i`).
+- [ ] Clic droit sur le bureau ou le tableau de bord → **Ajouter des composants graphiques** → « Poulplan — À venir ».
+- [ ] Configurer le composant → **Commande de lancement** :
+  `distrobox enter claude -- /home/LouisLePoulpe/dev/Poulplan/build/linux/x64/release/bundle/poulplan`
+- [ ] La liste montre les prochains événements (titre, « Aujourd'hui à… », lieu, couleur).
+- [ ] Créer / modifier un événement dans Poulplan : le widget se met à jour en moins d'une minute.
+- [ ] Cliquer sur un événement du widget : Poulplan s'ouvre **directement sur cet événement**.
+
+## D4. Widgets Android
+- [ ] Appui long sur l'écran d'accueil → **Widgets** → Poulplan : ajouter **À venir** et **Mois**.
+- [ ] « À venir » : prochains événements avec « Aujourd'hui / Demain / date », heure, lieu, barre de couleur.
+- [ ] « Mois » : mois en cours, jour courant en jaune, points de couleur sous les jours occupés ; redimensionner le widget → le dessin s'adapte.
+- [ ] Créer / modifier / supprimer un événement dans l'app : les deux widgets se mettent à jour.
+- [ ] Toucher un événement du widget « À venir » : l'app s'ouvre **directement sur l'événement** (aussi app fermée).
+- [ ] Toucher le widget « Mois » : l'app s'ouvre.
+- [ ] Le lendemain (ou après minuit) sans ouvrir l'app : « Aujourd'hui / Demain » et le jour en jaune sont à jour (rafraîchissement toutes les 30 min).

@@ -10,7 +10,8 @@ Dernière mise à jour : 2026-11-03
 | v0.3.0 Calendrier avancé | **Terminé** — vérifié sous Linux, par tests et sur le Pixel |
 | v0.4.0 Cloud Poulapp | **Terminé** — validé par Louis : connexion et synchro Linux ↔ Pixel |
 | v0.5.0 Notifications | **Terminé** — validé par Louis : Pixel (déverrouillé, verrouillé) et Linux (KDE) |
-| v0.6.0 → v1.0.0 | À faire |
+| v0.6.0 Intégrations | **Code terminé, non tagué** — en attente des tests manuels (section v0.6.0 de `docs/TESTS_MANUELS.md`) |
+| v0.7.0 → v1.0.0 | À faire |
 
 ## Reprendre le travail à froid
 ```bash
@@ -143,8 +144,26 @@ Mini-plan : tests d'abord (calcul des déclenchements) → rappels sur l'événe
   - un rappel reporté sous Linux est perdu si l'app est quittée pendant le report ;
   - sur Android 14+, l'utilisateur peut balayer une notification « persistante » (règle du système).
 
+## v0.6.0 — Intégrations
+Mini-plan : instantané commun pour les widgets (tests d'abord) → exportateur (fichier sous Linux, home_widget sous Android) → widgets Android natifs (Kotlin) → icône de zone de notification Linux → plasmoïde KDE → ouverture directe d'un événement → vérification.
+
+- Fait :
+  - instantané `widget.json` / préférences Android : prochains événements (20) et jours occupés (3 couleurs/jour), exporté 2 s après tout changement, relu par les widgets qui recalculent « aujourd'hui » eux-mêmes ;
+  - Android : widgets « À venir » (6 lignes, clic → événement) et « Mois » (dessiné en Kotlin, jour courant, points de couleur), `updatePeriodMillis` 30 min ;
+  - Linux : icône StatusNotifierItem en Dart pur via D-Bus (pas de bibliothèque native), menu dbusmenu Ouvrir/Quitter, infobulle « Prochain : … » ;
+  - plasmoïde Plasma 6 `linux/plasmoid/org.poulapp.poulplan.upcoming` (lecture du fichier toutes les minutes, commande de lancement configurable) ;
+  - ouverture directe : `poulplan://event/<id>` (Android), `poulplan --open-event=<id>` (Linux, transmis à l'instance existante par action GApplication).
+- Corrigé en cours de route : **sous Linux en distrobox, tous les horaires s'affichaient en UTC** (`/etc/localtime` est une copie, `/etc/timezone` périmé à `Etc/UTC`, et le greffon de fuseau renvoyait cette valeur) → fuseau reconnu par le contenu de `/etc/localtime` et toute réponse validée contre l'horloge locale.
+- Testé :
+  - 225 tests verts (instantané, liens, infobulle, détection du fuseau dont le cas distrobox) ;
+  - Linux réel : icône enregistrée auprès de KDE (`StatusNotifierWatcher`), infobulle lue par D-Bus, `widget.json` écrit, `--open-event=<id>` ouvre l'éditeur sur l'événement (capture), horaires corrigés en heure de Paris ;
+  - builds release Linux et Android (widgets compris).
+- Non testé : affichage réel des widgets Android (Pixel débranché), plasmoïde (pas d'outil QML dans le conteneur), menu de l'icône (clics) → tests manuels.
+- Limites : le widget « Mois » montre le mois en cours seulement ; le plasmoïde lit le fichier toutes les minutes (pas d'événement immédiat).
+
 ## Journal
 - 2026-11-03 : dépôt initialisé (CLAUDE.md, spec, roadmap, CI, licence GPL-3.0).
+- 2026-11-04 : v0.6.0 codée ; bug d'affichage en UTC sous Linux découvert et corrigé.
 - 2026-11-03 : tour 2 des tests manuels : création rapide avec clavier ✅, notifications Pixel déverrouillé/verrouillé ✅, chiffres AZERTY ✅, synchro partout ✅ ; traits de grille et notifications Linux ✅ après correction (grille dessinée d'un seul tenant, `07e99da`) et arrêt de l'ancienne instance. v0.4.0 et v0.5.0 taguées.
 - 2026-11-03 : tour 1 des tests manuels de Louis : synchro Linux ✅ ; connexion Pixel ❌ (pas de permission INTERNET en release), notification de test Pixel ❌ (icône supprimée par la minification), pas de demande d'autorisation au lancement ❌, création rapide chevauchée par le clavier ❌, traits de grille discontinus ❌, chiffres impossibles à taper (AZERTY sans Maj) ❌, pas de rappel pour un événement créé moins de 10 min avant ❌ → tous corrigés en 0.5.1 (`52a62bb`), tour 2 à faire.
 - 2026-11-03 : v0.5.0 codée ; arrêt pour les tests manuels (cloud + notifications).
