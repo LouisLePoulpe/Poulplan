@@ -163,6 +163,7 @@ Mini-plan : instantané commun pour les widgets (tests d'abord) → exportateur 
 
 ## Journal
 - 2026-11-03 : dépôt initialisé (CLAUDE.md, spec, roadmap, CI, licence GPL-3.0).
+- 2026-11-04 : retours v0.6 de Louis : widget Mois ✅, widget À venir ❌ (`<View>` interdit dans un widget), plasmoïde qui déborde ❌, demandes : « Journée », barres multi-jours continues, retrait des événements de démo → corrigé en 0.6.1 (`cc1ab21`) ; mes 8 événements de démonstration supprimés (suppression synchronisée).
 - 2026-11-04 : v0.6.0 codée ; bug d'affichage en UTC sous Linux découvert et corrigé.
 - 2026-11-03 : tour 2 des tests manuels : création rapide avec clavier ✅, notifications Pixel déverrouillé/verrouillé ✅, chiffres AZERTY ✅, synchro partout ✅ ; traits de grille et notifications Linux ✅ après correction (grille dessinée d'un seul tenant, `07e99da`) et arrêt de l'ancienne instance. v0.4.0 et v0.5.0 taguées.
 - 2026-11-03 : tour 1 des tests manuels de Louis : synchro Linux ✅ ; connexion Pixel ❌ (pas de permission INTERNET en release), notification de test Pixel ❌ (icône supprimée par la minification), pas de demande d'autorisation au lancement ❌, création rapide chevauchée par le clavier ❌, traits de grille discontinus ❌, chiffres impossibles à taper (AZERTY sans Maj) ❌, pas de rappel pour un événement créé moins de 10 min avant ❌ → tous corrigés en 0.5.1 (`52a62bb`), tour 2 à faire.

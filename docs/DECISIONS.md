@@ -38,6 +38,7 @@ Une ligne par décision : date — décision — raison.
 - 2026-11-04 — Zone de notification Linux : StatusNotifierItem + dbusmenu implémentés en Dart sur le paquet `dbus` (MPL-2.0) plutôt que `tray_manager` (libayatana-appindicator) — aucune bibliothèque native à empaqueter (Flatpak, CI).
 - 2026-11-04 — Widget KDE : plasmoïde QML qui lit `widget.json` via la source « executable » de Plasma 5 Support, commande de lancement configurable (Flatpak par défaut, distrobox en développement).
 - 2026-11-04 — Fuseau Linux : réponse du greffon et fichiers système acceptés seulement s'ils correspondent à l'heure locale (maintenant et à +6 mois) ; `/etc/localtime` copié reconnu par contenu.
+- 2026-11-04 — Événements de plusieurs jours : une barre continue par semaine, répartie sur des couloirs (le plus long en haut), les événements d'un jour en dessous ; traits verticaux de la grille dessinés sous les barres.
 - À traiter en v1.0 : `sqlite3` 3.x télécharge par défaut des bibliothèques SQLite précompilées (hook de build) ; pour F-Droid, compiler depuis la source (`hooks: user_defines: sqlite3: source: source`) ou utiliser la bibliothèque système.
 - À décider : moteur de cartes/routage libre hors ligne (jalon v0.8.0).
 - 2026-11-03 — Rappels Linux : l'application elle-même, unique (GApplication), reste en arrière-plan quand la fenêtre est fermée et peut démarrer cachée (`--background`, fichier XDG autostart ; portail Background en Flatpak) — pas de service systemd séparé, un seul code de rappels.
