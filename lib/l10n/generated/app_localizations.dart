@@ -963,6 +963,138 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Conservé'**
   String get conflictKept;
+
+  /// No description provided for @fieldReminders.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rappels'**
+  String get fieldReminders;
+
+  /// No description provided for @addReminder.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un rappel'**
+  String get addReminder;
+
+  /// No description provided for @reminderBefore.
+  ///
+  /// In fr, this message translates to:
+  /// **'avant'**
+  String get reminderBefore;
+
+  /// No description provided for @unitMinutes.
+  ///
+  /// In fr, this message translates to:
+  /// **'minutes'**
+  String get unitMinutes;
+
+  /// No description provided for @unitHours.
+  ///
+  /// In fr, this message translates to:
+  /// **'heures'**
+  String get unitHours;
+
+  /// No description provided for @settingsReminders.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rappels'**
+  String get settingsReminders;
+
+  /// No description provided for @settingsDefaultReminder.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rappel par défaut'**
+  String get settingsDefaultReminder;
+
+  /// No description provided for @settingsDefaultReminderSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouté aux nouveaux événements avec horaire'**
+  String get settingsDefaultReminderSubtitle;
+
+  /// No description provided for @noReminder.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun'**
+  String get noReminder;
+
+  /// No description provided for @notificationsAllowed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Notifications autorisées'**
+  String get notificationsAllowed;
+
+  /// No description provided for @notificationsDenied.
+  ///
+  /// In fr, this message translates to:
+  /// **'Notifications non autorisées'**
+  String get notificationsDenied;
+
+  /// No description provided for @notificationsAllow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autoriser'**
+  String get notificationsAllow;
+
+  /// No description provided for @notificationsTest.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tester les notifications'**
+  String get notificationsTest;
+
+  /// No description provided for @notificationsTestSubtitleAndroid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une notification tout de suite, une autre dans 1 minute (à tester écran verrouillé)'**
+  String get notificationsTestSubtitleAndroid;
+
+  /// No description provided for @notificationsTestSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Affiche une notification tout de suite'**
+  String get notificationsTestSubtitle;
+
+  /// No description provided for @notificationsTestSent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Notification de test envoyée'**
+  String get notificationsTestSent;
+
+  /// No description provided for @settingsRunInBackground.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer en arrière-plan'**
+  String get settingsRunInBackground;
+
+  /// No description provided for @settingsRunInBackgroundSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermer la fenêtre garde Poulplan actif pour les rappels'**
+  String get settingsRunInBackgroundSubtitle;
+
+  /// No description provided for @settingsAutostart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lancer à l\'ouverture de session'**
+  String get settingsAutostart;
+
+  /// No description provided for @settingsAutostartSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Poulplan démarre sans fenêtre pour afficher les rappels'**
+  String get settingsAutostartSubtitle;
+
+  /// No description provided for @quitApp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quitter Poulplan'**
+  String get quitApp;
+
+  /// No description provided for @quitAppSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus aucun rappel tant que l\'application n\'est pas relancée'**
+  String get quitAppSubtitle;
 }
 
 class _AppLocalizationsDelegate

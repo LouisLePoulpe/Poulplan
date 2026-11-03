@@ -1,13 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 import 'app.dart';
 import 'core/debug/screenshot_extension.dart';
+import 'core/platform/desktop_integration.dart';
 import 'core/time/device_time_zone.dart';
 import 'data/db/app_database.dart';
 import 'data/db/connection.dart';
 import 'data/sync/change_recorder.dart';
+import 'features/reminders/reminder_scheduler.dart';
 import 'data/providers.dart';
 
 Future<void> main() async {
@@ -24,6 +28,12 @@ Future<void> main() async {
     ],
   );
   registerDebugExtensions(container);
+  final settings = await container
+      .read(settingsRepositoryProvider)
+      .watch()
+      .first;
+  await DesktopIntegration.setHideOnClose(settings.runInBackground);
+  unawaited(container.read(reminderSchedulerProvider).start());
   runApp(
     UncontrolledProviderScope(container: container, child: const PoulplanApp()),
   );

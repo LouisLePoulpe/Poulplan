@@ -235,5 +235,27 @@
         "type": "String"
       }
     }
-  }
+  },
+  "fieldReminders": "Rappels",
+  "addReminder": "Ajouter un rappel",
+  "reminderBefore": "avant",
+  "unitMinutes": "minutes",
+  "unitHours": "heures",
+  "settingsReminders": "Rappels",
+  "settingsDefaultReminder": "Rappel par défaut",
+  "settingsDefaultReminderSubtitle": "Ajouté aux nouveaux événements avec horaire",
+  "noReminder": "Aucun",
+  "notificationsAllowed": "Notifications autorisées",
+  "notificationsDenied": "Notifications non autorisées",
+  "notificationsAllow": "Autoriser",
+  "notificationsTest": "Tester les notifications",
+  "notificationsTestSubtitleAndroid": "Une notification tout de suite, une autre dans 1 minute (à tester écran verrouillé)",
+  "notificationsTestSubtitle": "Affiche une notification tout de suite",
+  "notificationsTestSent": "Notification de test envoyée",
+  "settingsRunInBackground": "Continuer en arrière-plan",
+  "settingsRunInBackgroundSubtitle": "Fermer la fenêtre garde Poulplan actif pour les rappels",
+  "settingsAutostart": "Lancer à l'ouverture de session",
+  "settingsAutostartSubtitle": "Poulplan démarre sans fenêtre pour afficher les rappels",
+  "quitApp": "Quitter Poulplan",
+  "quitAppSubtitle": "Plus aucun rappel tant que l'application n'est pas relancée"
 }

@@ -24,11 +24,15 @@ class ReminderFire {
   final int minutesBefore;
   final DateTime fireAt;
 
-  /// Stable id for the platform notification (positive 31-bit).
+  /// Stable id for the platform notification (positive, 30 bits; ids with
+  /// [snoozeIdFlag] are reserved for snoozed reminders).
   final int notificationId;
 }
 
-/// Stable positive 31-bit id of the reminder [minutesBefore] of [eventId].
+/// Set on the notification id of a snoozed reminder.
+const snoozeIdFlag = 0x40000000;
+
+/// Stable positive 30-bit id of the reminder [minutesBefore] of [eventId].
 int reminderNotificationId(String eventId, int minutesBefore) {
   // FNV-1a, 32 bits.
   var hash = 0x811c9dc5;
@@ -36,7 +40,7 @@ int reminderNotificationId(String eventId, int minutesBefore) {
     hash ^= byte;
     hash = (hash * 0x01000193) & 0xffffffff;
   }
-  final id = hash & 0x7fffffff;
+  final id = hash & 0x3fffffff;
   return id == 0 ? 1 : id;
 }
 

@@ -17,6 +17,7 @@ import '../../calendar/providers/calendar_providers.dart';
 import '../../categories/presentation/color_palette.dart';
 import 'quick_create.dart';
 import 'recurrence_dialog.dart';
+import 'reminders_editor.dart';
 import 'recurrence_text.dart';
 import 'time_zone_picker.dart';
 
@@ -52,15 +53,16 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
       final today = ref.read(todayProvider);
       _setDraft(
         widget.initial ??
-            EventDraft.newTimed(
-              day: today,
-              startMinute: defaultStartMinute(
-                today,
-                today,
-                ref.read(localTimeProvider)(DateTime.now().toUtc()),
-              ),
-              timeZone: ref.read(deviceTimeZoneProvider),
-            ),
+              EventDraft.newTimed(
+                day: today,
+                startMinute: defaultStartMinute(
+                  today,
+                  today,
+                  ref.read(localTimeProvider)(DateTime.now().toUtc()),
+                ),
+                timeZone: ref.read(deviceTimeZoneProvider),
+              )
+          ..reminders = [?ref.read(settingsProvider).defaultReminder],
       );
     }
   }
@@ -318,6 +320,7 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
                     },
                   ),
                 _RecurrenceTile(draft: draft, onChanged: () => setState(() {})),
+                RemindersEditor(draft: draft, onChanged: () => setState(() {})),
                 _OverlapWarning(draft: draft, ignoreId: _original?.id),
                 const Divider(),
                 ListTile(

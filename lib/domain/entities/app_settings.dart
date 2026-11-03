@@ -10,6 +10,8 @@ class AppSettings {
     this.showHolidays = true,
     this.alsaceMoselle = false,
     this.schoolZone,
+    this.defaultReminder = 10,
+    this.runInBackground = true,
   });
 
   static const defaults = AppSettings();
@@ -28,18 +30,30 @@ class AppSettings {
   /// School holidays zone to display (`A`, `B`, `C`, `Corse`), or none.
   final String? schoolZone;
 
+  /// Reminder added to new timed events, in minutes (null: none).
+  final int? defaultReminder;
+
+  /// Linux: closing the window keeps the app running for reminders.
+  final bool runInBackground;
+
   AppSettings copyWith({
     AppThemeMode? themeMode,
     int? firstDayOfWeek,
     bool? showHolidays,
     bool? alsaceMoselle,
     String? Function()? schoolZone,
+    int? Function()? defaultReminder,
+    bool? runInBackground,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     firstDayOfWeek: firstDayOfWeek ?? this.firstDayOfWeek,
     showHolidays: showHolidays ?? this.showHolidays,
     alsaceMoselle: alsaceMoselle ?? this.alsaceMoselle,
     schoolZone: schoolZone != null ? schoolZone() : this.schoolZone,
+    defaultReminder: defaultReminder != null
+        ? defaultReminder()
+        : this.defaultReminder,
+    runInBackground: runInBackground ?? this.runInBackground,
   );
 
   @override
@@ -49,7 +63,9 @@ class AppSettings {
       other.firstDayOfWeek == firstDayOfWeek &&
       other.showHolidays == showHolidays &&
       other.alsaceMoselle == alsaceMoselle &&
-      other.schoolZone == schoolZone;
+      other.schoolZone == schoolZone &&
+      other.defaultReminder == defaultReminder &&
+      other.runInBackground == runInBackground;
 
   @override
   int get hashCode => Object.hash(
@@ -58,5 +74,7 @@ class AppSettings {
     showHolidays,
     alsaceMoselle,
     schoolZone,
+    defaultReminder,
+    runInBackground,
   );
 }

@@ -117,6 +117,31 @@ void main() {
     await unmount(tester);
   });
 
+  testWidgets('reminders: default one plus one added in the editor', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    await tester.tap(find.byTooltip('Nouvel événement'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'Train');
+    await tester.tap(find.text("Plus d'options"));
+    await tester.pumpAndSettle();
+    expect(find.text('10 min avant'), findsOneWidget);
+    await tester.ensureVisible(find.text('Ajouter un rappel'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ajouter un rappel'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('1 h avant'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Enregistrer'));
+    await tester.pumpAndSettle();
+    final saved = await tester.runAsync(
+      () => events.watchBetween(Day(2026, 11, 1), Day(2026, 11, 30)).first,
+    );
+    expect(saved!.single.reminders, [10, 60]);
+    await unmount(tester);
+  });
+
   testWidgets('edit only one occurrence', (tester) async {
     await pumpApp(tester);
     await weeklySeries(tester);

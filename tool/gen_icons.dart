@@ -31,6 +31,17 @@ void main() {
   // Pre-Android 12 splash and in-app logo.
   _write('$_generated/splash.png', _centered(logo, 768, 1.0));
 
+  // Android notification small icon (white silhouette, 24 dp).
+  const densities = {'mdpi': 24, 'hdpi': 36, 'xhdpi': 48, 'xxhdpi': 72};
+  for (final MapEntry(key: density, value: size) in densities.entries) {
+    final dir = Directory('android/app/src/main/res/drawable-$density')
+      ..createSync(recursive: true);
+    _write(
+      '${dir.path}/ic_notification.png',
+      _centered(_lineArt(logo), size, 1.0),
+    );
+  }
+
   for (final size in [64, 128, 256, 512]) {
     final dir = Directory('$_linuxIcons/${size}x$size/apps')
       ..createSync(recursive: true);

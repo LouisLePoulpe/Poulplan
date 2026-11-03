@@ -495,4 +495,76 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get conflictKept => 'Conservé';
+
+  @override
+  String get fieldReminders => 'Rappels';
+
+  @override
+  String get addReminder => 'Ajouter un rappel';
+
+  @override
+  String get reminderBefore => 'avant';
+
+  @override
+  String get unitMinutes => 'minutes';
+
+  @override
+  String get unitHours => 'heures';
+
+  @override
+  String get settingsReminders => 'Rappels';
+
+  @override
+  String get settingsDefaultReminder => 'Rappel par défaut';
+
+  @override
+  String get settingsDefaultReminderSubtitle =>
+      'Ajouté aux nouveaux événements avec horaire';
+
+  @override
+  String get noReminder => 'Aucun';
+
+  @override
+  String get notificationsAllowed => 'Notifications autorisées';
+
+  @override
+  String get notificationsDenied => 'Notifications non autorisées';
+
+  @override
+  String get notificationsAllow => 'Autoriser';
+
+  @override
+  String get notificationsTest => 'Tester les notifications';
+
+  @override
+  String get notificationsTestSubtitleAndroid =>
+      'Une notification tout de suite, une autre dans 1 minute (à tester écran verrouillé)';
+
+  @override
+  String get notificationsTestSubtitle =>
+      'Affiche une notification tout de suite';
+
+  @override
+  String get notificationsTestSent => 'Notification de test envoyée';
+
+  @override
+  String get settingsRunInBackground => 'Continuer en arrière-plan';
+
+  @override
+  String get settingsRunInBackgroundSubtitle =>
+      'Fermer la fenêtre garde Poulplan actif pour les rappels';
+
+  @override
+  String get settingsAutostart => 'Lancer à l\'ouverture de session';
+
+  @override
+  String get settingsAutostartSubtitle =>
+      'Poulplan démarre sans fenêtre pour afficher les rappels';
+
+  @override
+  String get quitApp => 'Quitter Poulplan';
+
+  @override
+  String get quitAppSubtitle =>
+      'Plus aucun rappel tant que l\'application n\'est pas relancée';
 }

@@ -8,6 +8,7 @@ import '../../../core/routing/app_router.dart';
 import '../../../data/providers.dart';
 import '../../../domain/entities/app_settings.dart';
 import '../../../domain/holidays/school_holidays.dart';
+import 'reminders_settings.dart';
 import '../../../l10n/generated/app_localizations.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -144,6 +145,8 @@ class SettingsPage extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push(Routes.birthdays),
           ),
+          section(l10n.settingsReminders),
+          const RemindersSettings(),
           section(l10n.settingsAbout),
           ListTile(
             leading: Image.asset(

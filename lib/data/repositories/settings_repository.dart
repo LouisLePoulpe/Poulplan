@@ -11,6 +11,8 @@ class SettingsRepository {
   static const _showHolidays = 'show_holidays';
   static const _alsaceMoselle = 'alsace_moselle';
   static const _schoolZone = 'school_zone';
+  static const _defaultReminder = 'default_reminder';
+  static const _runInBackground = 'run_in_background';
 
   Stream<AppSettings> watch() => _db.select(_db.settings).watch().map((rows) {
     final values = {for (final r in rows) r.key: r.value};
@@ -26,6 +28,12 @@ class SettingsRepository {
       schoolZone: values[_schoolZone]?.isEmpty ?? true
           ? null
           : values[_schoolZone],
+      defaultReminder: switch (values[_defaultReminder]) {
+        null => AppSettings.defaults.defaultReminder,
+        'none' => null,
+        final v => int.tryParse(v),
+      },
+      runInBackground: values[_runInBackground] != 'false',
     );
   });
 
@@ -41,6 +49,12 @@ class SettingsRepository {
   Future<void> setAlsaceMoselle(bool value) => _set(_alsaceMoselle, '$value');
 
   Future<void> setSchoolZone(String? zone) => _set(_schoolZone, zone ?? '');
+
+  Future<void> setDefaultReminder(int? minutes) =>
+      _set(_defaultReminder, minutes?.toString() ?? 'none');
+
+  Future<void> setRunInBackground(bool value) =>
+      _set(_runInBackground, '$value');
 
   Future<void> _set(String key, String value) => _db
       .into(_db.settings)

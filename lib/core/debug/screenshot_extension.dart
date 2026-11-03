@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/calendar/day.dart';
 import '../../features/calendar/providers/calendar_providers.dart';
+import '../../features/reminders/reminder_scheduler.dart';
 import '../routing/app_router.dart';
 
 /// Debug-only VM service extension used to check the app without touching
@@ -20,6 +21,14 @@ import '../routing/app_router.dart';
 /// PNG of the app's own window to `path`.
 void registerDebugExtensions(ProviderContainer container) {
   if (!kDebugMode) return;
+  // Same as the « Tester les notifications » button.
+  developer.registerExtension('ext.poulplan.testNotification', (
+    method,
+    params,
+  ) async {
+    await container.read(reminderSchedulerProvider).sendTest();
+    return developer.ServiceExtensionResponse.result('{"sent":true}');
+  });
   developer.registerExtension('ext.poulplan.screenshot', (
     method,
     params,

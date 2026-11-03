@@ -46,11 +46,11 @@ Future<void> main() async {
   }
   final sorted = periods.values.toList()
     ..sort(
-      (a, b) => '${a['start']}${a['zone']}'.compareTo('${b['start']}${b['zone']}'),
+      (a, b) =>
+          '${a['start']}${a['zone']}'.compareTo('${b['start']}${b['zone']}'),
     );
   final json = const JsonEncoder.withIndent(' ').convert({
-    'source':
-        'data.education.gouv.fr — fr-en-calendrier-scolaire (Licence Ouverte 2.0)',
+    'source': 'data.education.gouv.fr — fr-en-calendrier-scolaire (Licence Ouverte 2.0)',
     'generated': DateTime.now().toUtc().toIso8601String().substring(0, 10),
     'endExclusive': true,
     'periods': sorted,
@@ -67,6 +67,8 @@ String _parisDate(String iso) {
   return utc.toIso8601String().substring(0, 10);
 }
 
-String _nextDay(String date) => DateTime.parse(
-  '${date}T00:00:00Z',
-).add(const Duration(days: 1)).toIso8601String().substring(0, 10);
+String _nextDay(String date) =>
+    DateTime.parse('${date}T00:00:00Z')
+        .add(const Duration(days: 1))
+        .toIso8601String()
+        .substring(0, 10);

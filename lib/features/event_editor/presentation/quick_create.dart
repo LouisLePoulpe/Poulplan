@@ -62,9 +62,11 @@ Future<void> showQuickCreate(
         ref.read(todayProvider),
         ref.read(localTimeProvider)(DateTime.now().toUtc()),
       );
+  final defaultReminder = ref.read(settingsProvider).defaultReminder;
   final draft = allDay
       ? EventDraft.newAllDay(day: day, timeZone: zone)
-      : EventDraft.newTimed(day: day, startMinute: minute, timeZone: zone);
+      : (EventDraft.newTimed(day: day, startMinute: minute, timeZone: zone)
+          ..reminders = [?defaultReminder]);
   final moreOptions = await showDialog<bool>(
     context: context,
     builder: (context) => _QuickCreateDialog(draft: draft),
@@ -139,7 +141,13 @@ class _QuickCreateDialogState extends ConsumerState<_QuickCreateDialog> {
               contentPadding: EdgeInsets.zero,
               title: Text(l10n.allDay),
               value: _draft.allDay,
-              onChanged: (v) => setState(() => _draft.allDay = v),
+              onChanged: (v) => setState(() {
+                _draft.allDay = v;
+                // Timed default reminders make no sense for all-day events.
+                _draft.reminders = v
+                    ? []
+                    : [?ref.read(settingsProvider).defaultReminder];
+              }),
             ),
             Wrap(
               spacing: 6,
