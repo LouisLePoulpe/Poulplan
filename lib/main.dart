@@ -12,6 +12,7 @@ import 'data/db/app_database.dart';
 import 'data/db/connection.dart';
 import 'data/sync/change_recorder.dart';
 import 'features/reminders/reminder_scheduler.dart';
+import 'features/widgets/widget_exporter.dart';
 import 'data/providers.dart';
 
 Future<void> main() async {
@@ -34,6 +35,8 @@ Future<void> main() async {
       .first;
   await DesktopIntegration.setHideOnClose(settings.runInBackground);
   unawaited(container.read(reminderSchedulerProvider).start());
+  container.read(widgetExporterProvider).start();
+  unawaited(container.read(linuxTrayProvider).start());
   runApp(
     UncontrolledProviderScope(container: container, child: const PoulplanApp()),
   );

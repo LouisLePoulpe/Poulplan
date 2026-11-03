@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:home_widget/home_widget.dart';
 
 import 'core/platform/desktop_integration.dart';
 import 'core/routing/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'data/providers.dart';
 import 'features/reminders/reminder_scheduler.dart';
+import 'features/widgets/widget_exporter.dart';
 import 'l10n/generated/app_localizations.dart';
 
 class PoulplanApp extends ConsumerStatefulWidget {
@@ -20,6 +22,8 @@ class PoulplanApp extends ConsumerStatefulWidget {
 
 class _PoulplanAppState extends ConsumerState<PoulplanApp> {
   StreamSubscription<String>? _opened;
+  StreamSubscription<Uri?>? _widgetClicks;
+  StreamSubscription<String>? _desktopOpen;
 
   @override
   void initState() {
@@ -29,6 +33,22 @@ class _PoulplanAppState extends ConsumerState<PoulplanApp> {
       DesktopIntegration.showWindow();
       ref.read(routerProvider).push(Routes.event(id));
     });
+    // Home screen widget (Android) and KDE widget (Linux) taps.
+    void openFromWidget(String? id) {
+      if (id == null) return;
+      DesktopIntegration.showWindow();
+      ref.read(routerProvider).push(Routes.event(id));
+    }
+
+    if (WidgetExporter.supported && !DesktopIntegration.isLinux) {
+      _widgetClicks = HomeWidget.widgetClicked.listen(
+        (uri) => openFromWidget(eventIdFromUri(uri)),
+      );
+      HomeWidget.initiallyLaunchedFromHomeWidget().then(
+        (uri) => openFromWidget(eventIdFromUri(uri)),
+      );
+    }
+    _desktopOpen = DesktopIntegration.openEventRequests.listen(openFromWidget);
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => ref.read(reminderSchedulerProvider).askPermissionOnce(),
     );
@@ -37,6 +57,8 @@ class _PoulplanAppState extends ConsumerState<PoulplanApp> {
   @override
   void dispose() {
     _opened?.cancel();
+    _widgetClicks?.cancel();
+    _desktopOpen?.cancel();
     super.dispose();
   }
 

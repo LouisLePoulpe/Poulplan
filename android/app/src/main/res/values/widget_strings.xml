@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_upcoming_title">À venir</string>
+    <string name="widget_upcoming_empty">Aucun événement à venir</string>
+    <string name="widget_upcoming_description">Prochains événements de Poulplan</string>
+    <string name="widget_month_title">Mois</string>
+    <string name="widget_month_description">Calendrier du mois de Poulplan</string>
+</resources>

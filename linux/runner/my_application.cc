@@ -2,6 +2,8 @@
 
 #include <flutter_linux/flutter_linux.h>
 
+#include <cstring>
+
 #include "flutter/generated_plugin_registrant.h"
 
 struct _MyApplication {
@@ -13,6 +15,8 @@ struct _MyApplication {
   gboolean hide_on_close;
   // Started with --background (session autostart): no window at first.
   gboolean start_hidden;
+  // Event to open, from --open-event=<id> (KDE widget), until Dart asks.
+  gchar* pending_event;
 };
 
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
@@ -49,6 +53,11 @@ static void window_method_cb(FlMethodChannel* channel, FlMethodCall* call,
     self->start_hidden = FALSE;
     gtk_window_present(self->window);
     response = FL_METHOD_RESPONSE(fl_method_success_response_new(nullptr));
+  } else if (g_strcmp0(method, "takePendingEvent") == 0) {
+    g_autoptr(FlValue) id = fl_value_new_string(
+        self->pending_event != nullptr ? self->pending_event : "");
+    g_clear_pointer(&self->pending_event, g_free);
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(id));
   } else if (g_strcmp0(method, "quit") == 0) {
     response = FL_METHOD_RESPONSE(fl_method_success_response_new(nullptr));
     fl_method_call_respond(call, response, nullptr);
@@ -58,6 +67,24 @@ static void window_method_cb(FlMethodChannel* channel, FlMethodCall* call,
     response = FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
   }
   fl_method_call_respond(call, response, nullptr);
+}
+
+// "open-event" action: activated locally or, from a second launch, over
+// D-Bus on the running instance.
+static void open_event_cb(GSimpleAction* action, GVariant* parameter,
+                          gpointer user_data) {
+  MyApplication* self = MY_APPLICATION(user_data);
+  const gchar* id = g_variant_get_string(parameter, nullptr);
+  self->start_hidden = FALSE;
+  if (self->window != nullptr) gtk_window_present(self->window);
+  if (self->window_channel != nullptr) {
+    g_autoptr(FlValue) args = fl_value_new_string(id);
+    fl_method_channel_invoke_method(self->window_channel, "openEvent", args,
+                                    nullptr, nullptr, nullptr);
+  } else {
+    g_free(self->pending_event);
+    self->pending_event = g_strdup(id);
+  }
 }
 
 // Implements GApplication::activate.
@@ -133,6 +160,13 @@ static gboolean my_application_local_command_line(GApplication* application,
     if (g_strcmp0(*arg, "--background") == 0) self->start_hidden = TRUE;
   }
 
+  const gchar* open_event = nullptr;
+  for (gchar** arg = *arguments + 1; *arg != nullptr; arg++) {
+    if (g_str_has_prefix(*arg, "--open-event=")) {
+      open_event = *arg + strlen("--open-event=");
+    }
+  }
+
   g_autoptr(GError) error = nullptr;
   if (!g_application_register(application, nullptr, &error)) {
     g_warning("Failed to register: %s", error->message);
@@ -142,6 +176,10 @@ static gboolean my_application_local_command_line(GApplication* application,
 
   // In a second instance, this asks the running one to show its window.
   g_application_activate(application);
+  if (open_event != nullptr && *open_event != '\0') {
+    g_action_group_activate_action(G_ACTION_GROUP(application), "open-event",
+                                   g_variant_new_string(open_event));
+  }
   *exit_status = 0;
 
   return TRUE;
@@ -150,6 +188,11 @@ static gboolean my_application_local_command_line(GApplication* application,
 // Implements GApplication::startup.
 static void my_application_startup(GApplication* application) {
   G_APPLICATION_CLASS(my_application_parent_class)->startup(application);
+  g_autoptr(GSimpleAction) open_event =
+      g_simple_action_new("open-event", G_VARIANT_TYPE_STRING);
+  g_signal_connect(open_event, "activate", G_CALLBACK(open_event_cb),
+                   application);
+  g_action_map_add_action(G_ACTION_MAP(application), G_ACTION(open_event));
 }
 
 // Implements GApplication::shutdown.
@@ -161,6 +204,7 @@ static void my_application_shutdown(GApplication* application) {
 static void my_application_dispose(GObject* object) {
   MyApplication* self = MY_APPLICATION(object);
   g_clear_pointer(&self->dart_entrypoint_arguments, g_strfreev);
+  g_clear_pointer(&self->pending_event, g_free);
   g_clear_object(&self->window_channel);
   G_OBJECT_CLASS(my_application_parent_class)->dispose(object);
 }

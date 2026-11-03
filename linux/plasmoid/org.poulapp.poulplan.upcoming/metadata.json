@@ -1,0 +1,19 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Louis Le Poulpe"
+            }
+        ],
+        "Category": "Date and Time",
+        "Description": "Prochains événements de Poulplan",
+        "Icon": "view-calendar-upcoming-events",
+        "Id": "org.poulapp.poulplan.upcoming",
+        "License": "GPL-3.0-or-later",
+        "Name": "Poulplan — À venir",
+        "Version": "0.6.0",
+        "Website": "https://github.com/LouisLePoulpe/Poulplan"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

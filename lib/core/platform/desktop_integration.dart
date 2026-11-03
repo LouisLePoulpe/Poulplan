@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -31,6 +32,25 @@ abstract final class DesktopIntegration {
   static Future<void> showWindow() => _invoke('show');
 
   static Future<void> quit() => _invoke('quit');
+
+  /// Events to open, requested by `poulplan --open-event=<id>` (KDE widget).
+  static Stream<String> get openEventRequests {
+    if (!isLinux) return const Stream.empty();
+    final controller = StreamController<String>();
+    _channel.setMethodCallHandler((call) async {
+      if (call.method == 'openEvent' && call.arguments is String) {
+        controller.add(call.arguments as String);
+      }
+    });
+    // An id given at launch, before Dart was listening.
+    _channel
+        .invokeMethod<String>('takePendingEvent')
+        .then((id) {
+          if (id != null && id.isNotEmpty) controller.add(id);
+        })
+        .catchError((Object _) => null);
+    return controller.stream;
+  }
 
   static File _autostartFile() {
     final config =
