@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  analyze-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      # Tant que le projet Flutter n'est pas initialisé (pas de pubspec.yaml), on ne fait rien.
+      - name: Vérifier la présence du projet Flutter
+        id: has_project
+        run: |
+          if [ -f pubspec.yaml ]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "present=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Dépendances
+        if: steps.has_project.outputs.present == 'true'
+        run: flutter pub get
+
+      - name: Code généré (Drift) — doit être à jour dans le dépôt
+        if: steps.has_project.outputs.present == 'true'
+        run: |
+          dart run build_runner build --delete-conflicting-outputs
+          git diff --exit-code -- '*.g.dart' || (echo "Fichiers générés non commités" && exit 1)
+
+      - name: Analyse statique
+        if: steps.has_project.outputs.present == 'true'
+        run: flutter analyze
+
+      - name: Tests
+        if: steps.has_project.outputs.present == 'true'
+        run: flutter test
+
+  build-linux:
+    runs-on: ubuntu-latest
+    needs: analyze-test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Build Linux (si le projet existe)
+        run: |
+          if [ -f pubspec.yaml ] && [ -d linux ]; then
+            sudo apt-get update
+            sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libsqlite3-dev
+            flutter pub get
+            flutter build linux --release
+          else
+            echo "Projet Flutter absent : build ignoré"
+          fi
+
+  build-android:
+    runs-on: ubuntu-latest
+    needs: analyze-test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Build APK debug (si le projet existe)
+        run: |
+          if [ -f pubspec.yaml ] && [ -d android ]; then
+            flutter pub get
+            flutter build apk --debug
+          else
+            echo "Projet Flutter absent : build ignoré"
+          fi
+      - name: Archiver l'APK debug
+        if: hashFiles('build/app/outputs/flutter-apk/app-debug.apk') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: poulplan-debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
