@@ -13,7 +13,11 @@ class EventRepository {
   final DateTime Function() _clock;
   static const _uuid = Uuid();
 
-  DateTime _nowUtc() => _clock().toUtc();
+  /// Truncated to milliseconds, the precision stored in the database.
+  DateTime _nowUtc() => DateTime.fromMillisecondsSinceEpoch(
+    _clock().millisecondsSinceEpoch,
+    isUtc: true,
+  );
 
   /// Live events that may touch the local days [first]…[last].
   ///
@@ -81,6 +85,31 @@ class EventRepository {
     await (_db.update(
       _db.events,
     )..where((e) => e.id.equals(event.id))).write(_toCompanion(updated));
+  }
+
+  /// Copy of [event] with a new id, same times.
+  Future<CalendarEvent> duplicate(CalendarEvent event) => create(
+    title: event.title,
+    description: event.description,
+    categoryId: event.categoryId,
+    color: event.color,
+    location: event.location,
+    videoLink: event.videoLink,
+    busy: event.busy,
+    allDay: event.allDay,
+    start: event.start,
+    end: event.end,
+    timeZone: event.timeZone,
+  );
+
+  /// Undoes [delete].
+  Future<void> restore(String id) async {
+    await (_db.update(_db.events)..where((e) => e.id.equals(id))).write(
+      EventsCompanion(
+        deletedAt: const Value(null),
+        updatedAt: Value(_nowUtc().millisecondsSinceEpoch),
+      ),
+    );
   }
 
   /// Soft delete: keeps a tombstone for the sync.

@@ -6,6 +6,7 @@ import 'package:poulplan/data/repositories/event_repository.dart';
 import 'package:poulplan/data/repositories/settings_repository.dart';
 import 'package:poulplan/domain/calendar/day.dart';
 import 'package:poulplan/domain/entities/app_settings.dart';
+import 'package:poulplan/domain/entities/event_category.dart';
 
 void main() {
   late AppDatabase db;
@@ -91,6 +92,57 @@ void main() {
       final read = await events.findById(created.id);
       expect(read!.title, 'Final');
       expect(read.updatedAt, DateTime.utc(2026, 11, 4, 12));
+    });
+  });
+
+  group('EventRepository duplicate and restore', () {
+    test('duplicate creates an independent copy', () async {
+      final original = await events.create(
+        title: 'Cours',
+        categoryId: 'default-personal',
+        start: DateTime.utc(2026, 11, 3, 8),
+        end: DateTime.utc(2026, 11, 3, 9),
+        timeZone: 'Europe/Paris',
+      );
+      final copy = await events.duplicate(original);
+      expect(copy.id, isNot(original.id));
+      expect(copy.title, 'Cours');
+      expect(copy.start, original.start);
+      await events.delete(copy.id);
+      expect(await events.findById(original.id), isNotNull);
+    });
+
+    test('restore undoes a delete', () async {
+      final e = await events.create(
+        title: 'Oups',
+        start: DateTime.utc(2026, 11, 3, 8),
+        end: DateTime.utc(2026, 11, 3, 9),
+        timeZone: 'UTC',
+      );
+      await events.delete(e.id);
+      await events.restore(e.id);
+      expect((await events.findById(e.id))!.title, 'Oups');
+    });
+  });
+
+  group('CategoryRepository', () {
+    test('create, update and delete', () async {
+      final categories = CategoryRepository(db);
+      final sport = await categories.create(name: 'Sport', color: 0xFF00897B);
+      expect(sport.sortOrder, 4);
+      await categories.update(
+        EventCategory(
+          id: sport.id,
+          name: 'Sports',
+          color: 0xFF00897B,
+          sortOrder: 4,
+        ),
+      );
+      var all = await categories.watchAll().first;
+      expect(all.last.name, 'Sports');
+      await categories.delete(sport.id);
+      all = await categories.watchAll().first;
+      expect(all.map((c) => c.name), isNot(contains('Sports')));
     });
   });
 
