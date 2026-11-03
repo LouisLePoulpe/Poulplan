@@ -592,6 +592,87 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _rruleMeta = const VerificationMeta('rrule');
+  @override
+  late final GeneratedColumn<String> rrule = GeneratedColumn<String>(
+    'rrule',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _holidayRuleMeta = const VerificationMeta(
+    'holidayRule',
+  );
+  @override
+  late final GeneratedColumn<String> holidayRule = GeneratedColumn<String>(
+    'holiday_rule',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('none'),
+  );
+  static const VerificationMeta _seriesIdMeta = const VerificationMeta(
+    'seriesId',
+  );
+  @override
+  late final GeneratedColumn<String> seriesId = GeneratedColumn<String>(
+    'series_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _originalStartUtcMeta = const VerificationMeta(
+    'originalStartUtc',
+  );
+  @override
+  late final GeneratedColumn<int> originalStartUtc = GeneratedColumn<int>(
+    'original_start_utc',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _cancelledMeta = const VerificationMeta(
+    'cancelled',
+  );
+  @override
+  late final GeneratedColumn<bool> cancelled = GeneratedColumn<bool>(
+    'cancelled',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("cancelled" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _recurrenceEndUtcMeta = const VerificationMeta(
+    'recurrenceEndUtc',
+  );
+  @override
+  late final GeneratedColumn<int> recurrenceEndUtc = GeneratedColumn<int>(
+    'recurrence_end_utc',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _searchTextMeta = const VerificationMeta(
+    'searchText',
+  );
+  @override
+  late final GeneratedColumn<String> searchText = GeneratedColumn<String>(
+    'search_text',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -639,6 +720,13 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
     startUtc,
     endUtc,
     timeZone,
+    rrule,
+    holidayRule,
+    seriesId,
+    originalStartUtc,
+    cancelled,
+    recurrenceEndUtc,
+    searchText,
     createdAt,
     updatedAt,
     deletedAt,
@@ -737,6 +825,57 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
     } else if (isInserting) {
       context.missing(_timeZoneMeta);
     }
+    if (data.containsKey('rrule')) {
+      context.handle(
+        _rruleMeta,
+        rrule.isAcceptableOrUnknown(data['rrule']!, _rruleMeta),
+      );
+    }
+    if (data.containsKey('holiday_rule')) {
+      context.handle(
+        _holidayRuleMeta,
+        holidayRule.isAcceptableOrUnknown(
+          data['holiday_rule']!,
+          _holidayRuleMeta,
+        ),
+      );
+    }
+    if (data.containsKey('series_id')) {
+      context.handle(
+        _seriesIdMeta,
+        seriesId.isAcceptableOrUnknown(data['series_id']!, _seriesIdMeta),
+      );
+    }
+    if (data.containsKey('original_start_utc')) {
+      context.handle(
+        _originalStartUtcMeta,
+        originalStartUtc.isAcceptableOrUnknown(
+          data['original_start_utc']!,
+          _originalStartUtcMeta,
+        ),
+      );
+    }
+    if (data.containsKey('cancelled')) {
+      context.handle(
+        _cancelledMeta,
+        cancelled.isAcceptableOrUnknown(data['cancelled']!, _cancelledMeta),
+      );
+    }
+    if (data.containsKey('recurrence_end_utc')) {
+      context.handle(
+        _recurrenceEndUtcMeta,
+        recurrenceEndUtc.isAcceptableOrUnknown(
+          data['recurrence_end_utc']!,
+          _recurrenceEndUtcMeta,
+        ),
+      );
+    }
+    if (data.containsKey('search_text')) {
+      context.handle(
+        _searchTextMeta,
+        searchText.isAcceptableOrUnknown(data['search_text']!, _searchTextMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -816,6 +955,34 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
         DriftSqlType.string,
         data['${effectivePrefix}time_zone'],
       )!,
+      rrule: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}rrule'],
+      ),
+      holidayRule: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}holiday_rule'],
+      )!,
+      seriesId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}series_id'],
+      ),
+      originalStartUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}original_start_utc'],
+      ),
+      cancelled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}cancelled'],
+      )!,
+      recurrenceEndUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}recurrence_end_utc'],
+      ),
+      searchText: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}search_text'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}created_at'],
@@ -850,6 +1017,17 @@ class EventRow extends DataClass implements Insertable<EventRow> {
   final int startUtc;
   final int endUtc;
   final String timeZone;
+  final String? rrule;
+  final String holidayRule;
+  final String? seriesId;
+  final int? originalStartUtc;
+  final bool cancelled;
+
+  /// Upper bound of a bounded series (ms UTC), null when endless.
+  final int? recurrenceEndUtc;
+
+  /// Normalized title, description and location (see `normalizeForSearch`).
+  final String searchText;
   final int createdAt;
   final int updatedAt;
   final int? deletedAt;
@@ -866,6 +1044,13 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     required this.startUtc,
     required this.endUtc,
     required this.timeZone,
+    this.rrule,
+    required this.holidayRule,
+    this.seriesId,
+    this.originalStartUtc,
+    required this.cancelled,
+    this.recurrenceEndUtc,
+    required this.searchText,
     required this.createdAt,
     required this.updatedAt,
     this.deletedAt,
@@ -893,6 +1078,21 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     map['start_utc'] = Variable<int>(startUtc);
     map['end_utc'] = Variable<int>(endUtc);
     map['time_zone'] = Variable<String>(timeZone);
+    if (!nullToAbsent || rrule != null) {
+      map['rrule'] = Variable<String>(rrule);
+    }
+    map['holiday_rule'] = Variable<String>(holidayRule);
+    if (!nullToAbsent || seriesId != null) {
+      map['series_id'] = Variable<String>(seriesId);
+    }
+    if (!nullToAbsent || originalStartUtc != null) {
+      map['original_start_utc'] = Variable<int>(originalStartUtc);
+    }
+    map['cancelled'] = Variable<bool>(cancelled);
+    if (!nullToAbsent || recurrenceEndUtc != null) {
+      map['recurrence_end_utc'] = Variable<int>(recurrenceEndUtc);
+    }
+    map['search_text'] = Variable<String>(searchText);
     map['created_at'] = Variable<int>(createdAt);
     map['updated_at'] = Variable<int>(updatedAt);
     if (!nullToAbsent || deletedAt != null) {
@@ -923,6 +1123,21 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       startUtc: Value(startUtc),
       endUtc: Value(endUtc),
       timeZone: Value(timeZone),
+      rrule: rrule == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rrule),
+      holidayRule: Value(holidayRule),
+      seriesId: seriesId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(seriesId),
+      originalStartUtc: originalStartUtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(originalStartUtc),
+      cancelled: Value(cancelled),
+      recurrenceEndUtc: recurrenceEndUtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recurrenceEndUtc),
+      searchText: Value(searchText),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
       deletedAt: deletedAt == null && nullToAbsent
@@ -949,6 +1164,13 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       startUtc: serializer.fromJson<int>(json['startUtc']),
       endUtc: serializer.fromJson<int>(json['endUtc']),
       timeZone: serializer.fromJson<String>(json['timeZone']),
+      rrule: serializer.fromJson<String?>(json['rrule']),
+      holidayRule: serializer.fromJson<String>(json['holidayRule']),
+      seriesId: serializer.fromJson<String?>(json['seriesId']),
+      originalStartUtc: serializer.fromJson<int?>(json['originalStartUtc']),
+      cancelled: serializer.fromJson<bool>(json['cancelled']),
+      recurrenceEndUtc: serializer.fromJson<int?>(json['recurrenceEndUtc']),
+      searchText: serializer.fromJson<String>(json['searchText']),
       createdAt: serializer.fromJson<int>(json['createdAt']),
       updatedAt: serializer.fromJson<int>(json['updatedAt']),
       deletedAt: serializer.fromJson<int?>(json['deletedAt']),
@@ -970,6 +1192,13 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       'startUtc': serializer.toJson<int>(startUtc),
       'endUtc': serializer.toJson<int>(endUtc),
       'timeZone': serializer.toJson<String>(timeZone),
+      'rrule': serializer.toJson<String?>(rrule),
+      'holidayRule': serializer.toJson<String>(holidayRule),
+      'seriesId': serializer.toJson<String?>(seriesId),
+      'originalStartUtc': serializer.toJson<int?>(originalStartUtc),
+      'cancelled': serializer.toJson<bool>(cancelled),
+      'recurrenceEndUtc': serializer.toJson<int?>(recurrenceEndUtc),
+      'searchText': serializer.toJson<String>(searchText),
       'createdAt': serializer.toJson<int>(createdAt),
       'updatedAt': serializer.toJson<int>(updatedAt),
       'deletedAt': serializer.toJson<int?>(deletedAt),
@@ -989,6 +1218,13 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     int? startUtc,
     int? endUtc,
     String? timeZone,
+    Value<String?> rrule = const Value.absent(),
+    String? holidayRule,
+    Value<String?> seriesId = const Value.absent(),
+    Value<int?> originalStartUtc = const Value.absent(),
+    bool? cancelled,
+    Value<int?> recurrenceEndUtc = const Value.absent(),
+    String? searchText,
     int? createdAt,
     int? updatedAt,
     Value<int?> deletedAt = const Value.absent(),
@@ -1005,6 +1241,17 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     startUtc: startUtc ?? this.startUtc,
     endUtc: endUtc ?? this.endUtc,
     timeZone: timeZone ?? this.timeZone,
+    rrule: rrule.present ? rrule.value : this.rrule,
+    holidayRule: holidayRule ?? this.holidayRule,
+    seriesId: seriesId.present ? seriesId.value : this.seriesId,
+    originalStartUtc: originalStartUtc.present
+        ? originalStartUtc.value
+        : this.originalStartUtc,
+    cancelled: cancelled ?? this.cancelled,
+    recurrenceEndUtc: recurrenceEndUtc.present
+        ? recurrenceEndUtc.value
+        : this.recurrenceEndUtc,
+    searchText: searchText ?? this.searchText,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
@@ -1027,6 +1274,21 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       startUtc: data.startUtc.present ? data.startUtc.value : this.startUtc,
       endUtc: data.endUtc.present ? data.endUtc.value : this.endUtc,
       timeZone: data.timeZone.present ? data.timeZone.value : this.timeZone,
+      rrule: data.rrule.present ? data.rrule.value : this.rrule,
+      holidayRule: data.holidayRule.present
+          ? data.holidayRule.value
+          : this.holidayRule,
+      seriesId: data.seriesId.present ? data.seriesId.value : this.seriesId,
+      originalStartUtc: data.originalStartUtc.present
+          ? data.originalStartUtc.value
+          : this.originalStartUtc,
+      cancelled: data.cancelled.present ? data.cancelled.value : this.cancelled,
+      recurrenceEndUtc: data.recurrenceEndUtc.present
+          ? data.recurrenceEndUtc.value
+          : this.recurrenceEndUtc,
+      searchText: data.searchText.present
+          ? data.searchText.value
+          : this.searchText,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
@@ -1048,6 +1310,13 @@ class EventRow extends DataClass implements Insertable<EventRow> {
           ..write('startUtc: $startUtc, ')
           ..write('endUtc: $endUtc, ')
           ..write('timeZone: $timeZone, ')
+          ..write('rrule: $rrule, ')
+          ..write('holidayRule: $holidayRule, ')
+          ..write('seriesId: $seriesId, ')
+          ..write('originalStartUtc: $originalStartUtc, ')
+          ..write('cancelled: $cancelled, ')
+          ..write('recurrenceEndUtc: $recurrenceEndUtc, ')
+          ..write('searchText: $searchText, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -1056,7 +1325,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     title,
     description,
@@ -1069,10 +1338,17 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     startUtc,
     endUtc,
     timeZone,
+    rrule,
+    holidayRule,
+    seriesId,
+    originalStartUtc,
+    cancelled,
+    recurrenceEndUtc,
+    searchText,
     createdAt,
     updatedAt,
     deletedAt,
-  );
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1089,6 +1365,13 @@ class EventRow extends DataClass implements Insertable<EventRow> {
           other.startUtc == this.startUtc &&
           other.endUtc == this.endUtc &&
           other.timeZone == this.timeZone &&
+          other.rrule == this.rrule &&
+          other.holidayRule == this.holidayRule &&
+          other.seriesId == this.seriesId &&
+          other.originalStartUtc == this.originalStartUtc &&
+          other.cancelled == this.cancelled &&
+          other.recurrenceEndUtc == this.recurrenceEndUtc &&
+          other.searchText == this.searchText &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
           other.deletedAt == this.deletedAt);
@@ -1107,6 +1390,13 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
   final Value<int> startUtc;
   final Value<int> endUtc;
   final Value<String> timeZone;
+  final Value<String?> rrule;
+  final Value<String> holidayRule;
+  final Value<String?> seriesId;
+  final Value<int?> originalStartUtc;
+  final Value<bool> cancelled;
+  final Value<int?> recurrenceEndUtc;
+  final Value<String> searchText;
   final Value<int> createdAt;
   final Value<int> updatedAt;
   final Value<int?> deletedAt;
@@ -1124,6 +1414,13 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     this.startUtc = const Value.absent(),
     this.endUtc = const Value.absent(),
     this.timeZone = const Value.absent(),
+    this.rrule = const Value.absent(),
+    this.holidayRule = const Value.absent(),
+    this.seriesId = const Value.absent(),
+    this.originalStartUtc = const Value.absent(),
+    this.cancelled = const Value.absent(),
+    this.recurrenceEndUtc = const Value.absent(),
+    this.searchText = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
@@ -1142,6 +1439,13 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     required int startUtc,
     required int endUtc,
     required String timeZone,
+    this.rrule = const Value.absent(),
+    this.holidayRule = const Value.absent(),
+    this.seriesId = const Value.absent(),
+    this.originalStartUtc = const Value.absent(),
+    this.cancelled = const Value.absent(),
+    this.recurrenceEndUtc = const Value.absent(),
+    this.searchText = const Value.absent(),
     required int createdAt,
     required int updatedAt,
     this.deletedAt = const Value.absent(),
@@ -1166,6 +1470,13 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     Expression<int>? startUtc,
     Expression<int>? endUtc,
     Expression<String>? timeZone,
+    Expression<String>? rrule,
+    Expression<String>? holidayRule,
+    Expression<String>? seriesId,
+    Expression<int>? originalStartUtc,
+    Expression<bool>? cancelled,
+    Expression<int>? recurrenceEndUtc,
+    Expression<String>? searchText,
     Expression<int>? createdAt,
     Expression<int>? updatedAt,
     Expression<int>? deletedAt,
@@ -1184,6 +1495,13 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
       if (startUtc != null) 'start_utc': startUtc,
       if (endUtc != null) 'end_utc': endUtc,
       if (timeZone != null) 'time_zone': timeZone,
+      if (rrule != null) 'rrule': rrule,
+      if (holidayRule != null) 'holiday_rule': holidayRule,
+      if (seriesId != null) 'series_id': seriesId,
+      if (originalStartUtc != null) 'original_start_utc': originalStartUtc,
+      if (cancelled != null) 'cancelled': cancelled,
+      if (recurrenceEndUtc != null) 'recurrence_end_utc': recurrenceEndUtc,
+      if (searchText != null) 'search_text': searchText,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (deletedAt != null) 'deleted_at': deletedAt,
@@ -1204,6 +1522,13 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     Value<int>? startUtc,
     Value<int>? endUtc,
     Value<String>? timeZone,
+    Value<String?>? rrule,
+    Value<String>? holidayRule,
+    Value<String?>? seriesId,
+    Value<int?>? originalStartUtc,
+    Value<bool>? cancelled,
+    Value<int?>? recurrenceEndUtc,
+    Value<String>? searchText,
     Value<int>? createdAt,
     Value<int>? updatedAt,
     Value<int?>? deletedAt,
@@ -1222,6 +1547,13 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
       startUtc: startUtc ?? this.startUtc,
       endUtc: endUtc ?? this.endUtc,
       timeZone: timeZone ?? this.timeZone,
+      rrule: rrule ?? this.rrule,
+      holidayRule: holidayRule ?? this.holidayRule,
+      seriesId: seriesId ?? this.seriesId,
+      originalStartUtc: originalStartUtc ?? this.originalStartUtc,
+      cancelled: cancelled ?? this.cancelled,
+      recurrenceEndUtc: recurrenceEndUtc ?? this.recurrenceEndUtc,
+      searchText: searchText ?? this.searchText,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -1268,6 +1600,27 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     if (timeZone.present) {
       map['time_zone'] = Variable<String>(timeZone.value);
     }
+    if (rrule.present) {
+      map['rrule'] = Variable<String>(rrule.value);
+    }
+    if (holidayRule.present) {
+      map['holiday_rule'] = Variable<String>(holidayRule.value);
+    }
+    if (seriesId.present) {
+      map['series_id'] = Variable<String>(seriesId.value);
+    }
+    if (originalStartUtc.present) {
+      map['original_start_utc'] = Variable<int>(originalStartUtc.value);
+    }
+    if (cancelled.present) {
+      map['cancelled'] = Variable<bool>(cancelled.value);
+    }
+    if (recurrenceEndUtc.present) {
+      map['recurrence_end_utc'] = Variable<int>(recurrenceEndUtc.value);
+    }
+    if (searchText.present) {
+      map['search_text'] = Variable<String>(searchText.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<int>(createdAt.value);
     }
@@ -1298,6 +1651,13 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
           ..write('startUtc: $startUtc, ')
           ..write('endUtc: $endUtc, ')
           ..write('timeZone: $timeZone, ')
+          ..write('rrule: $rrule, ')
+          ..write('holidayRule: $holidayRule, ')
+          ..write('seriesId: $seriesId, ')
+          ..write('originalStartUtc: $originalStartUtc, ')
+          ..write('cancelled: $cancelled, ')
+          ..write('recurrenceEndUtc: $recurrenceEndUtc, ')
+          ..write('searchText: $searchText, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt, ')
@@ -1515,15 +1875,936 @@ class SettingsCompanion extends UpdateCompanion<SettingRow> {
   }
 }
 
+class $BirthdaysTable extends Birthdays
+    with TableInfo<$BirthdaysTable, BirthdayRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BirthdaysTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _monthMeta = const VerificationMeta('month');
+  @override
+  late final GeneratedColumn<int> month = GeneratedColumn<int>(
+    'month',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dayMeta = const VerificationMeta('day');
+  @override
+  late final GeneratedColumn<int> day = GeneratedColumn<int>(
+    'day',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _birthYearMeta = const VerificationMeta(
+    'birthYear',
+  );
+  @override
+  late final GeneratedColumn<int> birthYear = GeneratedColumn<int>(
+    'birth_year',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<int> deletedAt = GeneratedColumn<int>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    month,
+    day,
+    birthYear,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'birthdays';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<BirthdayRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('month')) {
+      context.handle(
+        _monthMeta,
+        month.isAcceptableOrUnknown(data['month']!, _monthMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_monthMeta);
+    }
+    if (data.containsKey('day')) {
+      context.handle(
+        _dayMeta,
+        day.isAcceptableOrUnknown(data['day']!, _dayMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dayMeta);
+    }
+    if (data.containsKey('birth_year')) {
+      context.handle(
+        _birthYearMeta,
+        birthYear.isAcceptableOrUnknown(data['birth_year']!, _birthYearMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  BirthdayRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BirthdayRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      month: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}month'],
+      )!,
+      day: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}day'],
+      )!,
+      birthYear: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}birth_year'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}deleted_at'],
+      ),
+    );
+  }
+
+  @override
+  $BirthdaysTable createAlias(String alias) {
+    return $BirthdaysTable(attachedDatabase, alias);
+  }
+}
+
+class BirthdayRow extends DataClass implements Insertable<BirthdayRow> {
+  final String id;
+  final String name;
+  final int month;
+  final int day;
+  final int? birthYear;
+  final int createdAt;
+  final int updatedAt;
+  final int? deletedAt;
+  const BirthdayRow({
+    required this.id,
+    required this.name,
+    required this.month,
+    required this.day,
+    this.birthYear,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['month'] = Variable<int>(month);
+    map['day'] = Variable<int>(day);
+    if (!nullToAbsent || birthYear != null) {
+      map['birth_year'] = Variable<int>(birthYear);
+    }
+    map['created_at'] = Variable<int>(createdAt);
+    map['updated_at'] = Variable<int>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<int>(deletedAt);
+    }
+    return map;
+  }
+
+  BirthdaysCompanion toCompanion(bool nullToAbsent) {
+    return BirthdaysCompanion(
+      id: Value(id),
+      name: Value(name),
+      month: Value(month),
+      day: Value(day),
+      birthYear: birthYear == null && nullToAbsent
+          ? const Value.absent()
+          : Value(birthYear),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+    );
+  }
+
+  factory BirthdayRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BirthdayRow(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      month: serializer.fromJson<int>(json['month']),
+      day: serializer.fromJson<int>(json['day']),
+      birthYear: serializer.fromJson<int?>(json['birthYear']),
+      createdAt: serializer.fromJson<int>(json['createdAt']),
+      updatedAt: serializer.fromJson<int>(json['updatedAt']),
+      deletedAt: serializer.fromJson<int?>(json['deletedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'month': serializer.toJson<int>(month),
+      'day': serializer.toJson<int>(day),
+      'birthYear': serializer.toJson<int?>(birthYear),
+      'createdAt': serializer.toJson<int>(createdAt),
+      'updatedAt': serializer.toJson<int>(updatedAt),
+      'deletedAt': serializer.toJson<int?>(deletedAt),
+    };
+  }
+
+  BirthdayRow copyWith({
+    String? id,
+    String? name,
+    int? month,
+    int? day,
+    Value<int?> birthYear = const Value.absent(),
+    int? createdAt,
+    int? updatedAt,
+    Value<int?> deletedAt = const Value.absent(),
+  }) => BirthdayRow(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    month: month ?? this.month,
+    day: day ?? this.day,
+    birthYear: birthYear.present ? birthYear.value : this.birthYear,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+  );
+  BirthdayRow copyWithCompanion(BirthdaysCompanion data) {
+    return BirthdayRow(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      month: data.month.present ? data.month.value : this.month,
+      day: data.day.present ? data.day.value : this.day,
+      birthYear: data.birthYear.present ? data.birthYear.value : this.birthYear,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BirthdayRow(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('month: $month, ')
+          ..write('day: $day, ')
+          ..write('birthYear: $birthYear, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    name,
+    month,
+    day,
+    birthYear,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BirthdayRow &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.month == this.month &&
+          other.day == this.day &&
+          other.birthYear == this.birthYear &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt);
+}
+
+class BirthdaysCompanion extends UpdateCompanion<BirthdayRow> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<int> month;
+  final Value<int> day;
+  final Value<int?> birthYear;
+  final Value<int> createdAt;
+  final Value<int> updatedAt;
+  final Value<int?> deletedAt;
+  final Value<int> rowid;
+  const BirthdaysCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.month = const Value.absent(),
+    this.day = const Value.absent(),
+    this.birthYear = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  BirthdaysCompanion.insert({
+    required String id,
+    required String name,
+    required int month,
+    required int day,
+    this.birthYear = const Value.absent(),
+    required int createdAt,
+    required int updatedAt,
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name),
+       month = Value(month),
+       day = Value(day),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<BirthdayRow> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<int>? month,
+    Expression<int>? day,
+    Expression<int>? birthYear,
+    Expression<int>? createdAt,
+    Expression<int>? updatedAt,
+    Expression<int>? deletedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (month != null) 'month': month,
+      if (day != null) 'day': day,
+      if (birthYear != null) 'birth_year': birthYear,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  BirthdaysCompanion copyWith({
+    Value<String>? id,
+    Value<String>? name,
+    Value<int>? month,
+    Value<int>? day,
+    Value<int?>? birthYear,
+    Value<int>? createdAt,
+    Value<int>? updatedAt,
+    Value<int?>? deletedAt,
+    Value<int>? rowid,
+  }) {
+    return BirthdaysCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      month: month ?? this.month,
+      day: day ?? this.day,
+      birthYear: birthYear ?? this.birthYear,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (month.present) {
+      map['month'] = Variable<int>(month.value);
+    }
+    if (day.present) {
+      map['day'] = Variable<int>(day.value);
+    }
+    if (birthYear.present) {
+      map['birth_year'] = Variable<int>(birthYear.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<int>(deletedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BirthdaysCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('month: $month, ')
+          ..write('day: $day, ')
+          ..write('birthYear: $birthYear, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SavedFiltersTable extends SavedFilters
+    with TableInfo<$SavedFiltersTable, SavedFilterRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SavedFiltersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _queryMeta = const VerificationMeta('query');
+  @override
+  late final GeneratedColumn<String> query = GeneratedColumn<String>(
+    'query',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<int> deletedAt = GeneratedColumn<int>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    query,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'saved_filters';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SavedFilterRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('query')) {
+      context.handle(
+        _queryMeta,
+        query.isAcceptableOrUnknown(data['query']!, _queryMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_queryMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SavedFilterRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SavedFilterRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      query: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}query'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}deleted_at'],
+      ),
+    );
+  }
+
+  @override
+  $SavedFiltersTable createAlias(String alias) {
+    return $SavedFiltersTable(attachedDatabase, alias);
+  }
+}
+
+class SavedFilterRow extends DataClass implements Insertable<SavedFilterRow> {
+  final String id;
+  final String name;
+  final String query;
+  final int createdAt;
+  final int updatedAt;
+  final int? deletedAt;
+  const SavedFilterRow({
+    required this.id,
+    required this.name,
+    required this.query,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['query'] = Variable<String>(query);
+    map['created_at'] = Variable<int>(createdAt);
+    map['updated_at'] = Variable<int>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<int>(deletedAt);
+    }
+    return map;
+  }
+
+  SavedFiltersCompanion toCompanion(bool nullToAbsent) {
+    return SavedFiltersCompanion(
+      id: Value(id),
+      name: Value(name),
+      query: Value(query),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+    );
+  }
+
+  factory SavedFilterRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SavedFilterRow(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      query: serializer.fromJson<String>(json['query']),
+      createdAt: serializer.fromJson<int>(json['createdAt']),
+      updatedAt: serializer.fromJson<int>(json['updatedAt']),
+      deletedAt: serializer.fromJson<int?>(json['deletedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'query': serializer.toJson<String>(query),
+      'createdAt': serializer.toJson<int>(createdAt),
+      'updatedAt': serializer.toJson<int>(updatedAt),
+      'deletedAt': serializer.toJson<int?>(deletedAt),
+    };
+  }
+
+  SavedFilterRow copyWith({
+    String? id,
+    String? name,
+    String? query,
+    int? createdAt,
+    int? updatedAt,
+    Value<int?> deletedAt = const Value.absent(),
+  }) => SavedFilterRow(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    query: query ?? this.query,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+  );
+  SavedFilterRow copyWithCompanion(SavedFiltersCompanion data) {
+    return SavedFilterRow(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      query: data.query.present ? data.query.value : this.query,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SavedFilterRow(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('query: $query, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, name, query, createdAt, updatedAt, deletedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SavedFilterRow &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.query == this.query &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt);
+}
+
+class SavedFiltersCompanion extends UpdateCompanion<SavedFilterRow> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<String> query;
+  final Value<int> createdAt;
+  final Value<int> updatedAt;
+  final Value<int?> deletedAt;
+  final Value<int> rowid;
+  const SavedFiltersCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.query = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SavedFiltersCompanion.insert({
+    required String id,
+    required String name,
+    required String query,
+    required int createdAt,
+    required int updatedAt,
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name),
+       query = Value(query),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<SavedFilterRow> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? query,
+    Expression<int>? createdAt,
+    Expression<int>? updatedAt,
+    Expression<int>? deletedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (query != null) 'query': query,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SavedFiltersCompanion copyWith({
+    Value<String>? id,
+    Value<String>? name,
+    Value<String>? query,
+    Value<int>? createdAt,
+    Value<int>? updatedAt,
+    Value<int?>? deletedAt,
+    Value<int>? rowid,
+  }) {
+    return SavedFiltersCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      query: query ?? this.query,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (query.present) {
+      map['query'] = Variable<String>(query.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<int>(deletedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SavedFiltersCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('query: $query, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $CategoriesTable categories = $CategoriesTable(this);
   late final $EventsTable events = $EventsTable(this);
   late final $SettingsTable settings = $SettingsTable(this);
+  late final $BirthdaysTable birthdays = $BirthdaysTable(this);
+  late final $SavedFiltersTable savedFilters = $SavedFiltersTable(this);
   late final Index eventsRange = Index(
     'events_range',
     'CREATE INDEX events_range ON events (start_utc, end_utc)',
+  );
+  late final Index eventsSeries = Index(
+    'events_series',
+    'CREATE INDEX events_series ON events (series_id, original_start_utc)',
   );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -1533,7 +2814,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     categories,
     events,
     settings,
+    birthdays,
+    savedFilters,
     eventsRange,
+    eventsSeries,
   ];
 }
 
@@ -1885,6 +3169,13 @@ typedef $$EventsTableCreateCompanionBuilder = EventsCompanion Function({
   required int startUtc,
   required int endUtc,
   required String timeZone,
+  Value<String?> rrule,
+  Value<String> holidayRule,
+  Value<String?> seriesId,
+  Value<int?> originalStartUtc,
+  Value<bool> cancelled,
+  Value<int?> recurrenceEndUtc,
+  Value<String> searchText,
   required int createdAt,
   required int updatedAt,
   Value<int?> deletedAt,
@@ -1903,6 +3194,13 @@ typedef $$EventsTableUpdateCompanionBuilder = EventsCompanion Function({
   Value<int> startUtc,
   Value<int> endUtc,
   Value<String> timeZone,
+  Value<String?> rrule,
+  Value<String> holidayRule,
+  Value<String?> seriesId,
+  Value<int?> originalStartUtc,
+  Value<bool> cancelled,
+  Value<int?> recurrenceEndUtc,
+  Value<String> searchText,
   Value<int> createdAt,
   Value<int> updatedAt,
   Value<int?> deletedAt,
@@ -1992,6 +3290,41 @@ class $$EventsTableFilterComposer
 
   ColumnFilters<String> get timeZone => $composableBuilder(
     column: $table.timeZone,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rrule => $composableBuilder(
+    column: $table.rrule,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get holidayRule => $composableBuilder(
+    column: $table.holidayRule,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get seriesId => $composableBuilder(
+    column: $table.seriesId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get originalStartUtc => $composableBuilder(
+    column: $table.originalStartUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get cancelled => $composableBuilder(
+    column: $table.cancelled,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get recurrenceEndUtc => $composableBuilder(
+    column: $table.recurrenceEndUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get searchText => $composableBuilder(
+    column: $table.searchText,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2098,6 +3431,41 @@ class $$EventsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get rrule => $composableBuilder(
+    column: $table.rrule,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get holidayRule => $composableBuilder(
+    column: $table.holidayRule,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get seriesId => $composableBuilder(
+    column: $table.seriesId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get originalStartUtc => $composableBuilder(
+    column: $table.originalStartUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get cancelled => $composableBuilder(
+    column: $table.cancelled,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get recurrenceEndUtc => $composableBuilder(
+    column: $table.recurrenceEndUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get searchText => $composableBuilder(
+    column: $table.searchText,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -2181,6 +3549,35 @@ class $$EventsTableAnnotationComposer
   GeneratedColumn<String> get timeZone =>
       $composableBuilder(column: $table.timeZone, builder: (column) => column);
 
+  GeneratedColumn<String> get rrule =>
+      $composableBuilder(column: $table.rrule, builder: (column) => column);
+
+  GeneratedColumn<String> get holidayRule => $composableBuilder(
+    column: $table.holidayRule,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get seriesId =>
+      $composableBuilder(column: $table.seriesId, builder: (column) => column);
+
+  GeneratedColumn<int> get originalStartUtc => $composableBuilder(
+    column: $table.originalStartUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get cancelled =>
+      $composableBuilder(column: $table.cancelled, builder: (column) => column);
+
+  GeneratedColumn<int> get recurrenceEndUtc => $composableBuilder(
+    column: $table.recurrenceEndUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get searchText => $composableBuilder(
+    column: $table.searchText,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -2254,6 +3651,13 @@ class $$EventsTableTableManager
                 Value<int> startUtc = const Value.absent(),
                 Value<int> endUtc = const Value.absent(),
                 Value<String> timeZone = const Value.absent(),
+                Value<String?> rrule = const Value.absent(),
+                Value<String> holidayRule = const Value.absent(),
+                Value<String?> seriesId = const Value.absent(),
+                Value<int?> originalStartUtc = const Value.absent(),
+                Value<bool> cancelled = const Value.absent(),
+                Value<int?> recurrenceEndUtc = const Value.absent(),
+                Value<String> searchText = const Value.absent(),
                 Value<int> createdAt = const Value.absent(),
                 Value<int> updatedAt = const Value.absent(),
                 Value<int?> deletedAt = const Value.absent(),
@@ -2271,6 +3675,13 @@ class $$EventsTableTableManager
                 startUtc: startUtc,
                 endUtc: endUtc,
                 timeZone: timeZone,
+                rrule: rrule,
+                holidayRule: holidayRule,
+                seriesId: seriesId,
+                originalStartUtc: originalStartUtc,
+                cancelled: cancelled,
+                recurrenceEndUtc: recurrenceEndUtc,
+                searchText: searchText,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 deletedAt: deletedAt,
@@ -2290,6 +3701,13 @@ class $$EventsTableTableManager
                 required int startUtc,
                 required int endUtc,
                 required String timeZone,
+                Value<String?> rrule = const Value.absent(),
+                Value<String> holidayRule = const Value.absent(),
+                Value<String?> seriesId = const Value.absent(),
+                Value<int?> originalStartUtc = const Value.absent(),
+                Value<bool> cancelled = const Value.absent(),
+                Value<int?> recurrenceEndUtc = const Value.absent(),
+                Value<String> searchText = const Value.absent(),
                 required int createdAt,
                 required int updatedAt,
                 Value<int?> deletedAt = const Value.absent(),
@@ -2307,6 +3725,13 @@ class $$EventsTableTableManager
                 startUtc: startUtc,
                 endUtc: endUtc,
                 timeZone: timeZone,
+                rrule: rrule,
+                holidayRule: holidayRule,
+                seriesId: seriesId,
+                originalStartUtc: originalStartUtc,
+                cancelled: cancelled,
+                recurrenceEndUtc: recurrenceEndUtc,
+                searchText: searchText,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 deletedAt: deletedAt,
@@ -2514,6 +3939,498 @@ typedef $$SettingsTableProcessedTableManager =
       SettingRow,
       PrefetchHooks Function()
     >;
+typedef $$BirthdaysTableCreateCompanionBuilder = BirthdaysCompanion Function({
+  required String id,
+  required String name,
+  required int month,
+  required int day,
+  Value<int?> birthYear,
+  required int createdAt,
+  required int updatedAt,
+  Value<int?> deletedAt,
+  Value<int> rowid,
+});
+typedef $$BirthdaysTableUpdateCompanionBuilder = BirthdaysCompanion Function({
+  Value<String> id,
+  Value<String> name,
+  Value<int> month,
+  Value<int> day,
+  Value<int?> birthYear,
+  Value<int> createdAt,
+  Value<int> updatedAt,
+  Value<int?> deletedAt,
+  Value<int> rowid,
+});
+
+class $$BirthdaysTableFilterComposer
+    extends Composer<_$AppDatabase, $BirthdaysTable> {
+  $$BirthdaysTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get month => $composableBuilder(
+    column: $table.month,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get day => $composableBuilder(
+    column: $table.day,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get birthYear => $composableBuilder(
+    column: $table.birthYear,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$BirthdaysTableOrderingComposer
+    extends Composer<_$AppDatabase, $BirthdaysTable> {
+  $$BirthdaysTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get month => $composableBuilder(
+    column: $table.month,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get day => $composableBuilder(
+    column: $table.day,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get birthYear => $composableBuilder(
+    column: $table.birthYear,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$BirthdaysTableAnnotationComposer
+    extends Composer<_$AppDatabase, $BirthdaysTable> {
+  $$BirthdaysTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get month =>
+      $composableBuilder(column: $table.month, builder: (column) => column);
+
+  GeneratedColumn<int> get day =>
+      $composableBuilder(column: $table.day, builder: (column) => column);
+
+  GeneratedColumn<int> get birthYear =>
+      $composableBuilder(column: $table.birthYear, builder: (column) => column);
+
+  GeneratedColumn<int> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<int> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<int> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+}
+
+class $$BirthdaysTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $BirthdaysTable,
+          BirthdayRow,
+          $$BirthdaysTableFilterComposer,
+          $$BirthdaysTableOrderingComposer,
+          $$BirthdaysTableAnnotationComposer,
+          $$BirthdaysTableCreateCompanionBuilder,
+          $$BirthdaysTableUpdateCompanionBuilder,
+          (
+            BirthdayRow,
+            BaseReferences<_$AppDatabase, $BirthdaysTable, BirthdayRow>,
+          ),
+          BirthdayRow,
+          PrefetchHooks Function()
+        > {
+  $$BirthdaysTableTableManager(_$AppDatabase db, $BirthdaysTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BirthdaysTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BirthdaysTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BirthdaysTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<int> month = const Value.absent(),
+                Value<int> day = const Value.absent(),
+                Value<int?> birthYear = const Value.absent(),
+                Value<int> createdAt = const Value.absent(),
+                Value<int> updatedAt = const Value.absent(),
+                Value<int?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => BirthdaysCompanion(
+                id: id,
+                name: name,
+                month: month,
+                day: day,
+                birthYear: birthYear,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String name,
+                required int month,
+                required int day,
+                Value<int?> birthYear = const Value.absent(),
+                required int createdAt,
+                required int updatedAt,
+                Value<int?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => BirthdaysCompanion.insert(
+                id: id,
+                name: name,
+                month: month,
+                day: day,
+                birthYear: birthYear,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$BirthdaysTable, BirthdayRow>(table),
+                  BaseReferences<_$AppDatabase, $BirthdaysTable, BirthdayRow>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$BirthdaysTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $BirthdaysTable,
+      BirthdayRow,
+      $$BirthdaysTableFilterComposer,
+      $$BirthdaysTableOrderingComposer,
+      $$BirthdaysTableAnnotationComposer,
+      $$BirthdaysTableCreateCompanionBuilder,
+      $$BirthdaysTableUpdateCompanionBuilder,
+      (
+        BirthdayRow,
+        BaseReferences<_$AppDatabase, $BirthdaysTable, BirthdayRow>,
+      ),
+      BirthdayRow,
+      PrefetchHooks Function()
+    >;
+typedef $$SavedFiltersTableCreateCompanionBuilder =
+    SavedFiltersCompanion Function({
+      required String id,
+      required String name,
+      required String query,
+      required int createdAt,
+      required int updatedAt,
+      Value<int?> deletedAt,
+      Value<int> rowid,
+    });
+typedef $$SavedFiltersTableUpdateCompanionBuilder =
+    SavedFiltersCompanion Function({
+      Value<String> id,
+      Value<String> name,
+      Value<String> query,
+      Value<int> createdAt,
+      Value<int> updatedAt,
+      Value<int?> deletedAt,
+      Value<int> rowid,
+    });
+
+class $$SavedFiltersTableFilterComposer
+    extends Composer<_$AppDatabase, $SavedFiltersTable> {
+  $$SavedFiltersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get query => $composableBuilder(
+    column: $table.query,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SavedFiltersTableOrderingComposer
+    extends Composer<_$AppDatabase, $SavedFiltersTable> {
+  $$SavedFiltersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get query => $composableBuilder(
+    column: $table.query,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SavedFiltersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SavedFiltersTable> {
+  $$SavedFiltersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get query =>
+      $composableBuilder(column: $table.query, builder: (column) => column);
+
+  GeneratedColumn<int> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<int> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<int> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+}
+
+class $$SavedFiltersTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SavedFiltersTable,
+          SavedFilterRow,
+          $$SavedFiltersTableFilterComposer,
+          $$SavedFiltersTableOrderingComposer,
+          $$SavedFiltersTableAnnotationComposer,
+          $$SavedFiltersTableCreateCompanionBuilder,
+          $$SavedFiltersTableUpdateCompanionBuilder,
+          (
+            SavedFilterRow,
+            BaseReferences<_$AppDatabase, $SavedFiltersTable, SavedFilterRow>,
+          ),
+          SavedFilterRow,
+          PrefetchHooks Function()
+        > {
+  $$SavedFiltersTableTableManager(_$AppDatabase db, $SavedFiltersTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SavedFiltersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SavedFiltersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SavedFiltersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> query = const Value.absent(),
+                Value<int> createdAt = const Value.absent(),
+                Value<int> updatedAt = const Value.absent(),
+                Value<int?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SavedFiltersCompanion(
+                id: id,
+                name: name,
+                query: query,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String name,
+                required String query,
+                required int createdAt,
+                required int updatedAt,
+                Value<int?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SavedFiltersCompanion.insert(
+                id: id,
+                name: name,
+                query: query,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SavedFiltersTable, SavedFilterRow>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $SavedFiltersTable,
+                    SavedFilterRow
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SavedFiltersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SavedFiltersTable,
+      SavedFilterRow,
+      $$SavedFiltersTableFilterComposer,
+      $$SavedFiltersTableOrderingComposer,
+      $$SavedFiltersTableAnnotationComposer,
+      $$SavedFiltersTableCreateCompanionBuilder,
+      $$SavedFiltersTableUpdateCompanionBuilder,
+      (
+        SavedFilterRow,
+        BaseReferences<_$AppDatabase, $SavedFiltersTable, SavedFilterRow>,
+      ),
+      SavedFilterRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -2524,4 +4441,8 @@ class $AppDatabaseManager {
       $$EventsTableTableManager(_db, _db.events);
   $$SettingsTableTableManager get settings =>
       $$SettingsTableTableManager(_db, _db.settings);
+  $$BirthdaysTableTableManager get birthdays =>
+      $$BirthdaysTableTableManager(_db, _db.birthdays);
+  $$SavedFiltersTableTableManager get savedFilters =>
+      $$SavedFiltersTableTableManager(_db, _db.savedFilters);
 }

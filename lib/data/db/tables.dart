@@ -21,6 +21,7 @@ class Categories extends Table {
 /// events (floating dates encoded as UTC midnights, end exclusive).
 @DataClassName('EventRow')
 @TableIndex(name: 'events_range', columns: {#startUtc, #endUtc})
+@TableIndex(name: 'events_series', columns: {#seriesId, #originalStartUtc})
 class Events extends Table {
   TextColumn get id => text()();
   TextColumn get title => text()();
@@ -34,6 +35,50 @@ class Events extends Table {
   IntColumn get startUtc => integer()();
   IntColumn get endUtc => integer()();
   TextColumn get timeZone => text()();
+
+  // Recurrence (schema v2). A series master has `rrule`; an overridden or
+  // cancelled occurrence has `seriesId` + `originalStartUtc`.
+  TextColumn get rrule => text().nullable()();
+  TextColumn get holidayRule => text().withDefault(const Constant('none'))();
+  TextColumn get seriesId => text().nullable()();
+  IntColumn get originalStartUtc => integer().nullable()();
+  BoolColumn get cancelled => boolean().withDefault(const Constant(false))();
+
+  /// Upper bound of a bounded series (ms UTC), null when endless.
+  IntColumn get recurrenceEndUtc => integer().nullable()();
+
+  /// Normalized title, description and location (see `normalizeForSearch`).
+  TextColumn get searchText => text().withDefault(const Constant(''))();
+
+  IntColumn get createdAt => integer()();
+  IntColumn get updatedAt => integer()();
+  IntColumn get deletedAt => integer().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@DataClassName('BirthdayRow')
+class Birthdays extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  IntColumn get month => integer()();
+  IntColumn get day => integer()();
+  IntColumn get birthYear => integer().nullable()();
+  IntColumn get createdAt => integer()();
+  IntColumn get updatedAt => integer()();
+  IntColumn get deletedAt => integer().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// Saved search filters (JSON of `SearchQuery`).
+@DataClassName('SavedFilterRow')
+class SavedFilters extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  TextColumn get query => text()();
   IntColumn get createdAt => integer()();
   IntColumn get updatedAt => integer()();
   IntColumn get deletedAt => integer().nullable()();
