@@ -25,6 +25,8 @@ class EventDraft {
     required this.endDay,
     required this.endMinute,
     required this.timeZone,
+    this.rrule,
+    this.holidayRule = HolidayRule.none,
   });
 
   /// One-hour event starting at [startMinute] of [day].
@@ -69,6 +71,8 @@ class EventDraft {
       endDay: Day.fromDateTime(event.start),
       endMinute: 10 * 60,
       timeZone: event.timeZone,
+      rrule: event.rrule,
+      holidayRule: event.holidayRule,
     );
     if (event.allDay) {
       final endExclusive = Day.fromDateTime(event.end);
@@ -101,6 +105,10 @@ class EventDraft {
   Day endDay;
   int endMinute;
   String timeZone;
+
+  /// Recurrence rule (RRULE text), null for a single event.
+  String? rrule;
+  HolidayRule holidayRule;
 
   /// UTC start and end as stored in [CalendarEvent].
   ({DateTime start, DateTime end}) resolve() {
@@ -148,6 +156,8 @@ class EventDraft {
       start: times.start,
       end: times.end,
       timeZone: timeZone,
+      rrule: () => rrule,
+      holidayRule: holidayRule,
     );
   }
 
