@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'generated/schema.dart';
 
 import 'generated/schema_v1.dart' as v1;
-import 'generated/schema_v2.dart' as v2;
+import 'generated/schema_v4.dart' as v4;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -25,7 +25,10 @@ void main() {
     const versions = GeneratedHelper.versions;
     for (final (i, fromVersion) in versions.indexed) {
       group('from $fromVersion', () {
-        for (final toVersion in versions.skip(i + 1)) {
+        // Migrations always go to the latest version (no step-by-step
+        // intermediate schemas).
+        for (final toVersion
+            in versions.skip(i + 1).where((v) => v == versions.last)) {
           test('to $toVersion', () async {
             final schema = await verifier.schemaAt(fromVersion);
             final db = AppDatabase(schema.newConnection());
@@ -37,59 +40,63 @@ void main() {
     }
   });
 
-  test('migration from v1 to v2 keeps events and fills searchText', () async {
-    const old = v1.EventsData(
-      id: 'e1',
-      title: 'Fête de Noël',
-      description: "À l'école",
-      categoryId: null,
-      color: null,
-      location: 'Lyon',
-      videoLink: null,
-      busy: 1,
-      allDay: 0,
-      startUtc: 1000,
-      endUtc: 2000,
-      timeZone: 'Europe/Paris',
-      createdAt: 1,
-      updatedAt: 2,
-      deletedAt: null,
-    );
-    const expected = v2.EventsData(
-      id: 'e1',
-      title: 'Fête de Noël',
-      description: "À l'école",
-      categoryId: null,
-      color: null,
-      location: 'Lyon',
-      videoLink: null,
-      busy: 1,
-      allDay: 0,
-      startUtc: 1000,
-      endUtc: 2000,
-      timeZone: 'Europe/Paris',
-      rrule: null,
-      holidayRule: 'none',
-      seriesId: null,
-      originalStartUtc: null,
-      cancelled: 0,
-      recurrenceEndUtc: null,
-      searchText: "fete de noel a l'ecole lyon",
-      createdAt: 1,
-      updatedAt: 2,
-      deletedAt: null,
-    );
+  test(
+    'migration from v1 to the latest keeps events and fills searchText',
+    () async {
+      const old = v1.EventsData(
+        id: 'e1',
+        title: 'Fête de Noël',
+        description: "À l'école",
+        categoryId: null,
+        color: null,
+        location: 'Lyon',
+        videoLink: null,
+        busy: 1,
+        allDay: 0,
+        startUtc: 1000,
+        endUtc: 2000,
+        timeZone: 'Europe/Paris',
+        createdAt: 1,
+        updatedAt: 2,
+        deletedAt: null,
+      );
+      const expected = v4.EventsData(
+        id: 'e1',
+        title: 'Fête de Noël',
+        description: "À l'école",
+        categoryId: null,
+        color: null,
+        location: 'Lyon',
+        videoLink: null,
+        busy: 1,
+        allDay: 0,
+        startUtc: 1000,
+        endUtc: 2000,
+        timeZone: 'Europe/Paris',
+        rrule: null,
+        holidayRule: 'none',
+        seriesId: null,
+        originalStartUtc: null,
+        cancelled: 0,
+        recurrenceEndUtc: null,
+        reminders: '[]',
+        searchText: "fete de noel a l'ecole lyon",
+        createdAt: 1,
+        updatedAt: 2,
+        deletedAt: null,
+      );
 
-    await verifier.testWithDataIntegrity(
-      oldVersion: 1,
-      newVersion: 2,
-      createOld: v1.DatabaseAtV1.new,
-      createNew: v2.DatabaseAtV2.new,
-      openTestedDatabase: AppDatabase.new,
-      createItems: (batch, oldDb) => batch.insert(oldDb.events, old),
-      validateItems: (newDb) async {
-        expect(await newDb.select(newDb.events).get(), [expected]);
-      },
-    );
-  });
+      await verifier.testWithDataIntegrity(
+        oldVersion: 1,
+        newVersion: 4,
+        createOld: v1.DatabaseAtV1.new,
+        createNew: v4.DatabaseAtV4.new,
+        openTestedDatabase: AppDatabase.new,
+        createItems: (batch, oldDb) => batch.insert(oldDb.events, old),
+        validateItems: (newDb) async {
+          expect(await newDb.select(newDb.events).get(), [expected]);
+        },
+      );
+    },
+  );
 }

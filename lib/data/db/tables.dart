@@ -47,6 +47,9 @@ class Events extends Table {
   /// Upper bound of a bounded series (ms UTC), null when endless.
   IntColumn get recurrenceEndUtc => integer().nullable()();
 
+  /// JSON list of reminder offsets in minutes (schema v4).
+  TextColumn get reminders => text().withDefault(const Constant('[]'))();
+
   /// Normalized title, description and location (see `normalizeForSearch`).
   TextColumn get searchText => text().withDefault(const Constant(''))();
 

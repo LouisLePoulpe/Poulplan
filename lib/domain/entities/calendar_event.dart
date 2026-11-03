@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
 /// Where a displayed event comes from: only [event] is stored and editable
@@ -36,6 +37,7 @@ class CalendarEvent {
     this.originalStart,
     this.cancelled = false,
     this.kind = EventKind.event,
+    this.reminders = const [],
     required this.createdAt,
     required this.updatedAt,
   });
@@ -71,6 +73,10 @@ class CalendarEvent {
   /// An overridden occurrence that was removed from its series.
   final bool cancelled;
   final EventKind kind;
+
+  /// Reminders, in minutes before the start (before 09:00 of the first day
+  /// for all-day events).
+  final List<int> reminders;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -100,6 +106,7 @@ class CalendarEvent {
     DateTime? Function()? originalStart,
     bool? cancelled,
     String? id,
+    List<int>? reminders,
     DateTime? updatedAt,
   }) {
     return CalendarEvent(
@@ -123,6 +130,7 @@ class CalendarEvent {
           : this.originalStart,
       cancelled: cancelled ?? this.cancelled,
       kind: kind,
+      reminders: reminders ?? this.reminders,
       createdAt: createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -149,6 +157,7 @@ class CalendarEvent {
       other.originalStart == originalStart &&
       other.cancelled == cancelled &&
       other.kind == kind &&
+      const ListEquality<int>().equals(other.reminders, reminders) &&
       other.createdAt == createdAt &&
       other.updatedAt == updatedAt;
 
@@ -171,6 +180,7 @@ class CalendarEvent {
     originalStart,
     cancelled,
     kind,
+    const ListEquality<int>().hash(reminders),
     updatedAt,
   );
 

@@ -107,6 +107,7 @@ class _EventCodec extends EntityCodec {
         'timeZone': 'UTC',
         'holidayRule': 'none',
         'cancelled': false,
+        'reminders': '[]',
         'searchText': '',
       }),
     );

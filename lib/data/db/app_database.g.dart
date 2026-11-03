@@ -661,6 +661,18 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _remindersMeta = const VerificationMeta(
+    'reminders',
+  );
+  @override
+  late final GeneratedColumn<String> reminders = GeneratedColumn<String>(
+    'reminders',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('[]'),
+  );
   static const VerificationMeta _searchTextMeta = const VerificationMeta(
     'searchText',
   );
@@ -726,6 +738,7 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
     originalStartUtc,
     cancelled,
     recurrenceEndUtc,
+    reminders,
     searchText,
     createdAt,
     updatedAt,
@@ -870,6 +883,12 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
         ),
       );
     }
+    if (data.containsKey('reminders')) {
+      context.handle(
+        _remindersMeta,
+        reminders.isAcceptableOrUnknown(data['reminders']!, _remindersMeta),
+      );
+    }
     if (data.containsKey('search_text')) {
       context.handle(
         _searchTextMeta,
@@ -979,6 +998,10 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
         DriftSqlType.int,
         data['${effectivePrefix}recurrence_end_utc'],
       ),
+      reminders: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reminders'],
+      )!,
       searchText: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}search_text'],
@@ -1026,6 +1049,9 @@ class EventRow extends DataClass implements Insertable<EventRow> {
   /// Upper bound of a bounded series (ms UTC), null when endless.
   final int? recurrenceEndUtc;
 
+  /// JSON list of reminder offsets in minutes (schema v4).
+  final String reminders;
+
   /// Normalized title, description and location (see `normalizeForSearch`).
   final String searchText;
   final int createdAt;
@@ -1050,6 +1076,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     this.originalStartUtc,
     required this.cancelled,
     this.recurrenceEndUtc,
+    required this.reminders,
     required this.searchText,
     required this.createdAt,
     required this.updatedAt,
@@ -1092,6 +1119,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     if (!nullToAbsent || recurrenceEndUtc != null) {
       map['recurrence_end_utc'] = Variable<int>(recurrenceEndUtc);
     }
+    map['reminders'] = Variable<String>(reminders);
     map['search_text'] = Variable<String>(searchText);
     map['created_at'] = Variable<int>(createdAt);
     map['updated_at'] = Variable<int>(updatedAt);
@@ -1137,6 +1165,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       recurrenceEndUtc: recurrenceEndUtc == null && nullToAbsent
           ? const Value.absent()
           : Value(recurrenceEndUtc),
+      reminders: Value(reminders),
       searchText: Value(searchText),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
@@ -1170,6 +1199,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       originalStartUtc: serializer.fromJson<int?>(json['originalStartUtc']),
       cancelled: serializer.fromJson<bool>(json['cancelled']),
       recurrenceEndUtc: serializer.fromJson<int?>(json['recurrenceEndUtc']),
+      reminders: serializer.fromJson<String>(json['reminders']),
       searchText: serializer.fromJson<String>(json['searchText']),
       createdAt: serializer.fromJson<int>(json['createdAt']),
       updatedAt: serializer.fromJson<int>(json['updatedAt']),
@@ -1198,6 +1228,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       'originalStartUtc': serializer.toJson<int?>(originalStartUtc),
       'cancelled': serializer.toJson<bool>(cancelled),
       'recurrenceEndUtc': serializer.toJson<int?>(recurrenceEndUtc),
+      'reminders': serializer.toJson<String>(reminders),
       'searchText': serializer.toJson<String>(searchText),
       'createdAt': serializer.toJson<int>(createdAt),
       'updatedAt': serializer.toJson<int>(updatedAt),
@@ -1224,6 +1255,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     Value<int?> originalStartUtc = const Value.absent(),
     bool? cancelled,
     Value<int?> recurrenceEndUtc = const Value.absent(),
+    String? reminders,
     String? searchText,
     int? createdAt,
     int? updatedAt,
@@ -1251,6 +1283,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     recurrenceEndUtc: recurrenceEndUtc.present
         ? recurrenceEndUtc.value
         : this.recurrenceEndUtc,
+    reminders: reminders ?? this.reminders,
     searchText: searchText ?? this.searchText,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
@@ -1286,6 +1319,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       recurrenceEndUtc: data.recurrenceEndUtc.present
           ? data.recurrenceEndUtc.value
           : this.recurrenceEndUtc,
+      reminders: data.reminders.present ? data.reminders.value : this.reminders,
       searchText: data.searchText.present
           ? data.searchText.value
           : this.searchText,
@@ -1316,6 +1350,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
           ..write('originalStartUtc: $originalStartUtc, ')
           ..write('cancelled: $cancelled, ')
           ..write('recurrenceEndUtc: $recurrenceEndUtc, ')
+          ..write('reminders: $reminders, ')
           ..write('searchText: $searchText, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
@@ -1344,6 +1379,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     originalStartUtc,
     cancelled,
     recurrenceEndUtc,
+    reminders,
     searchText,
     createdAt,
     updatedAt,
@@ -1371,6 +1407,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
           other.originalStartUtc == this.originalStartUtc &&
           other.cancelled == this.cancelled &&
           other.recurrenceEndUtc == this.recurrenceEndUtc &&
+          other.reminders == this.reminders &&
           other.searchText == this.searchText &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
@@ -1396,6 +1433,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
   final Value<int?> originalStartUtc;
   final Value<bool> cancelled;
   final Value<int?> recurrenceEndUtc;
+  final Value<String> reminders;
   final Value<String> searchText;
   final Value<int> createdAt;
   final Value<int> updatedAt;
@@ -1420,6 +1458,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     this.originalStartUtc = const Value.absent(),
     this.cancelled = const Value.absent(),
     this.recurrenceEndUtc = const Value.absent(),
+    this.reminders = const Value.absent(),
     this.searchText = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -1445,6 +1484,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     this.originalStartUtc = const Value.absent(),
     this.cancelled = const Value.absent(),
     this.recurrenceEndUtc = const Value.absent(),
+    this.reminders = const Value.absent(),
     this.searchText = const Value.absent(),
     required int createdAt,
     required int updatedAt,
@@ -1476,6 +1516,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     Expression<int>? originalStartUtc,
     Expression<bool>? cancelled,
     Expression<int>? recurrenceEndUtc,
+    Expression<String>? reminders,
     Expression<String>? searchText,
     Expression<int>? createdAt,
     Expression<int>? updatedAt,
@@ -1501,6 +1542,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
       if (originalStartUtc != null) 'original_start_utc': originalStartUtc,
       if (cancelled != null) 'cancelled': cancelled,
       if (recurrenceEndUtc != null) 'recurrence_end_utc': recurrenceEndUtc,
+      if (reminders != null) 'reminders': reminders,
       if (searchText != null) 'search_text': searchText,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
@@ -1528,6 +1570,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     Value<int?>? originalStartUtc,
     Value<bool>? cancelled,
     Value<int?>? recurrenceEndUtc,
+    Value<String>? reminders,
     Value<String>? searchText,
     Value<int>? createdAt,
     Value<int>? updatedAt,
@@ -1553,6 +1596,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
       originalStartUtc: originalStartUtc ?? this.originalStartUtc,
       cancelled: cancelled ?? this.cancelled,
       recurrenceEndUtc: recurrenceEndUtc ?? this.recurrenceEndUtc,
+      reminders: reminders ?? this.reminders,
       searchText: searchText ?? this.searchText,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -1618,6 +1662,9 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     if (recurrenceEndUtc.present) {
       map['recurrence_end_utc'] = Variable<int>(recurrenceEndUtc.value);
     }
+    if (reminders.present) {
+      map['reminders'] = Variable<String>(reminders.value);
+    }
     if (searchText.present) {
       map['search_text'] = Variable<String>(searchText.value);
     }
@@ -1657,6 +1704,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
           ..write('originalStartUtc: $originalStartUtc, ')
           ..write('cancelled: $cancelled, ')
           ..write('recurrenceEndUtc: $recurrenceEndUtc, ')
+          ..write('reminders: $reminders, ')
           ..write('searchText: $searchText, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
@@ -4085,6 +4133,7 @@ typedef $$EventsTableCreateCompanionBuilder = EventsCompanion Function({
   Value<int?> originalStartUtc,
   Value<bool> cancelled,
   Value<int?> recurrenceEndUtc,
+  Value<String> reminders,
   Value<String> searchText,
   required int createdAt,
   required int updatedAt,
@@ -4110,6 +4159,7 @@ typedef $$EventsTableUpdateCompanionBuilder = EventsCompanion Function({
   Value<int?> originalStartUtc,
   Value<bool> cancelled,
   Value<int?> recurrenceEndUtc,
+  Value<String> reminders,
   Value<String> searchText,
   Value<int> createdAt,
   Value<int> updatedAt,
@@ -4230,6 +4280,11 @@ class $$EventsTableFilterComposer
 
   ColumnFilters<int> get recurrenceEndUtc => $composableBuilder(
     column: $table.recurrenceEndUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reminders => $composableBuilder(
+    column: $table.reminders,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -4371,6 +4426,11 @@ class $$EventsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get reminders => $composableBuilder(
+    column: $table.reminders,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get searchText => $composableBuilder(
     column: $table.searchText,
     builder: (column) => ColumnOrderings(column),
@@ -4483,6 +4543,9 @@ class $$EventsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get reminders =>
+      $composableBuilder(column: $table.reminders, builder: (column) => column);
+
   GeneratedColumn<String> get searchText => $composableBuilder(
     column: $table.searchText,
     builder: (column) => column,
@@ -4567,6 +4630,7 @@ class $$EventsTableTableManager
                 Value<int?> originalStartUtc = const Value.absent(),
                 Value<bool> cancelled = const Value.absent(),
                 Value<int?> recurrenceEndUtc = const Value.absent(),
+                Value<String> reminders = const Value.absent(),
                 Value<String> searchText = const Value.absent(),
                 Value<int> createdAt = const Value.absent(),
                 Value<int> updatedAt = const Value.absent(),
@@ -4591,6 +4655,7 @@ class $$EventsTableTableManager
                 originalStartUtc: originalStartUtc,
                 cancelled: cancelled,
                 recurrenceEndUtc: recurrenceEndUtc,
+                reminders: reminders,
                 searchText: searchText,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
@@ -4617,6 +4682,7 @@ class $$EventsTableTableManager
                 Value<int?> originalStartUtc = const Value.absent(),
                 Value<bool> cancelled = const Value.absent(),
                 Value<int?> recurrenceEndUtc = const Value.absent(),
+                Value<String> reminders = const Value.absent(),
                 Value<String> searchText = const Value.absent(),
                 required int createdAt,
                 required int updatedAt,
@@ -4641,6 +4707,7 @@ class $$EventsTableTableManager
                 originalStartUtc: originalStartUtc,
                 cancelled: cancelled,
                 recurrenceEndUtc: recurrenceEndUtc,
+                reminders: reminders,
                 searchText: searchText,
                 createdAt: createdAt,
                 updatedAt: updatedAt,

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:uuid/uuid.dart';
@@ -148,6 +150,7 @@ class EventRepository {
     String? seriesId,
     DateTime? originalStart,
     bool cancelled = false,
+    List<int> reminders = const [],
   }) async {
     final now = _nowUtc();
     final event = CalendarEvent(
@@ -168,6 +171,7 @@ class EventRepository {
       seriesId: seriesId,
       originalStart: originalStart?.toUtc(),
       cancelled: cancelled,
+      reminders: reminders,
       createdAt: now,
       updatedAt: now,
     );
@@ -202,6 +206,7 @@ class EventRepository {
     timeZone: event.timeZone,
     rrule: event.seriesId == null ? event.rrule : null,
     holidayRule: event.holidayRule,
+    reminders: event.reminders,
   );
 
   /// Undoes [delete].
@@ -261,6 +266,7 @@ class EventRepository {
             // Keep a rule changed in the form, else the remaining part.
             rrule: edited.rrule == master.rrule ? remaining : edited.rrule,
             holidayRule: edited.holidayRule,
+            reminders: edited.reminders,
           );
         });
     }
@@ -361,6 +367,7 @@ class EventRepository {
         timeZone: edited.timeZone,
         rrule: () => edited.rrule ?? master.rrule,
         holidayRule: edited.holidayRule,
+        reminders: edited.reminders,
       ),
     );
   }
@@ -411,6 +418,7 @@ class EventRepository {
       seriesId: master.id,
       originalStart: occurrence.originalStart,
       cancelled: cancelled,
+      reminders: occurrence.reminders,
     );
     return created.id;
   }
@@ -475,6 +483,7 @@ class EventRepository {
         ? null
         : _utc(r.originalStartUtc!),
     cancelled: r.cancelled,
+    reminders: _parseReminders(r.reminders),
     createdAt: _utc(r.createdAt),
     updatedAt: _utc(r.updatedAt),
   );
@@ -497,6 +506,7 @@ class EventRepository {
     seriesId: Value(e.seriesId),
     originalStartUtc: Value(e.originalStart?.millisecondsSinceEpoch),
     cancelled: Value(e.cancelled),
+    reminders: Value(jsonEncode(e.reminders)),
     recurrenceEndUtc: Value(_recurrenceEnd(e)),
     searchText: Value(searchTextFor(e.title, e.description, e.location)),
     createdAt: Value(e.createdAt.millisecondsSinceEpoch),
@@ -519,6 +529,15 @@ class EventRepository {
           .millisecondsSinceEpoch;
     } on FormatException {
       return null;
+    }
+  }
+
+  static List<int> _parseReminders(String json) {
+    try {
+      return [for (final v in jsonDecode(json) as List) (v as num).toInt()]
+        ..sort();
+    } on Object {
+      return const [];
     }
   }
 

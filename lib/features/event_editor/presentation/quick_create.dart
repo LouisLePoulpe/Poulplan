@@ -42,6 +42,7 @@ Future<CalendarEvent> createFromDraft(WidgetRef ref, EventDraft draft) {
         timeZone: draft.timeZone,
         rrule: draft.rrule,
         holidayRule: draft.holidayRule,
+        reminders: (draft.reminders.toSet().toList()..sort()),
       );
 }
 

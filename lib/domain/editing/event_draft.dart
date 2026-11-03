@@ -27,7 +27,8 @@ class EventDraft {
     required this.timeZone,
     this.rrule,
     this.holidayRule = HolidayRule.none,
-  });
+    List<int>? reminders,
+  }) : reminders = reminders ?? [];
 
   /// One-hour event starting at [startMinute] of [day].
   factory EventDraft.newTimed({
@@ -73,6 +74,7 @@ class EventDraft {
       timeZone: event.timeZone,
       rrule: event.rrule,
       holidayRule: event.holidayRule,
+      reminders: [...event.reminders],
     );
     if (event.allDay) {
       final endExclusive = Day.fromDateTime(event.end);
@@ -109,6 +111,9 @@ class EventDraft {
   /// Recurrence rule (RRULE text), null for a single event.
   String? rrule;
   HolidayRule holidayRule;
+
+  /// Reminder offsets in minutes (see `CalendarEvent.reminders`).
+  List<int> reminders;
 
   /// UTC start and end as stored in [CalendarEvent].
   ({DateTime start, DateTime end}) resolve() {
@@ -158,6 +163,7 @@ class EventDraft {
       timeZone: timeZone,
       rrule: () => rrule,
       holidayRule: holidayRule,
+      reminders: (reminders.toSet().toList()..sort()),
     );
   }
 

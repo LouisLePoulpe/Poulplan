@@ -30,7 +30,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -55,6 +55,9 @@ class AppDatabase extends _$AppDatabase {
       if (from < 3) {
         await m.createTable(syncMeta);
         await m.createTable(syncConflicts);
+      }
+      if (from < 4) {
+        await m.addColumn(events, events.reminders);
       }
     },
     beforeOpen: (details) async {
@@ -83,13 +86,26 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
+  /// Raw SQL on the v1 columns only: the Dart table class describes the
+  /// latest schema, which has columns that do not exist yet at this step.
   Future<void> _fillSearchText() async {
-    final rows = await select(events).get();
+    final rows = await customSelect(
+      'SELECT id, title, description, location FROM events',
+    ).get();
     for (final r in rows) {
-      await (update(events)..where((e) => e.id.equals(r.id))).write(
-        EventsCompanion(
-          searchText: Value(searchTextFor(r.title, r.description, r.location)),
-        ),
+      await customUpdate(
+        'UPDATE events SET search_text = ? WHERE id = ?',
+        variables: [
+          Variable.withString(
+            searchTextFor(
+              r.read<String>('title'),
+              r.read<String>('description'),
+              r.readNullable<String>('location'),
+            ),
+          ),
+          Variable.withString(r.read<String>('id')),
+        ],
+        updates: {events},
       );
     }
   }
