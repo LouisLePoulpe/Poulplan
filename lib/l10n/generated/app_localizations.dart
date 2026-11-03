@@ -106,18 +106,6 @@ abstract class AppLocalizations {
   /// **'Aujourd\'hui'**
   String get today;
 
-  /// No description provided for @previousMonth.
-  ///
-  /// In fr, this message translates to:
-  /// **'Mois précédent'**
-  String get previousMonth;
-
-  /// No description provided for @nextMonth.
-  ///
-  /// In fr, this message translates to:
-  /// **'Mois suivant'**
-  String get nextMonth;
-
   /// No description provided for @settings.
   ///
   /// In fr, this message translates to:
@@ -207,6 +195,306 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Événements de démonstration ajoutés'**
   String get debugDemoInserted;
+
+  /// No description provided for @previous.
+  ///
+  /// In fr, this message translates to:
+  /// **'Précédent'**
+  String get previous;
+
+  /// No description provided for @next.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suivant'**
+  String get next;
+
+  /// No description provided for @viewDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jour'**
+  String get viewDay;
+
+  /// No description provided for @viewWeek.
+  ///
+  /// In fr, this message translates to:
+  /// **'Semaine'**
+  String get viewWeek;
+
+  /// No description provided for @viewMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mois'**
+  String get viewMonth;
+
+  /// No description provided for @viewYear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Année'**
+  String get viewYear;
+
+  /// No description provided for @viewAgenda.
+  ///
+  /// In fr, this message translates to:
+  /// **'Agenda'**
+  String get viewAgenda;
+
+  /// No description provided for @agendaFrom.
+  ///
+  /// In fr, this message translates to:
+  /// **'À partir du {day}'**
+  String agendaFrom(String day);
+
+  /// No description provided for @agendaEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun événement jusqu\'au {day}.'**
+  String agendaEmpty(String day);
+
+  /// No description provided for @agendaShowMore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher plus'**
+  String get agendaShowMore;
+
+  /// No description provided for @allDayShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jour.'**
+  String get allDayShort;
+
+  /// No description provided for @newEvent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvel événement'**
+  String get newEvent;
+
+  /// No description provided for @editEvent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier l\'événement'**
+  String get editEvent;
+
+  /// No description provided for @eventNotFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cet événement n\'existe plus.'**
+  String get eventNotFound;
+
+  /// No description provided for @moreOptions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus d\'options'**
+  String get moreOptions;
+
+  /// No description provided for @cancel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler'**
+  String get cancel;
+
+  /// No description provided for @save.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get save;
+
+  /// No description provided for @edit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier'**
+  String get edit;
+
+  /// No description provided for @duplicate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dupliquer'**
+  String get duplicate;
+
+  /// No description provided for @delete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
+  String get delete;
+
+  /// No description provided for @undo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler'**
+  String get undo;
+
+  /// No description provided for @eventDeleted.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {title} » supprimé'**
+  String eventDeleted(String title);
+
+  /// No description provided for @eventDuplicated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Événement dupliqué'**
+  String get eventDuplicated;
+
+  /// No description provided for @overlapWarning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chevauche un autre événement'**
+  String get overlapWarning;
+
+  /// No description provided for @overlapsWith.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chevauche : {titles}'**
+  String overlapsWith(String titles);
+
+  /// No description provided for @fieldTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Titre'**
+  String get fieldTitle;
+
+  /// No description provided for @fieldStart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Début'**
+  String get fieldStart;
+
+  /// No description provided for @fieldEnd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fin'**
+  String get fieldEnd;
+
+  /// No description provided for @fieldTimeZone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fuseau horaire'**
+  String get fieldTimeZone;
+
+  /// No description provided for @searchTimeZone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher (ex. Paris, New York)'**
+  String get searchTimeZone;
+
+  /// No description provided for @fieldCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégorie'**
+  String get fieldCategory;
+
+  /// No description provided for @noCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune'**
+  String get noCategory;
+
+  /// No description provided for @fieldColor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couleur'**
+  String get fieldColor;
+
+  /// No description provided for @colorFromCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couleur de la catégorie'**
+  String get colorFromCategory;
+
+  /// No description provided for @fieldLocation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lieu'**
+  String get fieldLocation;
+
+  /// No description provided for @fieldVideoLink.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lien de visioconférence'**
+  String get fieldVideoLink;
+
+  /// No description provided for @fieldDescription.
+  ///
+  /// In fr, this message translates to:
+  /// **'Description'**
+  String get fieldDescription;
+
+  /// No description provided for @busy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Occupé'**
+  String get busy;
+
+  /// No description provided for @free.
+  ///
+  /// In fr, this message translates to:
+  /// **'Libre'**
+  String get free;
+
+  /// No description provided for @errorEmptyTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le titre est obligatoire'**
+  String get errorEmptyTitle;
+
+  /// No description provided for @errorEndBeforeStart.
+  ///
+  /// In fr, this message translates to:
+  /// **'La fin doit être après le début'**
+  String get errorEndBeforeStart;
+
+  /// No description provided for @errorUnknownTimeZone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fuseau horaire inconnu'**
+  String get errorUnknownTimeZone;
+
+  /// No description provided for @categories.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégories'**
+  String get categories;
+
+  /// No description provided for @newCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle catégorie'**
+  String get newCategory;
+
+  /// No description provided for @editCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier la catégorie'**
+  String get editCategory;
+
+  /// No description provided for @fieldName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom'**
+  String get fieldName;
+
+  /// No description provided for @errorEmptyName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le nom est obligatoire'**
+  String get errorEmptyName;
+
+  /// No description provided for @deleteCategoryTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer « {name} » ?'**
+  String deleteCategoryTitle(String name);
+
+  /// No description provided for @deleteCategoryBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les événements de cette catégorie sont conservés et reprennent la couleur par défaut.'**
+  String get deleteCategoryBody;
+
+  /// No description provided for @settingsCategoriesSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Noms et couleurs des catégories d\'événements'**
+  String get settingsCategoriesSubtitle;
 }
 
 class _AppLocalizationsDelegate

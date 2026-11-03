@@ -11,17 +11,17 @@ import 'data/providers.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  registerScreenshotExtension();
   await initializeDateFormatting('fr');
   final timeZone = await initTimeZones();
   final database = AppDatabase(openAppDatabaseConnection());
+  final container = ProviderContainer(
+    overrides: [
+      databaseProvider.overrideWithValue(database),
+      deviceTimeZoneProvider.overrideWithValue(timeZone),
+    ],
+  );
+  registerDebugExtensions(container);
   runApp(
-    ProviderScope(
-      overrides: [
-        databaseProvider.overrideWithValue(database),
-        deviceTimeZoneProvider.overrideWithValue(timeZone),
-      ],
-      child: const PoulplanApp(),
-    ),
+    UncontrolledProviderScope(container: container, child: const PoulplanApp()),
   );
 }

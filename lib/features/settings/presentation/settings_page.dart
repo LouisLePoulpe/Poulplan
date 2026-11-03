@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+
+import '../../../core/routing/app_router.dart';
 
 import '../../../data/providers.dart';
 import '../../../domain/entities/app_settings.dart';
@@ -86,6 +89,13 @@ class SettingsPage extends ConsumerWidget {
                   ),
               ],
             ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.label_outline),
+            title: Text(l10n.categories),
+            subtitle: Text(l10n.settingsCategoriesSubtitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(Routes.categories),
           ),
           section(l10n.settingsAbout),
           ListTile(

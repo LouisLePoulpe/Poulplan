@@ -2,8 +2,6 @@
   "@@locale": "fr",
   "appTitle": "Poulplan",
   "today": "Aujourd'hui",
-  "previousMonth": "Mois précédent",
-  "nextMonth": "Mois suivant",
   "settings": "Paramètres",
   "settingsAppearance": "Apparence",
   "settingsTheme": "Thème",
@@ -18,10 +16,97 @@
   "moreEvents": "+{count}",
   "@moreEvents": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "allDay": "Toute la journée",
   "debugInsertDemo": "Insérer des événements de démonstration",
-  "debugDemoInserted": "Événements de démonstration ajoutés"
+  "debugDemoInserted": "Événements de démonstration ajoutés",
+  "previous": "Précédent",
+  "next": "Suivant",
+  "viewDay": "Jour",
+  "viewWeek": "Semaine",
+  "viewMonth": "Mois",
+  "viewYear": "Année",
+  "viewAgenda": "Agenda",
+  "agendaFrom": "À partir du {day}",
+  "agendaEmpty": "Aucun événement jusqu'au {day}.",
+  "agendaShowMore": "Afficher plus",
+  "allDayShort": "Jour.",
+  "newEvent": "Nouvel événement",
+  "editEvent": "Modifier l'événement",
+  "eventNotFound": "Cet événement n'existe plus.",
+  "moreOptions": "Plus d'options",
+  "cancel": "Annuler",
+  "save": "Enregistrer",
+  "edit": "Modifier",
+  "duplicate": "Dupliquer",
+  "delete": "Supprimer",
+  "undo": "Annuler",
+  "eventDeleted": "« {title} » supprimé",
+  "eventDuplicated": "Événement dupliqué",
+  "overlapWarning": "Chevauche un autre événement",
+  "overlapsWith": "Chevauche : {titles}",
+  "fieldTitle": "Titre",
+  "fieldStart": "Début",
+  "fieldEnd": "Fin",
+  "fieldTimeZone": "Fuseau horaire",
+  "searchTimeZone": "Rechercher (ex. Paris, New York)",
+  "fieldCategory": "Catégorie",
+  "noCategory": "Aucune",
+  "fieldColor": "Couleur",
+  "colorFromCategory": "Couleur de la catégorie",
+  "fieldLocation": "Lieu",
+  "fieldVideoLink": "Lien de visioconférence",
+  "fieldDescription": "Description",
+  "busy": "Occupé",
+  "free": "Libre",
+  "errorEmptyTitle": "Le titre est obligatoire",
+  "errorEndBeforeStart": "La fin doit être après le début",
+  "errorUnknownTimeZone": "Fuseau horaire inconnu",
+  "categories": "Catégories",
+  "newCategory": "Nouvelle catégorie",
+  "editCategory": "Modifier la catégorie",
+  "fieldName": "Nom",
+  "errorEmptyName": "Le nom est obligatoire",
+  "deleteCategoryTitle": "Supprimer « {name} » ?",
+  "deleteCategoryBody": "Les événements de cette catégorie sont conservés et reprennent la couleur par défaut.",
+  "settingsCategoriesSubtitle": "Noms et couleurs des catégories d'événements",
+  "@agendaFrom": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "@agendaEmpty": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "@eventDeleted": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "@overlapsWith": {
+    "placeholders": {
+      "titles": {
+        "type": "String"
+      }
+    }
+  },
+  "@deleteCategoryTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }
