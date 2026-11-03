@@ -73,6 +73,18 @@ jobs:
         with:
           channel: stable
           cache: true
+      # Le téléchargement de CMake par Gradle échoue parfois (archive
+      # corrompue) : pré-installation avec nouvelles tentatives.
+      - name: Pré-installer CMake (réessais)
+        run: |
+          for attempt in 1 2 3; do
+            yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "cmake;3.22.1" > /dev/null && exit 0
+            echo "Tentative $attempt échouée, nouvel essai"
+            rm -rf "$ANDROID_HOME/cmake/3.22.1"
+            sleep 10
+          done
+          exit 1
+
       - name: Build APK debug (si le projet existe)
         run: |
           if [ -f pubspec.yaml ] && [ -d android ]; then
