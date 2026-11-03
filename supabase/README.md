@@ -21,7 +21,7 @@ Ils sont idempotents : on peut les relancer sans casse.
 
 Dans **SQL Editor**, exécuter dans l'ordre le contenu de :
 
-1. `migrations/0001_poulapp_access.sql` — si `poulapp_access` existe déjà (créée pour Poulpoints), le script la laisse intacte ; vérifier simplement qu'elle a les colonnes `user_id uuid` et `app text`.
+1. `migrations/0001_poulapp_access.sql` — la table `poulapp_access` (colonnes `user_id`, `app_id`, `approved_at`, créée pour Poulpoints) est laissée intacte ; le script ajoute seulement la fonction `poulapp_has_access()`.
 2. `migrations/0002_poulplan_records.sql`
 3. `migrations/0003_poulplan_storage.sql`
 
@@ -32,7 +32,7 @@ Dans **SQL Editor**, exécuter dans l'ordre le contenu de :
 2. Dans **SQL Editor**, accorder l'accès à Poulplan (remplacer l'adresse) :
 
    ```sql
-   insert into public.poulapp_access (user_id, app)
+   insert into public.poulapp_access (user_id, app_id)
    select id, 'poulplan' from auth.users where email = 'votre@adresse.fr'
    on conflict do nothing;
    ```
