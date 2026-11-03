@@ -224,7 +224,15 @@ void main() {
     await tester.tap(find.text('Toute la journée'));
     await tester.pumpAndSettle();
     // End date: pick the 6th.
-    await tester.tap(find.text('mar. 3 nov. 2026').last);
+    // The end date button (its date depends on the default start hour).
+    await tester.tap(
+      find
+          .descendant(
+            of: find.byKey(const ValueKey('end')),
+            matching: find.byType(OutlinedButton),
+          )
+          .first,
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('6'));
     await tester.tap(find.text('OK'));

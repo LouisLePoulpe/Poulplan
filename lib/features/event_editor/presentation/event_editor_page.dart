@@ -283,6 +283,7 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
                   onChanged: (v) => setState(() => draft.allDay = v),
                 ),
                 _DateTimeRow(
+                  key: const ValueKey('start'),
                   label: l10n.fieldStart,
                   day: draft.startDay,
                   minute: draft.allDay ? null : draft.startMinute,
@@ -290,6 +291,7 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
                   onPickTime: () => _pickTime(start: true),
                 ),
                 _DateTimeRow(
+                  key: const ValueKey('end'),
                   label: l10n.fieldEnd,
                   day: draft.endDay,
                   minute: draft.allDay ? null : draft.endMinute,
@@ -425,6 +427,7 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
 
 class _DateTimeRow extends StatelessWidget {
   const _DateTimeRow({
+    super.key,
     required this.label,
     required this.day,
     required this.minute,

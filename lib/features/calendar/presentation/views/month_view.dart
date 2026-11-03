@@ -15,6 +15,7 @@ import '../../providers/calendar_providers.dart';
 import '../event_actions.dart';
 import '../widgets/event_drag_source.dart';
 import '../widgets/event_style.dart';
+import '../widgets/grid_lines.dart';
 
 class MonthView extends ConsumerWidget {
   const MonthView({super.key});
@@ -55,25 +56,41 @@ class MonthView extends ConsumerWidget {
         ),
         const Divider(height: 1),
         Expanded(
-          child: Column(
+          child: Stack(
             children: [
-              for (var week = 0; week < days.length ~/ 7; week++)
-                Expanded(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      for (final day in days.skip(week * 7).take(7))
-                        Expanded(
-                          child: _DayCell(
-                            day: day,
-                            inMonth: day.month == month,
-                            isToday: day == today,
-                            events: eventsByDay[day] ?? const [],
-                          ),
-                        ),
-                    ],
+              Column(
+                children: [
+                  for (var week = 0; week < days.length ~/ 7; week++)
+                    Expanded(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          for (final day in days.skip(week * 7).take(7))
+                            Expanded(
+                              child: _DayCell(
+                                day: day,
+                                inMonth: day.month == month,
+                                isToday: day == today,
+                                events: eventsByDay[day] ?? const [],
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: CustomPaint(
+                    painter: GridLinesPainter(
+                      columns: 7,
+                      rows: days.length ~/ 7,
+                      color: theme.dividerColor,
+                      pixelRatio: MediaQuery.devicePixelRatioOf(context),
+                    ),
                   ),
                 ),
+              ),
             ],
           ),
         ),
@@ -135,12 +152,6 @@ class _DayCell extends ConsumerWidget {
                     : inMonth
                     ? null
                     : scheme.surfaceContainerLow,
-                // Width 0: hairline of exactly one physical pixel, crisp at
-                // any pixel ratio (0.5 logical px vanished on 1x screens).
-                border: Border(
-                  right: BorderSide(color: theme.dividerColor, width: 0),
-                  bottom: BorderSide(color: theme.dividerColor, width: 0),
-                ),
               ),
               child: LayoutBuilder(
                 builder: (context, constraints) {

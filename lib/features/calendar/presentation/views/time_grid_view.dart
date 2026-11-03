@@ -15,6 +15,7 @@ import '../../providers/calendar_providers.dart';
 import '../event_actions.dart';
 import '../widgets/event_drag_source.dart';
 import '../widgets/event_style.dart';
+import '../widgets/grid_lines.dart';
 import 'month_view.dart' show MonthEventChip;
 
 const _hourHeight = 52.0;
@@ -312,6 +313,7 @@ class _DayColumn extends ConsumerWidget {
                   child: CustomPaint(
                     painter: _GridPainter(
                       line: theme.dividerColor,
+                      pixelRatio: MediaQuery.devicePixelRatioOf(context),
                       highlight: candidates.isNotEmpty
                           ? theme.colorScheme.primaryContainer.withValues(
                               alpha: 0.3,
@@ -460,9 +462,10 @@ class _TimedEventTile extends ConsumerWidget {
 }
 
 class _GridPainter extends CustomPainter {
-  _GridPainter({required this.line, this.highlight});
+  _GridPainter({required this.line, required this.pixelRatio, this.highlight});
 
   final Color line;
+  final double pixelRatio;
   final Color? highlight;
 
   @override
@@ -470,18 +473,22 @@ class _GridPainter extends CustomPainter {
     if (highlight != null) {
       canvas.drawRect(Offset.zero & size, Paint()..color = highlight!);
     }
-    // Stroke width 0: one physical pixel, crisp at any pixel ratio.
+    // One physical pixel, snapped to the pixel grid: crisp and never
+    // dropped at fractional positions.
     final paint = Paint()
       ..color = line
-      ..strokeWidth = 0;
+      ..strokeWidth = 1 / pixelRatio;
     for (var h = 0; h <= 24; h++) {
-      final y = h * _hourHeight;
+      final y = snapToPixel(h * _hourHeight, pixelRatio);
       canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
     }
-    canvas.drawLine(Offset.zero, Offset(0, size.height), paint);
+    final x = snapToPixel(0, pixelRatio);
+    canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
   }
 
   @override
   bool shouldRepaint(_GridPainter old) =>
-      old.line != line || old.highlight != highlight;
+      old.line != line ||
+      old.highlight != highlight ||
+      old.pixelRatio != pixelRatio;
 }
