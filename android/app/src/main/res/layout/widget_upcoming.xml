@@ -7,15 +7,33 @@
     android:background="@drawable/widget_background"
     android:orientation="vertical"
     android:padding="12dp">
-    <TextView
-        android:id="@+id/widget_header"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="6dp"
-        android:text="@string/widget_upcoming_title"
-        android:textColor="#FFE600"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="6dp">
+        <TextView
+            android:id="@+id/widget_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/widget_upcoming_title"
+            android:textColor="#FFE600"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/widget_add"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/widget_add_background"
+            android:contentDescription="@string/widget_add"
+            android:gravity="center"
+            android:text="+"
+            android:textColor="#2C1E00"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+    </LinearLayout>
     <TextView
         android:id="@+id/widget_empty"
         android:layout_width="match_parent"

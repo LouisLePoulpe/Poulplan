@@ -138,3 +138,9 @@ Préparation :
 - [ ] Toucher un événement du widget « À venir » : l'app s'ouvre **directement sur l'événement** (aussi app fermée).
 - [ ] Toucher le widget « Mois » : l'app s'ouvre.
 - [ ] Le lendemain (ou après minuit) sans ouvrir l'app : « Aujourd'hui / Demain » et le jour en jaune sont à jour (rafraîchissement toutes les 30 min).
+
+## D5. Widgets « Journée » et actions (0.6.2)
+- [ ] Android : widget **Journée** (aperçu réel dans le sélecteur) : tous les événements du jour avec l'heure de début et de fin ou « Journée », les événements passés grisés.
+- [ ] Dans les trois widgets Android : toucher un événement l'ouvre, le bouton jaune **+** ouvre « Nouvel événement », le titre ouvre l'application.
+- [ ] KDE : ajouter **Poulplan — Journée** ; régler la commande de lancement ; même contenu que sur Android.
+- [ ] KDE (« À venir » et « Journée ») : clic sur un événement → l'événement ; bouton **+** → « Nouvel événement » ; clic sur le titre → l'application.

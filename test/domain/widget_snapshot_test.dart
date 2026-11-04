@@ -141,4 +141,45 @@ void main() {
     expect(upcoming['time'], '09:00');
     expect((json['busyDays'] as Map)['2026-11-04'], isNotEmpty);
   });
+
+  test('agenda: every event of each day, finished ones included', () {
+    final snapshot = build([
+      event('morning', DateTime.utc(2026, 11, 3, 8), const Duration(hours: 1)),
+      event('evening', DateTime.utc(2026, 11, 3, 19), const Duration(hours: 1)),
+      event(
+        'trip',
+        DateTime.utc(2026, 11, 3),
+        const Duration(days: 3),
+        allDay: true,
+      ),
+      event(
+        'next week',
+        DateTime.utc(2026, 11, 20, 8),
+        const Duration(hours: 1),
+      ),
+    ], DateTime.utc(2026, 11, 3, 12));
+    // Finished « morning » is kept: the Day widget shows the whole day.
+    expect(snapshot.agenda[Day(2026, 11, 3)]!.map((e) => e.id), [
+      'trip',
+      'morning',
+      'evening',
+    ]);
+    // A multi-day event is listed on each of its days.
+    expect(snapshot.agenda[Day(2026, 11, 5)]!.map((e) => e.id), ['trip']);
+    // Only the next week is kept.
+    expect(
+      snapshot.agenda.keys.every((d) => !d.isAfter(Day(2026, 11, 10))),
+      isTrue,
+    );
+    expect(snapshot.agenda[Day(2026, 11, 3)]!.first.endTime, isNull);
+    expect(snapshot.agenda[Day(2026, 11, 3)]![1].endTime, '09:00');
+  });
+
+  test('agenda json is keyed by day', () {
+    final json = build([
+      event('e', DateTime.utc(2026, 11, 4, 9), const Duration(hours: 1)),
+    ], DateTime.utc(2026, 11, 3)).toJson();
+    final agenda = json['agenda'] as Map;
+    expect(((agenda['2026-11-04'] as List).single as Map)['endTime'], '10:00');
+  });
 }

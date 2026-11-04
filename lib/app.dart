@@ -23,7 +23,7 @@ class PoulplanApp extends ConsumerStatefulWidget {
 class _PoulplanAppState extends ConsumerState<PoulplanApp> {
   StreamSubscription<String>? _opened;
   StreamSubscription<Uri?>? _widgetClicks;
-  StreamSubscription<String>? _desktopOpen;
+  StreamSubscription<Uri>? _desktopOpen;
 
   @override
   void initState() {
@@ -33,22 +33,25 @@ class _PoulplanAppState extends ConsumerState<PoulplanApp> {
       DesktopIntegration.showWindow();
       ref.read(routerProvider).push(Routes.event(id));
     });
-    // Home screen widget (Android) and KDE widget (Linux) taps.
-    void openFromWidget(String? id) {
-      if (id == null) return;
+    // Home screen widget (Android) and KDE widget (Linux) taps: open an
+    // event, create one, or just open the app.
+    void handleWidget(Uri? uri) {
+      if (uri == null || uri.scheme != 'poulplan') return;
       DesktopIntegration.showWindow();
-      ref.read(routerProvider).push(Routes.event(id));
+      final router = ref.read(routerProvider);
+      final id = eventIdFromUri(uri);
+      if (id != null) {
+        router.push(Routes.event(id));
+      } else if (isNewEventUri(uri)) {
+        router.push(Routes.newEvent);
+      }
     }
 
     if (WidgetExporter.supported && !DesktopIntegration.isLinux) {
-      _widgetClicks = HomeWidget.widgetClicked.listen(
-        (uri) => openFromWidget(eventIdFromUri(uri)),
-      );
-      HomeWidget.initiallyLaunchedFromHomeWidget().then(
-        (uri) => openFromWidget(eventIdFromUri(uri)),
-      );
+      _widgetClicks = HomeWidget.widgetClicked.listen(handleWidget);
+      HomeWidget.initiallyLaunchedFromHomeWidget().then(handleWidget);
     }
-    _desktopOpen = DesktopIntegration.openEventRequests.listen(openFromWidget);
+    _desktopOpen = DesktopIntegration.widgetActions.listen(handleWidget);
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => ref.read(reminderSchedulerProvider).askPermissionOnce(),
     );

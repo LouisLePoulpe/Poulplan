@@ -56,6 +56,12 @@ void main() {
     }
   });
 
+  test('new event uri', () {
+    expect(isNewEventUri(Uri.parse('poulplan://new')), isTrue);
+    expect(isNewEventUri(Uri.parse('poulplan://open')), isFalse);
+    expect(eventIdFromUri(Uri.parse('poulplan://new')), isNull);
+  });
+
   test('other uris open nothing in particular', () {
     expect(eventIdFromUri(Uri.parse('poulplan://open')), isNull);
     expect(eventIdFromUri(Uri.parse('https://example.org/event/x')), isNull);

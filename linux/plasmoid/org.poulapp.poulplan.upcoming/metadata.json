@@ -12,7 +12,7 @@
         "Id": "org.poulapp.poulplan.upcoming",
         "License": "GPL-3.0-or-later",
         "Name": "Poulplan — À venir",
-        "Version": "0.6.1",
+        "Version": "0.6.2",
         "Website": "https://github.com/LouisLePoulpe/Poulplan"
     },
     "X-Plasma-API-Minimum-Version": "6.0"

@@ -21,6 +21,7 @@ import '../calendar/providers/calendar_providers.dart';
 
 /// Android widget providers (see android/app/src/main/kotlin).
 const _androidProviders = [
+  'org.poulapp.poulplan.DayWidgetProvider',
   'org.poulapp.poulplan.UpcomingWidgetProvider',
   'org.poulapp.poulplan.MonthWidgetProvider',
 ];
@@ -30,6 +31,10 @@ const linuxSnapshotFile = 'widget.json';
 
 /// `poulplan://event/<id>`: opens an event from a widget.
 Uri eventUri(String id) => Uri(scheme: 'poulplan', host: 'event', path: '/$id');
+
+/// `poulplan://new`: creates an event from a widget.
+bool isNewEventUri(Uri? uri) =>
+    uri != null && uri.scheme == 'poulplan' && uri.host == 'new';
 
 /// Event id of a widget click, if it targets an event.
 String? eventIdFromUri(Uri? uri) {

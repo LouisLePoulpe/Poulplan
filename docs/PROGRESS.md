@@ -163,6 +163,7 @@ Mini-plan : instantané commun pour les widgets (tests d'abord) → exportateur 
 
 ## Journal
 - 2026-11-03 : dépôt initialisé (CLAUDE.md, spec, roadmap, CI, licence GPL-3.0).
+- 2026-11-04 : 0.6.2 — widget « Journée » (Android et KDE, demande de Louis), bouton + (nouvel événement) et ouverture de l'app depuis tous les widgets, aperçus dans le sélecteur Android ; menu « Quitter » de l'icône vérifié par D-Bus.
 - 2026-11-04 : retours v0.6 de Louis : widget Mois ✅, widget À venir ❌ (`<View>` interdit dans un widget), plasmoïde qui déborde ❌, demandes : « Journée », barres multi-jours continues, retrait des événements de démo → corrigé en 0.6.1 (`cc1ab21`) ; mes 8 événements de démonstration supprimés (suppression synchronisée).
 - 2026-11-04 : v0.6.0 codée ; bug d'affichage en UTC sous Linux découvert et corrigé.
 - 2026-11-03 : tour 2 des tests manuels : création rapide avec clavier ✅, notifications Pixel déverrouillé/verrouillé ✅, chiffres AZERTY ✅, synchro partout ✅ ; traits de grille et notifications Linux ✅ après correction (grille dessinée d'un seul tenant, `07e99da`) et arrêt de l'ancienne instance. v0.4.0 et v0.5.0 taguées.

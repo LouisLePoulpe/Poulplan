@@ -45,6 +45,7 @@ class UpcomingWidgetProvider : HomeWidgetProvider() {
                 context, MainActivity::class.java, Uri.parse("poulplan://open"),
             )
             views.setOnClickPendingIntent(R.id.widget_header, openApp)
+            views.setOnClickPendingIntent(R.id.widget_add, launchIntent(context, "new"))
             views.setViewVisibility(
                 R.id.widget_empty, if (entries.isEmpty()) View.VISIBLE else View.GONE,
             )

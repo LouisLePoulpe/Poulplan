@@ -82,6 +82,10 @@ PlasmoidItem {
         return entry.time ? day + " à " + entry.time : day + " · Journée";
     }
 
+    function create() {
+        executable.run(Plasmoid.configuration.launchCommand + " --new-event");
+    }
+
     function open(entry) {
         const base = Plasmoid.configuration.launchCommand;
         executable.run(entry && entry.openable
@@ -110,14 +114,25 @@ PlasmoidItem {
         spacing: Kirigami.Units.smallSpacing
         clip: true
 
-        PlasmaExtras.Heading {
+        RowLayout {
             id: heading
-            level: 4
-            text: "À venir"
             Layout.fillWidth: true
-            MouseArea {
-                anchors.fill: parent
-                onClicked: root.open(null)
+            PlasmaExtras.Heading {
+                level: 4
+                text: "À venir"
+                Layout.fillWidth: true
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: root.open(null)
+                }
+            }
+            PlasmaComponents.ToolButton {
+                icon.name: "list-add"
+                text: "Nouvel événement"
+                display: PlasmaComponents.AbstractButton.IconOnly
+                PlasmaComponents.ToolTip.text: text
+                PlasmaComponents.ToolTip.visible: hovered
+                onClicked: root.create()
             }
         }
 

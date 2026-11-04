@@ -33,21 +33,27 @@ abstract final class DesktopIntegration {
 
   static Future<void> quit() => _invoke('quit');
 
-  /// Events to open, requested by `poulplan --open-event=<id>` (KDE widget).
-  static Stream<String> get openEventRequests {
+  /// Widget actions from the KDE widget, as `poulplan://…` links:
+  /// `poulplan --open-event=<id>` → `poulplan://event/<id>`,
+  /// `poulplan --new-event` → `poulplan://new`.
+  static Stream<Uri> get widgetActions {
     if (!isLinux) return const Stream.empty();
-    final controller = StreamController<String>();
+    final controller = StreamController<Uri>();
+    void add(String? action) {
+      if (action != null && action.isNotEmpty) {
+        controller.add(Uri.parse('poulplan://$action'));
+      }
+    }
+
     _channel.setMethodCallHandler((call) async {
-      if (call.method == 'openEvent' && call.arguments is String) {
-        controller.add(call.arguments as String);
+      if (call.method == 'widgetAction' && call.arguments is String) {
+        add(call.arguments as String);
       }
     });
-    // An id given at launch, before Dart was listening.
+    // An action given at launch, before Dart was listening.
     _channel
-        .invokeMethod<String>('takePendingEvent')
-        .then((id) {
-          if (id != null && id.isNotEmpty) controller.add(id);
-        })
+        .invokeMethod<String>('takePendingAction')
+        .then(add)
         .catchError((Object _) => null);
     return controller.stream;
   }
