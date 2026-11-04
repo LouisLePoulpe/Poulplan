@@ -125,6 +125,27 @@ class SyncEngine {
             ..where((m) => m.entity.equals(entity) & m.recordId.equals(id)))
           .getSingleOrNull();
 
+  /// An event may arrive before its category (missed pull, category pushed
+  /// later): the category is fetched, and when the cloud does not have it
+  /// either, the event is stored without it so that the synchronization
+  /// never stops on it.
+  Future<Map<String, Object?>> _withKnownCategory(
+    Map<String, Object?> fields,
+  ) async {
+    final id = fields['categoryId'];
+    if (id is! String) return fields;
+    Future<bool> known() async =>
+        await (_db.select(
+          _db.categories,
+        )..where((c) => c.id.equals(id))).getSingleOrNull() !=
+        null;
+    if (await known()) return fields;
+    final category = await _remote.fetch('category', id);
+    if (category != null) await _apply(category);
+    if (await known()) return fields;
+    return {...fields, 'categoryId': null};
+  }
+
   /// Applies a remote record locally. Returns false when it was already
   /// known (overlap re-read).
   Future<bool> _apply(RemoteRecord remote) async {
@@ -158,8 +179,11 @@ class SyncEngine {
         !_equality.equals(result.fields, incoming.fields) ||
         !_equality.equals(result.versions, incoming.versions);
 
+    final stored = remote.entity == 'event'
+        ? await _withKnownCategory(result.fields)
+        : result.fields;
     await _db.transaction(() async {
-      await codecFor(remote.entity).write(_db, remote.id, result.fields);
+      await codecFor(remote.entity).write(_db, remote.id, stored);
       await _db
           .into(_db.syncMeta)
           .insertOnConflictUpdate(

@@ -336,6 +336,54 @@ void main() {
     },
   );
 
+  test('an event whose category was not pulled still syncs', () async {
+    final category = await a.categories.create(name: '6 Month', color: 1);
+    final event = await a.events.create(
+      title: 'Planning',
+      categoryId: category.id,
+      start: DateTime.utc(2026, 11, 10, 9),
+      end: DateTime.utc(2026, 11, 10, 10),
+      timeZone: 'UTC',
+    );
+    await a.sync();
+    await a.events.update(event.copyWith(title: 'Planning et démarrage'));
+    await a.sync();
+    // B missed the category (its cursor is past it), not the event.
+    final categoryRev = (await remote.fetch('category', category.id))!.rev;
+    await b.db
+        .into(b.db.settings)
+        .insert(
+          SettingsCompanion.insert(
+            key: 'sync_cursor',
+            value: '${categoryRev + SyncEngine.overlap}',
+          ),
+        );
+    await b.sync();
+    final events = await b.all();
+    expect(events.single.title, 'Planning et démarrage');
+    expect(events.single.categoryId, category.id);
+  });
+
+  test('an event whose category is nowhere still syncs, without it', () async {
+    await a.db.customStatement('PRAGMA foreign_keys = OFF');
+    final event = await a.events.create(
+      title: 'Orphelin',
+      categoryId: 'gone',
+      start: DateTime.utc(2026, 11, 10, 9),
+      end: DateTime.utc(2026, 11, 10, 10),
+      timeZone: 'UTC',
+    );
+    await a.sync();
+    await b.sync();
+    expect((await b.all()).single.title, 'Orphelin');
+    expect((await b.all()).single.categoryId, isNull);
+    // The category stays in what is synchronized.
+    final meta = await (b.db.select(
+      b.db.syncMeta,
+    )..where((m) => m.recordId.equals(event.id))).getSingle();
+    expect(meta.fieldValues, contains('"categoryId":"gone"'));
+  });
+
   test('records are pushed in batches, one call per batch', () async {
     await a.db.batch((batch) {
       for (var i = 0; i < 250; i++) {
