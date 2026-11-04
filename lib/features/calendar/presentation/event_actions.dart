@@ -64,6 +64,9 @@ void _showUndo(
     ..showSnackBar(
       SnackBar(
         content: Text(message),
+        // Flutter keeps SnackBars with an action until tapped by default.
+        persist: false,
+        duration: const Duration(seconds: 6),
         action: undo == null
             ? null
             : SnackBarAction(label: l10n.undo, onPressed: undo),

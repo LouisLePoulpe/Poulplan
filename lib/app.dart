@@ -52,6 +52,7 @@ class _PoulplanAppState extends ConsumerState<PoulplanApp> {
       messenger.showSnackBar(
         SnackBar(
           duration: const Duration(seconds: 10),
+          persist: false,
           content: Text(
             l10n.storageLow(
               formatBytes(report.reclaimableBytes, localeOf(messenger.context)),

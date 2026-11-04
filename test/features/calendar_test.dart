@@ -211,6 +211,18 @@ void main() {
     await tester.tap(find.text('Annuler'));
     await tester.pumpAndSettle();
     expect(find.text('Orthodontiste'), findsNWidgets(2));
+
+    // Delete again: the « undo » bar goes away by itself.
+    await tester.tap(find.text('Orthodontiste').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(PopupMenuButton<String>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Supprimer'));
+    await tester.pumpAndSettle();
+    expect(find.text('Annuler'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 7));
+    await tester.pumpAndSettle();
+    expect(find.text('Annuler'), findsNothing);
     await unmount(tester);
   });
 
