@@ -163,6 +163,7 @@ Mini-plan : instantané commun pour les widgets (tests d'abord) → exportateur 
 
 ## Journal
 - 2026-11-03 : dépôt initialisé (CLAUDE.md, spec, roadmap, CI, licence GPL-3.0).
+- 2026-11-04 : 0.6.3 — retours de Louis sur la 0.6.2 : Android, ouvrir un événement → page d'erreur et + sans effet (Flutter routait lui-même les liens poulplan:// : `flutter_deeplinking_enabled=false`) ; KDE, aucune action (commande de lancement non configurée → actions envoyées par D-Bus à l'app, commande en secours) ; widget Journée redessiné en frise horaire avec ligne de l'heure (Android 12+ et KDE).
 - 2026-11-04 : 0.6.2 — widget « Journée » (Android et KDE, demande de Louis), bouton + (nouvel événement) et ouverture de l'app depuis tous les widgets, aperçus dans le sélecteur Android ; menu « Quitter » de l'icône vérifié par D-Bus.
 - 2026-11-04 : retours v0.6 de Louis : widget Mois ✅, widget À venir ❌ (`<View>` interdit dans un widget), plasmoïde qui déborde ❌, demandes : « Journée », barres multi-jours continues, retrait des événements de démo → corrigé en 0.6.1 (`cc1ab21`) ; mes 8 événements de démonstration supprimés (suppression synchronisée).
 - 2026-11-04 : v0.6.0 codée ; bug d'affichage en UTC sous Linux découvert et corrigé.

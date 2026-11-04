@@ -82,15 +82,25 @@ PlasmoidItem {
         return entry.time ? day + " à " + entry.time : day + " · Journée";
     }
 
-    function create() {
-        executable.run(Plasmoid.configuration.launchCommand + " --new-event");
+    // Asks the running Poulplan (it stays in the background) over D-Bus;
+    // starts it with the configured command when it is not running.
+    function action(name, args) {
+        const dbus = "gdbus call --session --dest org.poulapp.poulplan"
+            + " --object-path /org/poulapp/poulplan --method org.gtk.Actions.Activate"
+            + " widget-action \"[<'" + name + "'>]\" \"{}\"";
+        executable.run(dbus + " >/dev/null 2>&1 || " + Plasmoid.configuration.launchCommand + args);
     }
 
     function open(entry) {
-        const base = Plasmoid.configuration.launchCommand;
-        executable.run(entry && entry.openable
-            ? base + " --open-event=" + entry.id
-            : base);
+        if (entry && entry.openable) {
+            action("event/" + entry.id, " --open-event=" + entry.id);
+        } else {
+            action("open", "");
+        }
+    }
+
+    function create() {
+        action("new", " --new-event");
     }
 
     compactRepresentation: Kirigami.Icon {
