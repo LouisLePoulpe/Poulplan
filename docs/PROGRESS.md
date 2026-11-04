@@ -10,7 +10,7 @@ Dernière mise à jour : 2026-11-03
 | v0.3.0 Calendrier avancé | **Terminé** — vérifié sous Linux, par tests et sur le Pixel |
 | v0.4.0 Cloud Poulapp | **Terminé** — validé par Louis : connexion et synchro Linux ↔ Pixel |
 | v0.5.0 Notifications | **Terminé** — validé par Louis : Pixel (déverrouillé, verrouillé) et Linux (KDE) |
-| v0.6.0 Intégrations | **Code terminé, non tagué** — en attente des tests manuels (section v0.6.0 de `docs/TESTS_MANUELS.md`) |
+| v0.6.0 Intégrations | **Terminé** — validé par Louis le 2026-11-04 (widgets Android et KDE, actions, barre système), version 0.6.4 |
 | v0.7.0 → v1.0.0 | À faire |
 
 ## Reprendre le travail à froid
@@ -165,6 +165,7 @@ Mini-plan : instantané commun pour les widgets (tests d'abord) → exportateur 
 - 2026-11-03 : dépôt initialisé (CLAUDE.md, spec, roadmap, CI, licence GPL-3.0).
 - 2026-11-04 : 0.6.3 — retours de Louis sur la 0.6.2 : Android, ouvrir un événement → page d'erreur et + sans effet (Flutter routait lui-même les liens poulplan:// : `flutter_deeplinking_enabled=false`) ; KDE, aucune action (commande de lancement non configurée → actions envoyées par D-Bus à l'app, commande en secours) ; widget Journée redessiné en frise horaire avec ligne de l'heure (Android 12+ et KDE).
 - 2026-11-04 : 0.6.4 — retours sur la 0.6.3 : Android OK (+, ouverture, heures, ligne). Widget Journée Android défilant sur 24 h (une ligne de liste par heure, 52 dp, se cale sur l'heure courante), événements en pleine largeur partagée seulement par groupe de chevauchement (largeur par poids de layout, plus de dépendance à la taille déclarée par le lanceur). Linux : l'entrée de menu pointait vers un dossier absent → `tool/install_linux_dev.sh` (copie du bundle, commande `~/.local/bin/poulplan` via distrobox, entrée de menu, icônes, widgets KDE) ; autostart via `distrobox enter` dans un conteneur ; widgets KDE en secours sur `~/.local/bin/poulplan` puis Flatpak. À vérifier par Louis : rendu du widget défilant, widgets KDE après redémarrage de plasmashell.
+- 2026-11-04 : v0.6.0 validée par Louis (« ça fonctionne ») et taguée. Prochaine étape : v0.7.0 (pièces jointes, import/export, sauvegardes, verrouillage).
 - 2026-11-04 : 0.6.2 — widget « Journée » (Android et KDE, demande de Louis), bouton + (nouvel événement) et ouverture de l'app depuis tous les widgets, aperçus dans le sélecteur Android ; menu « Quitter » de l'icône vérifié par D-Bus.
 - 2026-11-04 : retours v0.6 de Louis : widget Mois ✅, widget À venir ❌ (`<View>` interdit dans un widget), plasmoïde qui déborde ❌, demandes : « Journée », barres multi-jours continues, retrait des événements de démo → corrigé en 0.6.1 (`cc1ab21`) ; mes 8 événements de démonstration supprimés (suppression synchronisée).
 - 2026-11-04 : v0.6.0 codée ; bug d'affichage en UTC sous Linux découvert et corrigé.
