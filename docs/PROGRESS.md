@@ -12,7 +12,8 @@ Dernière mise à jour : 2026-11-04
 | v0.5.0 Notifications | **Terminé** — validé par Louis : Pixel (déverrouillé, verrouillé) et Linux (KDE) |
 | v0.6.0 Intégrations | **Terminé** — validé par Louis le 2026-11-04 (widgets Android et KDE, actions, barre système), version 0.6.4 |
 | v0.7.0 Fonctions complémentaires | **Terminé** — validé par Louis le 2026-11-04 (tests E1–E6), version 0.7.1 |
-| v0.8.0 → v1.0.0 | À faire |
+| v0.8.0 Navigation | **En cours** — option A choisie par Louis |
+| v0.9.0 → v1.0.0 | À faire |
 
 ## Reprendre le travail à froid
 ```bash
@@ -182,7 +183,18 @@ Mini-plan (dans l'ordre, un commit par étape) :
 - Non testé : tout sur le Pixel (ADB « unauthorized » au moment du déploiement), restauration sur un autre appareil, ouverture réelle des pièces jointes, biométrie, import des contacts, sélecteurs de fichiers natifs → tests manuels E1–E6.
 - Limites : pièces jointes d'un événement supprimé conservées (non visibles) ; widgets et notifications visibles malgré le verrouillage ; le code oublié n'est pas récupérable (données récupérables par la synchro ou une sauvegarde).
 
+## v0.8.0 — Navigation
+Mini-plan (option A, détails dans `DECISIONS.md`) :
+1. Domaine, tests d'abord : décodage des réponses Nominatim/OSRM/BRouter (polyline, GeoJSON), liste des tuiles d'une zone, modèle de trajet.
+2. Schéma v6 : coordonnées sur l'événement, table `routes` synchronisée (géométrie, durée, distance, profil), table locale des zones de carte.
+3. Éditeur : « Localiser » le lieu (Nominatim), section Trajet (profil, calcul, durée/distance, mini-carte) ; paramètre « Adresse de départ ».
+4. Page Carte (fond OpenFreeMap, marqueur, trajet, attribution).
+5. Zones hors ligne (téléchargement d'une zone limitée, liste, suppression) et recalcul hors ligne Android via BRouter.
+6. Vérification : trajet calculé en ligne puis consulté hors ligne (critère du jalon).
+
 ## Journal
+- 2026-11-04 : 0.7.2 — la barre « supprimé / Annuler » ne se fermait jamais (Flutter garde par défaut les barres avec bouton) → fermeture après 6 s (test). Déployée sur le PC ; Pixel non détecté par ADB.
+- 2026-11-04 : v0.8.0 : option A choisie par Louis (fond OpenFreeMap, trajets OSRM FOSSGIS mémorisés, recalcul hors ligne via l'app BRouter sur Android).
 - 2026-11-04 : v0.7.0 validée par Louis (« Tout m'a l'air bon ») et taguée. Prochaine étape : v0.8.0, arrêt pour le choix du moteur de cartes/routage.
 - 2026-11-04 : 0.7.1 — sur le Pixel, la synchro échouait (clé étrangère) : l'événement « Planning et démarrage » arrivait sans sa catégorie « 6 Month ». La catégorie manquante est maintenant récupérée dans le cloud, sinon l'événement est rangé sans catégorie localement (tests ajoutés). Cause exacte du « trou » non établie (base du Pixel illisible en release). Déployée Pixel + PC, plus d'erreur de synchro au lancement.
 - 2026-11-04 : v0.7.0 codée (sauvegardes, export ICS, import VCF/contacts, pièces jointes, verrouillage, espace de stockage) + dates de début/fin des répétitions (demande de Louis) ; arrêt pour les tests manuels E1–E6.
