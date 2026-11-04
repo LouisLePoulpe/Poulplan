@@ -204,6 +204,7 @@ Mini-plan (option A, détails dans `DECISIONS.md`) :
 - Limites : pas de géolocalisation (point de départ = adresse) ; sous Linux pas de recalcul hors ligne ; glyphes de police non encore vus indisponibles hors ligne (rare).
 
 ## Journal
+- 2026-11-04 : 0.8.1 — synchro du Pixel en échec : le serveur refusait les types `attachment` et `route` (contrainte de la table) et tout le lot échouait → script `supabase/migrations/0004_poulplan_new_entities.sql` (à exécuter par Louis), envoi par type (un type refusé ne bloque plus les autres). Trouvé en lisant la requête : la récupération se faisait par révision **décroissante** (`order()` de postgrest est décroissant par défaut) → corrigé, test sur la requête envoyée ; c'est la cause probable du bug de catégorie de la 0.7.1.
 - 2026-11-04 : v0.8.0 codée (cartes, lieux, trajets, zones hors ligne, BRouter) ; correction de la synchro (dépendance circulaire des pièces jointes) ; arrêt pour les tests F1–F5.
 - 2026-11-04 : 0.7.2 — la barre « supprimé / Annuler » ne se fermait jamais (Flutter garde par défaut les barres avec bouton) → fermeture après 6 s (test). Déployée sur le PC ; Pixel non détecté par ADB.
 - 2026-11-04 : v0.8.0 : option A choisie par Louis (fond OpenFreeMap, trajets OSRM FOSSGIS mémorisés, recalcul hors ligne via l'app BRouter sur Android).
