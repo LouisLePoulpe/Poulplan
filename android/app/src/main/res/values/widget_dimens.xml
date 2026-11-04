@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Height of one hour in the « Journée » time line. -->
+    <dimen name="widget_hour_height">52dp</dimen>
+</resources>

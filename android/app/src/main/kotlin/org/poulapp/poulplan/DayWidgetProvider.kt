@@ -1,17 +1,19 @@
 package org.poulapp.poulplan
 
+import android.app.ActivityOptions
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
 import android.widget.RemoteViews
+import android.widget.RemoteViews.RemoteCollectionItems
+import es.antonborri.home_widget.HomeWidgetLaunchIntent
 import es.antonborri.home_widget.HomeWidgetProvider
 import java.time.Instant
 import java.time.LocalTime
@@ -22,8 +24,8 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * « Journée »: today as a time line (hours, events where they are, a line for
- * the current time) on Android 12+, a simple list on older versions.
+ * « Journée »: today as a scrolling time line (24 hours, events where they
+ * are, a line for the current time) on Android 12+, a list on older versions.
  */
 class DayWidgetProvider : HomeWidgetProvider() {
 
@@ -55,7 +57,7 @@ class DayWidgetProvider : HomeWidgetProvider() {
         val date = today.format(DateTimeFormatter.ofPattern("EEEE d MMMM", Locale.FRENCH))
             .replaceFirstChar { it.titlecase(Locale.FRENCH) }
         val views = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            timeline(context, manager.getAppWidgetOptions(id), entries, now, zone)
+            timeline(context, entries, now, zone)
         } else {
             DayListRenderer.render(context, entries, now)
         }
@@ -75,13 +77,11 @@ class DayWidgetProvider : HomeWidgetProvider() {
 
     private fun timeline(
         context: Context,
-        options: Bundle,
         entries: List<WidgetEntry>,
         now: Instant,
         zone: ZoneId,
     ): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.widget_day)
-        val density = context.resources.displayMetrics.density
         val nowMinute = now.atZone(zone).toLocalTime().let { it.hour * 60 + it.minute }
 
         // All-day events: up to two chips above the time line.
@@ -103,41 +103,52 @@ class DayWidgetProvider : HomeWidgetProvider() {
             views.setOnClickPendingIntent(viewId, launchIntent(context, target(entry)))
         }
 
-        // Size of the time line, in dp.
-        val widthDp = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 250) - 24f
-        val heightDp = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 250) -
-            24f - 46f - (if (allDay.isEmpty()) 0f else 26f)
-        val timed = entries.filter { !it.allDay }
-            .map { e -> Triple(e, minutes(e.time) ?: 0, minutes(e.endTime) ?: (24 * 60)) }
-            .map { (e, start, end) -> Triple(e, start, if (end <= start) 24 * 60 else end) }
-
-        // Hours shown: around the events and now, as many as fit (≥ 20 dp/h).
-        val maxHours = max(3, (heightDp / 20f).toInt())
-        var first = min(8, nowMinute / 60)
-        var last = max(20, nowMinute / 60 + 1)
-        timed.forEach { (_, start, end) ->
-            first = min(first, start / 60)
-            last = max(last, (end + 59) / 60)
+        val placed = layoutDay(entries.filter { !it.allDay })
+        val hourDp = context.resources.getDimension(R.dimen.widget_hour_height) /
+            context.resources.displayMetrics.density
+        val items = RemoteCollectionItems.Builder().setHasStableIds(true).setViewTypeCount(1)
+        for (hour in 0 until 24) {
+            items.addItem(hour.toLong(), hourItem(context, hour, hourDp, placed, now, nowMinute))
         }
-        last = min(last, 24)
-        if (last - first > maxHours) {
-            // Keep the current hour in view, starting a little before it.
-            first = max(0, min(nowMinute / 60 - 1, 24 - maxHours))
-            last = first + maxHours
-        }
-        val hours = last - first
-        val dpPerMinute = heightDp / (hours * 60f)
-        val gutterDp = 38f
+        views.setRemoteAdapter(R.id.day_list, items.build())
+        views.setPendingIntentTemplate(R.id.day_list, templateIntent(context))
+        views.setScrollPosition(R.id.day_list, max(0, nowMinute / 60 - 1))
+        return views
+    }
 
-        views.setImageViewBitmap(
-            R.id.day_grid,
-            drawGrid(widthDp, heightDp, min(density, 2.5f), first, last, nowMinute, gutterDp),
-        )
+    /** An event of the day, in minutes since midnight, and its column. */
+    private class Placed(
+        val entry: WidgetEntry,
+        val start: Int,
+        val end: Int,
+        val column: Int,
+        var columns: Int,
+        var titleHour: Int = 0,
+    )
 
-        // Event boxes, side by side when they overlap.
-        val sorted = timed.sortedWith(compareBy({ it.second }, { -it.third }))
+    /**
+     * Columns as in the calendar: overlapping events share the width of their
+     * group, an event alone takes the whole width.
+     */
+    private fun layoutDay(timed: List<WidgetEntry>): List<Placed> {
+        val sorted = timed.map { e ->
+            val start = minutes(e.time) ?: 0
+            var end = minutes(e.endTime) ?: (24 * 60)
+            if (end <= start) end = 24 * 60
+            Triple(e, start, max(end, min(start + 15, 24 * 60)))
+        }.sortedWith(compareBy({ it.second }, { -it.third }))
+        val placed = mutableListOf<Placed>()
+        var group = mutableListOf<Placed>()
         val columnEnds = mutableListOf<Int>()
-        val placed = sorted.map { (e, start, end) ->
+        var groupEnd = -1
+        fun closeGroup() {
+            val count = min(SLOTS, max(1, columnEnds.size))
+            group.forEach { it.columns = count }
+            group = mutableListOf()
+            columnEnds.clear()
+        }
+        for ((e, start, end) in sorted) {
+            if (start >= groupEnd) closeGroup()
             var col = columnEnds.indexOfFirst { it <= start }
             if (col == -1) {
                 col = columnEnds.size
@@ -145,83 +156,107 @@ class DayWidgetProvider : HomeWidgetProvider() {
             } else {
                 columnEnds[col] = end
             }
-            Pair(Triple(e, start, end), col)
+            val item = Placed(e, start, end, min(col, SLOTS - 1), 1)
+            // Title in the hour that shows the biggest part of the event.
+            item.titleHour = (start / 60..min(23, (end - 1) / 60)).maxByOrNull { h ->
+                min(end, h * 60 + 60) - max(start, h * 60)
+            } ?: (start / 60)
+            group.add(item)
+            placed.add(item)
+            groupEnd = max(groupEnd, end)
         }
-        val columns = max(1, columnEnds.size)
-        val eventViews = listOf(
-            R.id.tl_event_0, R.id.tl_event_1, R.id.tl_event_2, R.id.tl_event_3,
-            R.id.tl_event_4, R.id.tl_event_5, R.id.tl_event_6, R.id.tl_event_7,
-        )
-        val columnWidth = (widthDp - gutterDp) / columns
-        eventViews.forEachIndexed { i, viewId ->
-            val item = placed.getOrNull(i)
-            val visible = item != null && item.first.third > first * 60 && item.first.second < last * 60
-            if (!visible) {
-                views.setViewVisibility(viewId, View.GONE)
+        closeGroup()
+        return placed
+    }
+
+    private fun hourItem(
+        context: Context,
+        hour: Int,
+        hourDp: Float,
+        placed: List<Placed>,
+        now: Instant,
+        nowMinute: Int,
+    ): RemoteViews {
+        val views = RemoteViews(context.packageName, R.layout.widget_day_hour)
+        views.setTextViewText(R.id.tl_hour, String.format(Locale.FRENCH, "%02d:00", hour))
+        val from = hour * 60
+        val to = from + 60
+        val dpPerMinute = hourDp / 60f
+        val slices = placed.filter { it.start < to && it.end > from }.sortedBy { it.column }
+        LANES.forEachIndexed { i, (lane, slots) ->
+            val p = slices.getOrNull(i)
+            if (p == null) {
+                views.setViewVisibility(lane, View.GONE)
                 return@forEachIndexed
             }
-            val (triple, col) = item!!
-            val (entry, start, end) = triple
-            val top = (max(start, first * 60) - first * 60) * dpPerMinute
-            val bottom = (min(end, last * 60) - first * 60) * dpPerMinute
-            val height = max(16f, bottom - top - 1f)
-            views.setViewVisibility(viewId, View.VISIBLE)
-            views.setViewLayoutMargin(viewId, RemoteViews.MARGIN_TOP, top, TypedValue.COMPLEX_UNIT_DIP)
-            views.setViewLayoutMargin(
-                viewId, RemoteViews.MARGIN_START, gutterDp + col * columnWidth, TypedValue.COMPLEX_UNIT_DIP,
-            )
-            views.setViewLayoutWidth(viewId, columnWidth - 2f, TypedValue.COMPLEX_UNIT_DIP)
-            views.setViewLayoutHeight(viewId, height, TypedValue.COMPLEX_UNIT_DIP)
-            val finished = entry.end <= now.toEpochMilli()
-            val alpha = if (finished) 0x55 else 0xDD
-            views.setInt(viewId, "setBackgroundColor", (alpha shl 24) or (entry.color and 0xFFFFFF))
-            val time = if (height >= 30f) "\n${entry.time}–${entry.endTime ?: ""}" else ""
-            views.setTextViewText(viewId, entry.title + time)
-            views.setOnClickPendingIntent(viewId, launchIntent(context, target(entry)))
+            // A small gap between two events that follow each other.
+            val top = (max(p.start, from) - from) * dpPerMinute + (if (p.start >= from) 1f else 0f)
+            val bottom = (min(p.end, to) - from) * dpPerMinute - (if (p.end <= to) 1f else 0f)
+            views.setViewVisibility(lane, View.VISIBLE)
+            views.setViewLayoutMargin(lane, RemoteViews.MARGIN_TOP, top, TypedValue.COMPLEX_UNIT_DIP)
+            views.setViewLayoutHeight(lane, max(1f, bottom - top), TypedValue.COMPLEX_UNIT_DIP)
+            slots.forEachIndexed { c, slot ->
+                when {
+                    c >= p.columns -> views.setViewVisibility(slot, View.GONE)
+                    c != p.column -> views.setViewVisibility(slot, View.INVISIBLE)
+                    else -> {
+                        views.setViewVisibility(slot, View.VISIBLE)
+                        val finished = p.entry.end <= now.toEpochMilli()
+                        val alpha = if (finished) 0x55 else 0xDD
+                        views.setInt(slot, "setBackgroundColor", (alpha shl 24) or (p.entry.color and 0xFFFFFF))
+                        val text = if (hour == p.titleHour) {
+                            val totalDp = (p.end - p.start) * dpPerMinute
+                            val time = if (totalDp >= 34f) "\n${p.entry.time}–${p.entry.endTime ?: ""}" else ""
+                            p.entry.title + time
+                        } else ""
+                        views.setTextViewText(slot, text)
+                        views.setOnClickFillInIntent(
+                            slot, Intent().setData(Uri.parse("poulplan://${target(p.entry)}")),
+                        )
+                    }
+                }
+            }
+        }
+        val showNow = nowMinute in from until to
+        views.setViewVisibility(R.id.tl_now, if (showNow) View.VISIBLE else View.GONE)
+        views.setViewVisibility(R.id.tl_now_dot, if (showNow) View.VISIBLE else View.GONE)
+        if (showNow) {
+            val y = (nowMinute - from) * dpPerMinute
+            views.setViewLayoutMargin(R.id.tl_now, RemoteViews.MARGIN_TOP, max(0f, y - 1f), TypedValue.COMPLEX_UNIT_DIP)
+            views.setViewLayoutMargin(R.id.tl_now_dot, RemoteViews.MARGIN_TOP, max(0f, y - 4f), TypedValue.COMPLEX_UNIT_DIP)
         }
         return views
     }
 
-    /** Hour lines and labels, plus the red « now » line. */
-    private fun drawGrid(
-        widthDp: Float,
-        heightDp: Float,
-        dp: Float,
-        first: Int,
-        last: Int,
-        nowMinute: Int,
-        gutterDp: Float,
-    ): Bitmap {
-        val width = max(1, (widthDp * dp).toInt())
-        val height = max(1, (heightDp * dp).toInt())
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        val hourHeight = height.toFloat() / (last - first)
-        val line = Paint().apply {
-            color = 0x40FFF6C2
-            strokeWidth = max(1f, dp * 0.6f)
+    /** Opens the app; each event box fills in its poulplan:// link. */
+    private fun templateIntent(context: Context): PendingIntent {
+        val intent = Intent(context, MainActivity::class.java)
+            .setAction(HomeWidgetLaunchIntent.HOME_WIDGET_LAUNCH_ACTION)
+        val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            return PendingIntent.getActivity(context, 1, intent, flags)
         }
-        val label = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = 0x99FFF6C2.toInt()
-            textSize = 10 * dp
+        val options = ActivityOptions.makeBasic()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            options.setPendingIntentCreatorBackgroundActivityStartMode(
+                ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED,
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            options.pendingIntentBackgroundActivityStartMode =
+                ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED
         }
-        for (h in first..last) {
-            val y = (h - first) * hourHeight
-            canvas.drawLine(gutterDp * dp - 4 * dp, y, width.toFloat(), y, line)
-            if (h < last) {
-                canvas.drawText(String.format(Locale.FRENCH, "%02d:00", h % 24), 0f, y + 11 * dp, label)
-            }
-        }
-        if (nowMinute >= first * 60 && nowMinute <= last * 60) {
-            val y = (nowMinute - first * 60) / 60f * hourHeight
-            val now = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = 0xFFE53935.toInt()
-                strokeWidth = 2 * dp
-            }
-            canvas.drawCircle(gutterDp * dp - 3 * dp, y, 4 * dp, now)
-            canvas.drawLine(gutterDp * dp - 3 * dp, y, width.toFloat(), y, now)
-        }
-        return bitmap
+        return PendingIntent.getActivity(context, 1, intent, flags, options.toBundle())
+    }
+
+    private companion object {
+        const val SLOTS = 4
+        val LANES = listOf(
+            R.id.tl_lane_0 to listOf(R.id.tl_lane_0_0, R.id.tl_lane_0_1, R.id.tl_lane_0_2, R.id.tl_lane_0_3),
+            R.id.tl_lane_1 to listOf(R.id.tl_lane_1_0, R.id.tl_lane_1_1, R.id.tl_lane_1_2, R.id.tl_lane_1_3),
+            R.id.tl_lane_2 to listOf(R.id.tl_lane_2_0, R.id.tl_lane_2_1, R.id.tl_lane_2_2, R.id.tl_lane_2_3),
+            R.id.tl_lane_3 to listOf(R.id.tl_lane_3_0, R.id.tl_lane_3_1, R.id.tl_lane_3_2, R.id.tl_lane_3_3),
+        )
     }
 }
 

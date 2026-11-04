@@ -77,7 +77,12 @@ PlasmoidItem {
         const dbus = "gdbus call --session --dest org.poulapp.poulplan"
             + " --object-path /org/poulapp/poulplan --method org.gtk.Actions.Activate"
             + " widget-action \"[<'" + name + "'>]\" \"{}\"";
-        executable.run(dbus + " >/dev/null 2>&1 || " + Plasmoid.configuration.launchCommand + args);
+        const command = Plasmoid.configuration.launchCommand;
+        const launch = command
+            ? command + args
+            : "{ test -x \"$HOME/.local/bin/poulplan\" && \"$HOME/.local/bin/poulplan\"" + args
+                + "; } || flatpak run org.poulapp.poulplan" + args;
+        executable.run(dbus + " >/dev/null 2>&1 || " + launch);
     }
 
     function open(entry) {

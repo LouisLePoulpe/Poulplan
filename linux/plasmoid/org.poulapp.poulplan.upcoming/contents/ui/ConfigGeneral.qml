@@ -11,7 +11,7 @@ KCM.SimpleKCM {
         QQC2.TextField {
             id: launchCommand
             Kirigami.FormData.label: "Commande de lancement :"
-            placeholderText: "flatpak run org.poulapp.poulplan"
+            placeholderText: "Automatique (~/.local/bin/poulplan ou Flatpak)"
         }
         QQC2.Label {
             text: "Version de développement : distrobox enter claude -- ~/dev/Poulplan/build/linux/x64/release/bundle/poulplan"

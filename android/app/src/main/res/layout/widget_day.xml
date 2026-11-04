@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- « Journée » as a time line (Android 12+): the hours and the « now » line
-     are drawn in day_grid; the event boxes are positioned over it from the
-     code (RemoteViews.setViewLayoutMargin/Width/Height). -->
+<!-- « Journée » as a scrolling time line (Android 12+): one list item per
+     hour (widget_day_hour), filled from the code with RemoteCollectionItems. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -80,104 +79,12 @@
             android:textSize="12sp"
             android:visibility="gone" />
     </LinearLayout>
-    <FrameLayout
-        android:id="@+id/day_timeline"
+    <ListView
+        android:id="@+id/day_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-        <ImageView
-            android:id="@+id/day_grid"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/widget_day_description"
-            android:scaleType="fitXY" />
-        <TextView
-            android:id="@+id/tl_event_0"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:ellipsize="end"
-            android:paddingStart="4dp"
-            android:paddingEnd="2dp"
-            android:paddingTop="1dp"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:visibility="gone" />
-        <TextView
-            android:id="@+id/tl_event_1"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:ellipsize="end"
-            android:paddingStart="4dp"
-            android:paddingEnd="2dp"
-            android:paddingTop="1dp"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:visibility="gone" />
-        <TextView
-            android:id="@+id/tl_event_2"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:ellipsize="end"
-            android:paddingStart="4dp"
-            android:paddingEnd="2dp"
-            android:paddingTop="1dp"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:visibility="gone" />
-        <TextView
-            android:id="@+id/tl_event_3"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:ellipsize="end"
-            android:paddingStart="4dp"
-            android:paddingEnd="2dp"
-            android:paddingTop="1dp"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:visibility="gone" />
-        <TextView
-            android:id="@+id/tl_event_4"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:ellipsize="end"
-            android:paddingStart="4dp"
-            android:paddingEnd="2dp"
-            android:paddingTop="1dp"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:visibility="gone" />
-        <TextView
-            android:id="@+id/tl_event_5"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:ellipsize="end"
-            android:paddingStart="4dp"
-            android:paddingEnd="2dp"
-            android:paddingTop="1dp"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:visibility="gone" />
-        <TextView
-            android:id="@+id/tl_event_6"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:ellipsize="end"
-            android:paddingStart="4dp"
-            android:paddingEnd="2dp"
-            android:paddingTop="1dp"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:visibility="gone" />
-        <TextView
-            android:id="@+id/tl_event_7"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:ellipsize="end"
-            android:paddingStart="4dp"
-            android:paddingEnd="2dp"
-            android:paddingTop="1dp"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:visibility="gone" />
-    </FrameLayout>
+        android:layout_weight="1"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:scrollbars="none" />
 </LinearLayout>

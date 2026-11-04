@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One hour of the « Journée » time line (list item, Android 12+). Each lane
+     is one event slice: its slots split the width between the overlapping
+     events, the code shows the slot of the event's column and sets the
+     lane's top margin and height (RemoteViews.setViewLayoutMargin/Height). -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/widget_hour_height">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="36dp"
+        android:background="#40FFF6C2" />
+    <TextView
+        android:id="@+id/tl_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="2dp"
+        android:textColor="#99FFF6C2"
+        android:textSize="11sp" />
+    <LinearLayout
+        android:id="@+id/tl_lane_0"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginStart="40dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/tl_lane_0_0"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tl_lane_0_1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tl_lane_0_2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tl_lane_0_3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/tl_lane_1"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginStart="40dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/tl_lane_1_0"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tl_lane_1_1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tl_lane_1_2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tl_lane_1_3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/tl_lane_2"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginStart="40dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/tl_lane_2_0"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tl_lane_2_1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tl_lane_2_2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tl_lane_2_3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/tl_lane_3"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginStart="40dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/tl_lane_3_0"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tl_lane_3_1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tl_lane_3_2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tl_lane_3_3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+        android:id="@+id/tl_now"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginStart="36dp"
+        android:background="#E53935"
+        android:visibility="gone" />
+    <FrameLayout
+        android:id="@+id/tl_now_dot"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginStart="32dp"
+        android:background="@drawable/widget_now_dot"
+        android:visibility="gone" />
+</FrameLayout>

@@ -65,6 +65,15 @@ abstract final class DesktopIntegration {
     return File(p.join(config, 'autostart', _desktopFile));
   }
 
+  /// Inside a distrobox (development), the session must start Poulplan
+  /// through the container.
+  static String _launchCommand() {
+    final exe = '"${Platform.resolvedExecutable}"';
+    final container = Platform.environment['CONTAINER_ID'];
+    if (container == null || container.isEmpty) return exe;
+    return 'distrobox enter $container -- $exe';
+  }
+
   static bool get autostartEnabled =>
       canManageAutostart && _autostartFile().existsSync();
 
@@ -83,7 +92,7 @@ abstract final class DesktopIntegration {
       'Name=Poulplan\n'
       'Comment=Rappels du calendrier Poulplan\n'
       'Icon=org.poulapp.poulplan\n'
-      'Exec="${Platform.resolvedExecutable}" --background\n'
+      'Exec=${_launchCommand()} --background\n'
       'X-GNOME-Autostart-enabled=true\n'
       'X-KDE-autostart-after=panel\n'
       'NoDisplay=true\n',
