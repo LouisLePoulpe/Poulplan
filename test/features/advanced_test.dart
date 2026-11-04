@@ -246,6 +246,8 @@ void main() {
     await tester.tap(find.byTooltip('Paramètres'));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text('Anniversaires'), 100);
+    await tester.ensureVisible(find.text('Anniversaires'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Anniversaires'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Nouvel anniversaire'));
