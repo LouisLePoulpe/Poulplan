@@ -419,5 +419,48 @@
   "lockPinInvalid": "4 à 8 chiffres",
   "lockForgotHint": "Sans ce code, l'application ne s'ouvre plus : après réinstallation, seules la synchronisation cloud ou une sauvegarde exportée rendent les données.",
   "lockCurrentPin": "Code actuel",
-  "lockNow": "Verrouiller maintenant"
+  "lockNow": "Verrouiller maintenant",
+  "storageTitle": "Espace de stockage",
+  "storageSubtitle": "Place utilisée et nettoyage",
+  "storageDatabase": "Calendrier (base de données)",
+  "storageAttachments": "Pièces jointes sur cet appareil",
+  "storageBackups": "Sauvegardes locales",
+  "storageFree": "Espace libre sur l'appareil",
+  "storageTotal": "Total utilisé par Poulplan",
+  "storageFreeAttachments": "Libérer les pièces jointes déjà dans le cloud",
+  "storageFreeAttachmentsSubtitle": "{size} — téléchargées de nouveau à l'ouverture",
+  "@storageFreeAttachmentsSubtitle": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "storageDeleteOldBackups": "Supprimer les anciennes sauvegardes",
+  "storageDeleteOldBackupsSubtitle": "{size} — la plus récente est gardée",
+  "@storageDeleteOldBackupsSubtitle": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "storageFreed": "{size} libérés",
+  "@storageFreed": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "storageLow": "Espace presque plein : Poulplan peut libérer {size}",
+  "@storageLow": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "storageClean": "Nettoyer",
+  "storageNothing": "Rien à libérer pour l'instant"
 }

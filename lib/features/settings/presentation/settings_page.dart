@@ -55,6 +55,13 @@ class SettingsPage extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push(Routes.backups),
           ),
+          ListTile(
+            leading: const Icon(Icons.storage_outlined),
+            title: Text(l10n.storageTitle),
+            subtitle: Text(l10n.storageSubtitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(Routes.storage),
+          ),
           section(l10n.securitySection),
           const LockSettings(),
           section(l10n.settingsAppearance),

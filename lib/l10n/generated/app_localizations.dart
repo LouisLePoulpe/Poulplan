@@ -1514,6 +1514,96 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Verrouiller maintenant'**
   String get lockNow;
+
+  /// No description provided for @storageTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Espace de stockage'**
+  String get storageTitle;
+
+  /// No description provided for @storageSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Place utilisée et nettoyage'**
+  String get storageSubtitle;
+
+  /// No description provided for @storageDatabase.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calendrier (base de données)'**
+  String get storageDatabase;
+
+  /// No description provided for @storageAttachments.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pièces jointes sur cet appareil'**
+  String get storageAttachments;
+
+  /// No description provided for @storageBackups.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegardes locales'**
+  String get storageBackups;
+
+  /// No description provided for @storageFree.
+  ///
+  /// In fr, this message translates to:
+  /// **'Espace libre sur l\'appareil'**
+  String get storageFree;
+
+  /// No description provided for @storageTotal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Total utilisé par Poulplan'**
+  String get storageTotal;
+
+  /// No description provided for @storageFreeAttachments.
+  ///
+  /// In fr, this message translates to:
+  /// **'Libérer les pièces jointes déjà dans le cloud'**
+  String get storageFreeAttachments;
+
+  /// No description provided for @storageFreeAttachmentsSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{size} — téléchargées de nouveau à l\'ouverture'**
+  String storageFreeAttachmentsSubtitle(String size);
+
+  /// No description provided for @storageDeleteOldBackups.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer les anciennes sauvegardes'**
+  String get storageDeleteOldBackups;
+
+  /// No description provided for @storageDeleteOldBackupsSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{size} — la plus récente est gardée'**
+  String storageDeleteOldBackupsSubtitle(String size);
+
+  /// No description provided for @storageFreed.
+  ///
+  /// In fr, this message translates to:
+  /// **'{size} libérés'**
+  String storageFreed(String size);
+
+  /// No description provided for @storageLow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Espace presque plein : Poulplan peut libérer {size}'**
+  String storageLow(String size);
+
+  /// No description provided for @storageClean.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nettoyer'**
+  String get storageClean;
+
+  /// No description provided for @storageNothing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien à libérer pour l\'instant'**
+  String get storageNothing;
 }
 
 class _AppLocalizationsDelegate

@@ -6,6 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_widget/home_widget.dart';
 
 import 'features/lock/lock_controller.dart';
+import 'features/backup/presentation/backup_page.dart' show formatBytes;
+import 'features/storage/storage_report.dart';
+import 'core/format/formatters.dart';
 import 'features/lock/presentation/lock_screen.dart';
 import 'core/platform/desktop_integration.dart';
 import 'core/routing/app_router.dart';
@@ -26,6 +29,44 @@ class _PoulplanAppState extends ConsumerState<PoulplanApp> {
   StreamSubscription<String>? _opened;
   StreamSubscription<Uri?>? _widgetClicks;
   StreamSubscription<Uri>? _desktopOpen;
+  Timer? _storageCheck;
+  final _messenger = GlobalKey<ScaffoldMessengerState>();
+
+  /// When the device is almost full, proposes the cleanup (once a week).
+  Future<void> _checkStorage() async {
+    try {
+      final report = await ref.read(storageReportProvider.future);
+      if (!report.proposeCleanup) return;
+      final settings = ref.read(settingsRepositoryProvider);
+      final last = int.tryParse(
+        await settings.getValue('storage_proposed') ?? '',
+      );
+      final now = DateTime.now().millisecondsSinceEpoch;
+      if (last != null && now - last < const Duration(days: 7).inMilliseconds) {
+        return;
+      }
+      await settings.setValue('storage_proposed', '$now');
+      final messenger = _messenger.currentState;
+      if (messenger == null || !messenger.mounted) return;
+      final l10n = AppLocalizations.of(messenger.context);
+      messenger.showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 10),
+          content: Text(
+            l10n.storageLow(
+              formatBytes(report.reclaimableBytes, localeOf(messenger.context)),
+            ),
+          ),
+          action: SnackBarAction(
+            label: l10n.storageClean,
+            onPressed: () => ref.read(routerProvider).push(Routes.storage),
+          ),
+        ),
+      );
+    } catch (e) {
+      debugPrint('Storage check failed: $e');
+    }
+  }
 
   @override
   void initState() {
@@ -57,6 +98,7 @@ class _PoulplanAppState extends ConsumerState<PoulplanApp> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => ref.read(reminderSchedulerProvider).askPermissionOnce(),
     );
+    _storageCheck = Timer(const Duration(seconds: 20), _checkStorage);
   }
 
   @override
@@ -64,6 +106,7 @@ class _PoulplanAppState extends ConsumerState<PoulplanApp> {
     _opened?.cancel();
     _widgetClicks?.cancel();
     _desktopOpen?.cancel();
+    _storageCheck?.cancel();
     super.dispose();
   }
 
@@ -71,6 +114,7 @@ class _PoulplanAppState extends ConsumerState<PoulplanApp> {
   Widget build(BuildContext context) {
     final themeMode = ref.watch(settingsProvider.select((s) => s.themeMode));
     return MaterialApp.router(
+      scaffoldMessengerKey: _messenger,
       debugShowCheckedModeBanner: false,
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       theme: AppTheme.light(),

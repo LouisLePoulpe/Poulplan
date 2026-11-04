@@ -816,4 +816,58 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get lockNow => 'Verrouiller maintenant';
+
+  @override
+  String get storageTitle => 'Espace de stockage';
+
+  @override
+  String get storageSubtitle => 'Place utilisée et nettoyage';
+
+  @override
+  String get storageDatabase => 'Calendrier (base de données)';
+
+  @override
+  String get storageAttachments => 'Pièces jointes sur cet appareil';
+
+  @override
+  String get storageBackups => 'Sauvegardes locales';
+
+  @override
+  String get storageFree => 'Espace libre sur l\'appareil';
+
+  @override
+  String get storageTotal => 'Total utilisé par Poulplan';
+
+  @override
+  String get storageFreeAttachments =>
+      'Libérer les pièces jointes déjà dans le cloud';
+
+  @override
+  String storageFreeAttachmentsSubtitle(String size) {
+    return '$size — téléchargées de nouveau à l\'ouverture';
+  }
+
+  @override
+  String get storageDeleteOldBackups => 'Supprimer les anciennes sauvegardes';
+
+  @override
+  String storageDeleteOldBackupsSubtitle(String size) {
+    return '$size — la plus récente est gardée';
+  }
+
+  @override
+  String storageFreed(String size) {
+    return '$size libérés';
+  }
+
+  @override
+  String storageLow(String size) {
+    return 'Espace presque plein : Poulplan peut libérer $size';
+  }
+
+  @override
+  String get storageClean => 'Nettoyer';
+
+  @override
+  String get storageNothing => 'Rien à libérer pour l\'instant';
 }
