@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 
@@ -61,6 +63,29 @@ RouteResult parseBrouterGeoJson(Map<String, dynamic> json) {
     points: [
       for (final c in coordinates.cast<List<dynamic>>())
         GeoPoint((c[1] as num).toDouble(), (c[0] as num).toDouble()),
+    ],
+  );
+}
+
+/// Answer of the BRouter app: GeoJSON, GPX, or an error message.
+RouteResult parseBrouterTrack(String text) {
+  final trimmed = text.trimLeft();
+  if (trimmed.startsWith('{')) {
+    return parseBrouterGeoJson(jsonDecode(trimmed) as Map<String, dynamic>);
+  }
+  if (!trimmed.startsWith('<')) throw RoutingException(text.trim());
+  final length = RegExp(r'track-length = (\d+)').firstMatch(text);
+  final time = RegExp(r'time=(?:(\d+)h )?(?:(\d+)m )?(?:(\d+)s)?')
+      .firstMatch(text);
+  int part(int group) => int.tryParse(time?[group] ?? '') ?? 0;
+  return RouteResult(
+    distanceMeters: int.tryParse(length?[1] ?? '') ?? 0,
+    durationSeconds: part(1) * 3600 + part(2) * 60 + part(3),
+    points: [
+      for (final m in RegExp(
+        r'<trkpt lon="([-\d.]+)" lat="([-\d.]+)"',
+      ).allMatches(text))
+        GeoPoint(double.parse(m[2]!), double.parse(m[1]!)),
     ],
   );
 }

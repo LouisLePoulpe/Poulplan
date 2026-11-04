@@ -9,6 +9,11 @@ android {
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
+    // IBRouterService.aidl: offline routes through the BRouter app.
+    buildFeatures {
+        aidl = true
+    }
+
     compileOptions {
         // Required by flutter_local_notifications (java.time on older APIs).
         isCoreLibraryDesugaringEnabled = true

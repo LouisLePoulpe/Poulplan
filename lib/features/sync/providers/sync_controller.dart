@@ -80,17 +80,23 @@ final pendingChangesProvider = StreamProvider<int>((ref) {
       .map((rows) => rows.length);
 });
 
-/// File transfers of the attachments, when signed in.
-final attachmentTransferProvider = Provider<AttachmentTransfer?>((ref) {
-  ref.watch(syncControllerProvider.select((s) => s.signedIn));
+/// File transfers of the attachments; the function returns null when not
+/// signed in. A function, so that it reads the session when called: the
+/// sync controller uses it while it builds its own state.
+final attachmentTransferProvider = Provider<AttachmentTransfer? Function()>((
+  ref,
+) {
   final session = ref.watch(cloudSessionProvider);
-  final user = session?.client.auth.currentUser;
-  if (session == null || !session.isSignedIn || user == null) return null;
-  return AttachmentTransfer(
-    ref.watch(attachmentRepositoryProvider),
-    SupabaseAttachmentRemote(session.client),
-    userId: user.id,
-  );
+  final repository = ref.watch(attachmentRepositoryProvider);
+  return () {
+    final user = session?.client.auth.currentUser;
+    if (session == null || !session.isSignedIn || user == null) return null;
+    return AttachmentTransfer(
+      repository,
+      SupabaseAttachmentRemote(session.client),
+      userId: user.id,
+    );
+  };
 });
 
 /// Drives the optional cloud synchronization: after sign-in, a few seconds
@@ -175,7 +181,7 @@ class SyncController extends Notifier<SyncStatus> {
         _again = false;
         await _engine!.sync();
       } while (_again);
-      await ref.read(attachmentTransferProvider)?.run();
+      await ref.read(attachmentTransferProvider)()?.run();
       state = state.copyWith(
         phase: SyncPhase.idle,
         lastSync: DateTime.now(),

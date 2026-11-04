@@ -11,6 +11,10 @@ import 'package:poulplan/data/db/app_database.dart';
 import 'package:poulplan/data/providers.dart';
 import 'package:poulplan/data/repositories/attachment_repository.dart';
 import 'package:poulplan/data/repositories/event_repository.dart';
+import 'package:poulplan/data/repositories/route_repository.dart';
+import 'package:poulplan/domain/geo/geo.dart';
+import 'package:poulplan/domain/geo/routing.dart';
+import 'package:poulplan/features/maps/maps_providers.dart';
 import 'package:poulplan/data/repositories/settings_repository.dart';
 import 'package:poulplan/domain/calendar/day.dart';
 import 'package:poulplan/domain/holidays/school_holidays.dart';
@@ -42,6 +46,8 @@ void main() {
       ProviderScope(
         overrides: [
           databaseProvider.overrideWithValue(db),
+          // No network in tests: the map shows a plain background.
+          mapStyleProvider.overrideWith((ref) => Future.error('offline')),
           if (directory != null)
             appDirectoryProvider.overrideWithValue(directory),
           todayProvider.overrideWithValue(Day(2026, 11, 3)),
@@ -205,6 +211,52 @@ void main() {
     expect(find.text('Pièces jointes'), findsOneWidget);
     expect(find.text('billet.pdf'), findsOneWidget);
     expect(find.text('2 ko · Sur cet appareil'), findsOneWidget);
+    await unmount(tester);
+  });
+
+  testWidgets('the remembered route is shown in the editor', (tester) async {
+    final event = await tester.runAsync(
+      () => events.create(
+        title: 'Rendez-vous',
+        location: 'Place Bellecour',
+        placePoint: const GeoPoint(45.7577, 4.8324),
+        start: DateTime.utc(2026, 11, 3, 8),
+        end: DateTime.utc(2026, 11, 3, 9),
+        timeZone: 'UTC',
+      ),
+    );
+    await tester.runAsync(
+      () => RouteRepository(db).save(
+        eventId: event!.id,
+        mode: TravelMode.bike,
+        origin: const Place('Maison', GeoPoint(45.7616, 4.8593)),
+        destination: const GeoPoint(45.7577, 4.8324),
+        result: const RouteResult(
+          distanceMeters: 2500,
+          durationSeconds: 1020,
+          points: [GeoPoint(45.7616, 4.8593), GeoPoint(45.7577, 4.8324)],
+        ),
+        engine: 'osrm',
+      ),
+    );
+    await pumpApp(tester);
+    await tester.tap(find.text('Rendez-vous'));
+    await tester.pumpAndSettle();
+    expect(find.text('Position trouvée sur la carte'), findsOneWidget);
+    expect(find.text('17 min · 2,5 km'), findsOneWidget);
+    expect(find.text('Départ : Maison'), findsOneWidget);
+    expect(find.text('Recalculer'), findsOneWidget);
+    // Typing another place: the position (and the route) no longer apply.
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Place Bellecour'),
+      'Ailleurs',
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Position trouvée sur la carte'), findsNothing);
+    expect(
+      find.text('Trouvez le lieu sur la carte pour calculer un trajet'),
+      findsOneWidget,
+    );
     await unmount(tester);
   });
 

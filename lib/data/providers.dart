@@ -5,6 +5,7 @@ import 'package:path/path.dart' as p;
 
 import '../domain/entities/attachment.dart';
 import 'repositories/attachment_repository.dart';
+import 'repositories/route_repository.dart';
 
 import '../domain/entities/app_settings.dart';
 import '../domain/entities/event_category.dart';
@@ -35,6 +36,13 @@ final attachmentRepositoryProvider = Provider(
     directory: Directory(
       p.join(ref.watch(appDirectoryProvider).path, 'attachments'),
     ),
+    recorder: ref.watch(changeRecorderProvider),
+  ),
+);
+
+final routeRepositoryProvider = Provider(
+  (ref) => RouteRepository(
+    ref.watch(databaseProvider),
     recorder: ref.watch(changeRecorderProvider),
   ),
 );

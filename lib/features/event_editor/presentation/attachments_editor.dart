@@ -70,7 +70,7 @@ class AttachmentsEditor extends ConsumerWidget {
   Future<void> _open(BuildContext context, WidgetRef ref, Attachment a) async {
     final l10n = AppLocalizations.of(context);
     final repository = ref.read(attachmentRepositoryProvider);
-    final transfer = ref.read(attachmentTransferProvider);
+    final transfer = ref.read(attachmentTransferProvider)();
     try {
       final file = a.stored && repository.file(a).existsSync()
           ? repository.file(a)
@@ -135,7 +135,7 @@ class AttachmentsEditor extends ConsumerWidget {
                 final repository = ref.read(attachmentRepositoryProvider);
                 if (action == 'keep') {
                   await repository.setKeepOffline(a.id, !a.keepOffline);
-                  await ref.read(attachmentTransferProvider)?.run();
+                  await ref.read(attachmentTransferProvider)()?.run();
                 } else if (action == 'delete') {
                   await repository.delete(a.id);
                 }

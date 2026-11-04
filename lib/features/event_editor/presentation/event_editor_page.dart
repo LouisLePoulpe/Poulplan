@@ -17,6 +17,8 @@ import '../../calendar/presentation/event_actions.dart';
 import '../../calendar/providers/calendar_providers.dart';
 import '../../categories/presentation/color_palette.dart';
 import 'quick_create.dart';
+import '../../maps/presentation/place_search.dart';
+import '../../maps/presentation/route_section.dart';
 import 'attachments_editor.dart';
 import 'recurrence_dialog.dart';
 import 'reminders_editor.dart';
@@ -386,10 +388,46 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
                 const Divider(),
                 TextField(
                   controller: _location,
+                  // Another place: the position found before is wrong.
+                  onChanged: (_) {
+                    if (draft.placePoint != null) {
+                      setState(() => draft.placePoint = null);
+                    }
+                  },
                   decoration: InputDecoration(
                     icon: const Icon(Icons.place_outlined),
                     labelText: l10n.fieldLocation,
+                    helperText: draft.placePoint == null
+                        ? null
+                        : l10n.placeFound,
+                    suffixIcon: IconButton(
+                      tooltip: l10n.placeSearch,
+                      icon: Icon(
+                        draft.placePoint == null
+                            ? Icons.travel_explore
+                            : Icons.where_to_vote,
+                      ),
+                      onPressed: () async {
+                        final place = await showPlaceSearch(
+                          context,
+                          initial: _location.text,
+                        );
+                        if (place == null) return;
+                        setState(() {
+                          if (_location.text.trim().isEmpty) {
+                            _location.text = place.label;
+                          }
+                          draft.placePoint = place.point;
+                        });
+                      },
+                    ),
                   ),
+                ),
+                RouteSection(
+                  eventId: _original == null
+                      ? null
+                      : _original!.seriesId ?? _original!.id,
+                  destination: draft.placePoint,
                 ),
                 TextField(
                   controller: _videoLink,

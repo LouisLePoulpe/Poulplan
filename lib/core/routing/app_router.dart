@@ -10,6 +10,10 @@ import '../../features/search/presentation/search_page.dart';
 import '../../features/settings/presentation/settings_page.dart';
 import '../../features/backup/presentation/backup_page.dart';
 import '../../features/storage/presentation/storage_page.dart';
+import '../../data/maps/map_tiles.dart';
+import '../../features/maps/presentation/event_map_page.dart';
+import '../../features/maps/presentation/maps_settings_page.dart';
+import '../../features/maps/presentation/zone_page.dart';
 import '../../features/sync/presentation/account_page.dart';
 import '../../features/sync/presentation/conflicts_page.dart';
 
@@ -20,6 +24,9 @@ abstract final class Routes {
   static const birthdays = '/settings/birthdays';
   static const backups = '/settings/backups';
   static const storage = '/settings/storage';
+  static const maps = '/settings/maps';
+  static const mapZone = '/settings/maps/zone';
+  static String eventMap(String id) => '/map/$id';
   static const search = '/search';
   static const account = '/settings/account';
   static const conflicts = '/settings/account/conflicts';
@@ -58,6 +65,19 @@ GoRouter createRouter() => GoRouter(
     GoRoute(
       path: Routes.storage,
       builder: (context, state) => const StoragePage(),
+    ),
+    GoRoute(
+      path: Routes.maps,
+      builder: (context, state) => const MapsSettingsPage(),
+    ),
+    GoRoute(
+      path: Routes.mapZone,
+      builder: (context, state) => ZonePage(resume: state.extra as MapZone?),
+    ),
+    GoRoute(
+      path: '/map/:id',
+      builder: (context, state) =>
+          EventMapPage(eventId: state.pathParameters['id']!),
     ),
     GoRoute(
       path: Routes.account,

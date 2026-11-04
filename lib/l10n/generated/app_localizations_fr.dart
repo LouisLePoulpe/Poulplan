@@ -870,4 +870,160 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get storageNothing => 'Rien à libérer pour l\'instant';
+
+  @override
+  String get placeSearch => 'Trouver sur la carte';
+
+  @override
+  String get placeSearchHint => 'Adresse, lieu, ville…';
+
+  @override
+  String get placeSearchNone => 'Aucun résultat';
+
+  @override
+  String get placeSearchFailed =>
+      'Recherche impossible : vérifiez la connexion';
+
+  @override
+  String get placeFound => 'Position trouvée sur la carte';
+
+  @override
+  String get placeClear => 'Oublier la position';
+
+  @override
+  String get routeTitle => 'Trajet';
+
+  @override
+  String routeFrom(String place) {
+    return 'Départ : $place';
+  }
+
+  @override
+  String get routeNoStart => 'Choisir un point de départ';
+
+  @override
+  String get routeCompute => 'Calculer le trajet';
+
+  @override
+  String get routeRecompute => 'Recalculer';
+
+  @override
+  String routeSummary(String duration, String distance) {
+    return '$duration · $distance';
+  }
+
+  @override
+  String routeComputedOnline(String date) {
+    return 'Calculé le $date, en ligne';
+  }
+
+  @override
+  String routeComputedOffline(String date) {
+    return 'Calculé le $date, hors ligne (BRouter)';
+  }
+
+  @override
+  String routeFailed(String error) {
+    return 'Trajet impossible à calculer : $error';
+  }
+
+  @override
+  String get routeOffline =>
+      'Pas de connexion et pas de calcul hors ligne disponible';
+
+  @override
+  String get routePlaceChanged => 'Le lieu a changé depuis le calcul';
+
+  @override
+  String get routeNeedsPlace =>
+      'Trouvez le lieu sur la carte pour calculer un trajet';
+
+  @override
+  String get routeSaveFirst =>
+      'Enregistrez l\'événement pour calculer un trajet';
+
+  @override
+  String get travelCar => 'Voiture';
+
+  @override
+  String get travelBike => 'Vélo';
+
+  @override
+  String get travelFoot => 'À pied';
+
+  @override
+  String get mapTitle => 'Carte';
+
+  @override
+  String get mapsSettings => 'Cartes et trajets';
+
+  @override
+  String get mapsSettingsSubtitle => 'Adresse de départ, cartes hors ligne';
+
+  @override
+  String get homePlace => 'Adresse de départ';
+
+  @override
+  String get homePlaceNone => 'Aucune (à choisir pour chaque trajet)';
+
+  @override
+  String get offlineZones => 'Cartes hors ligne';
+
+  @override
+  String get offlineZoneAdd => 'Télécharger une zone';
+
+  @override
+  String get offlineZoneNone =>
+      'Aucune zone téléchargée : les lieux déjà affichés restent visibles hors ligne';
+
+  @override
+  String offlineZoneTiles(int count, String size) {
+    return '$count tuiles · $size';
+  }
+
+  @override
+  String get offlineZoneIncomplete =>
+      'Téléchargement incomplet : toucher pour reprendre';
+
+  @override
+  String get offlineZonePick => 'Cadrez la zone à garder hors ligne';
+
+  @override
+  String get offlineZoneName => 'Nom de la zone';
+
+  @override
+  String get offlineZoneDownload => 'Télécharger';
+
+  @override
+  String offlineZoneTooLarge(int count, int max) {
+    return 'Zone trop grande ($count tuiles, $max au plus) : zoomez';
+  }
+
+  @override
+  String offlineZoneEstimate(int count) {
+    return '$count tuiles';
+  }
+
+  @override
+  String offlineZoneProgress(int done, int total) {
+    return 'Téléchargement : $done / $total';
+  }
+
+  @override
+  String get offlineZoneDone => 'Zone téléchargée';
+
+  @override
+  String get brouterTitle => 'Calcul des trajets hors ligne';
+
+  @override
+  String get brouterInstalled =>
+      'BRouter est installé : les trajets se calculent aussi sans connexion, dans les zones dont BRouter a les données';
+
+  @override
+  String get brouterMissing =>
+      'Installez l\'application libre BRouter (F-Droid) et ses données de votre région pour calculer des trajets sans connexion';
+
+  @override
+  String get mapUnavailable =>
+      'Fond de carte indisponible hors ligne pour l\'instant';
 }

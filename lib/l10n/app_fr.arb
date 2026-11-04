@@ -462,5 +462,123 @@
     }
   },
   "storageClean": "Nettoyer",
-  "storageNothing": "Rien à libérer pour l'instant"
+  "storageNothing": "Rien à libérer pour l'instant",
+  "placeSearch": "Trouver sur la carte",
+  "placeSearchHint": "Adresse, lieu, ville…",
+  "placeSearchNone": "Aucun résultat",
+  "placeSearchFailed": "Recherche impossible : vérifiez la connexion",
+  "placeFound": "Position trouvée sur la carte",
+  "placeClear": "Oublier la position",
+  "routeTitle": "Trajet",
+  "routeFrom": "Départ : {place}",
+  "@routeFrom": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "routeNoStart": "Choisir un point de départ",
+  "routeCompute": "Calculer le trajet",
+  "routeRecompute": "Recalculer",
+  "routeSummary": "{duration} · {distance}",
+  "@routeSummary": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "routeComputedOnline": "Calculé le {date}, en ligne",
+  "@routeComputedOnline": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "routeComputedOffline": "Calculé le {date}, hors ligne (BRouter)",
+  "@routeComputedOffline": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "routeFailed": "Trajet impossible à calculer : {error}",
+  "@routeFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "routeOffline": "Pas de connexion et pas de calcul hors ligne disponible",
+  "routePlaceChanged": "Le lieu a changé depuis le calcul",
+  "routeNeedsPlace": "Trouvez le lieu sur la carte pour calculer un trajet",
+  "routeSaveFirst": "Enregistrez l'événement pour calculer un trajet",
+  "travelCar": "Voiture",
+  "travelBike": "Vélo",
+  "travelFoot": "À pied",
+  "mapTitle": "Carte",
+  "mapsSettings": "Cartes et trajets",
+  "mapsSettingsSubtitle": "Adresse de départ, cartes hors ligne",
+  "homePlace": "Adresse de départ",
+  "homePlaceNone": "Aucune (à choisir pour chaque trajet)",
+  "offlineZones": "Cartes hors ligne",
+  "offlineZoneAdd": "Télécharger une zone",
+  "offlineZoneNone": "Aucune zone téléchargée : les lieux déjà affichés restent visibles hors ligne",
+  "offlineZoneTiles": "{count} tuiles · {size}",
+  "@offlineZoneTiles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "offlineZoneIncomplete": "Téléchargement incomplet : toucher pour reprendre",
+  "offlineZonePick": "Cadrez la zone à garder hors ligne",
+  "offlineZoneName": "Nom de la zone",
+  "offlineZoneDownload": "Télécharger",
+  "offlineZoneTooLarge": "Zone trop grande ({count} tuiles, {max} au plus) : zoomez",
+  "@offlineZoneTooLarge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "offlineZoneEstimate": "{count} tuiles",
+  "@offlineZoneEstimate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "offlineZoneProgress": "Téléchargement : {done} / {total}",
+  "@offlineZoneProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "offlineZoneDone": "Zone téléchargée",
+  "brouterTitle": "Calcul des trajets hors ligne",
+  "brouterInstalled": "BRouter est installé : les trajets se calculent aussi sans connexion, dans les zones dont BRouter a les données",
+  "brouterMissing": "Installez l'application libre BRouter (F-Droid) et ses données de votre région pour calculer des trajets sans connexion",
+  "mapUnavailable": "Fond de carte indisponible hors ligne pour l'instant"
 }

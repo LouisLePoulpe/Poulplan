@@ -109,6 +109,33 @@ void main() {
       expect(route.points.last, const GeoPoint(48.86, 2.33));
     });
 
+    test('BRouter GPX track (older BRouter versions)', () {
+      final route = parseBrouterTrack('''<?xml version="1.0" encoding="UTF-8"?>
+<!-- track-length = 1803 filtered ascend = 3 plain-ascend = -2 cost=2384 energy=.0kwh time=1h 3m 21s -->
+<gpx><trk><trkseg>
+<trkpt lon="2.290000" lat="48.850000"><ele>35</ele></trkpt>
+<trkpt lon="2.330000" lat="48.860000"><ele>40</ele></trkpt>
+</trkseg></trk></gpx>''');
+      expect(route.distanceMeters, 1803);
+      expect(route.durationSeconds, 3600 + 3 * 60 + 21);
+      expect(route.points, const [
+        GeoPoint(48.85, 2.29),
+        GeoPoint(48.86, 2.33),
+      ]);
+      expect(
+        parseBrouterTrack(
+          '{"type":"FeatureCollection","features":[{"properties":'
+          '{"track-length":"10","total-time":"5"},"geometry":'
+          '{"coordinates":[[2.29,48.85],[2.33,48.86]]}}]}',
+        ).durationSeconds,
+        5,
+      );
+      expect(
+        () => parseBrouterTrack('datafile E0_N45.rd5 not found'),
+        throwsA(isA<RoutingException>()),
+      );
+    });
+
     test('travel time text', () {
       expect(formatDuration(240), '4 min');
       expect(formatDuration(3600), '1 h');

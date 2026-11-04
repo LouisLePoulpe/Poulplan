@@ -1604,6 +1604,264 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Rien à libérer pour l\'instant'**
   String get storageNothing;
+
+  /// No description provided for @placeSearch.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trouver sur la carte'**
+  String get placeSearch;
+
+  /// No description provided for @placeSearchHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse, lieu, ville…'**
+  String get placeSearchHint;
+
+  /// No description provided for @placeSearchNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun résultat'**
+  String get placeSearchNone;
+
+  /// No description provided for @placeSearchFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recherche impossible : vérifiez la connexion'**
+  String get placeSearchFailed;
+
+  /// No description provided for @placeFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Position trouvée sur la carte'**
+  String get placeFound;
+
+  /// No description provided for @placeClear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oublier la position'**
+  String get placeClear;
+
+  /// No description provided for @routeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trajet'**
+  String get routeTitle;
+
+  /// No description provided for @routeFrom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Départ : {place}'**
+  String routeFrom(String place);
+
+  /// No description provided for @routeNoStart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir un point de départ'**
+  String get routeNoStart;
+
+  /// No description provided for @routeCompute.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calculer le trajet'**
+  String get routeCompute;
+
+  /// No description provided for @routeRecompute.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recalculer'**
+  String get routeRecompute;
+
+  /// No description provided for @routeSummary.
+  ///
+  /// In fr, this message translates to:
+  /// **'{duration} · {distance}'**
+  String routeSummary(String duration, String distance);
+
+  /// No description provided for @routeComputedOnline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calculé le {date}, en ligne'**
+  String routeComputedOnline(String date);
+
+  /// No description provided for @routeComputedOffline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calculé le {date}, hors ligne (BRouter)'**
+  String routeComputedOffline(String date);
+
+  /// No description provided for @routeFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trajet impossible à calculer : {error}'**
+  String routeFailed(String error);
+
+  /// No description provided for @routeOffline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas de connexion et pas de calcul hors ligne disponible'**
+  String get routeOffline;
+
+  /// No description provided for @routePlaceChanged.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le lieu a changé depuis le calcul'**
+  String get routePlaceChanged;
+
+  /// No description provided for @routeNeedsPlace.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trouvez le lieu sur la carte pour calculer un trajet'**
+  String get routeNeedsPlace;
+
+  /// No description provided for @routeSaveFirst.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrez l\'événement pour calculer un trajet'**
+  String get routeSaveFirst;
+
+  /// No description provided for @travelCar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voiture'**
+  String get travelCar;
+
+  /// No description provided for @travelBike.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vélo'**
+  String get travelBike;
+
+  /// No description provided for @travelFoot.
+  ///
+  /// In fr, this message translates to:
+  /// **'À pied'**
+  String get travelFoot;
+
+  /// No description provided for @mapTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Carte'**
+  String get mapTitle;
+
+  /// No description provided for @mapsSettings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cartes et trajets'**
+  String get mapsSettings;
+
+  /// No description provided for @mapsSettingsSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse de départ, cartes hors ligne'**
+  String get mapsSettingsSubtitle;
+
+  /// No description provided for @homePlace.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse de départ'**
+  String get homePlace;
+
+  /// No description provided for @homePlaceNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune (à choisir pour chaque trajet)'**
+  String get homePlaceNone;
+
+  /// No description provided for @offlineZones.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cartes hors ligne'**
+  String get offlineZones;
+
+  /// No description provided for @offlineZoneAdd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Télécharger une zone'**
+  String get offlineZoneAdd;
+
+  /// No description provided for @offlineZoneNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune zone téléchargée : les lieux déjà affichés restent visibles hors ligne'**
+  String get offlineZoneNone;
+
+  /// No description provided for @offlineZoneTiles.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} tuiles · {size}'**
+  String offlineZoneTiles(int count, String size);
+
+  /// No description provided for @offlineZoneIncomplete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléchargement incomplet : toucher pour reprendre'**
+  String get offlineZoneIncomplete;
+
+  /// No description provided for @offlineZonePick.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cadrez la zone à garder hors ligne'**
+  String get offlineZonePick;
+
+  /// No description provided for @offlineZoneName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom de la zone'**
+  String get offlineZoneName;
+
+  /// No description provided for @offlineZoneDownload.
+  ///
+  /// In fr, this message translates to:
+  /// **'Télécharger'**
+  String get offlineZoneDownload;
+
+  /// No description provided for @offlineZoneTooLarge.
+  ///
+  /// In fr, this message translates to:
+  /// **'Zone trop grande ({count} tuiles, {max} au plus) : zoomez'**
+  String offlineZoneTooLarge(int count, int max);
+
+  /// No description provided for @offlineZoneEstimate.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} tuiles'**
+  String offlineZoneEstimate(int count);
+
+  /// No description provided for @offlineZoneProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléchargement : {done} / {total}'**
+  String offlineZoneProgress(int done, int total);
+
+  /// No description provided for @offlineZoneDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Zone téléchargée'**
+  String get offlineZoneDone;
+
+  /// No description provided for @brouterTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calcul des trajets hors ligne'**
+  String get brouterTitle;
+
+  /// No description provided for @brouterInstalled.
+  ///
+  /// In fr, this message translates to:
+  /// **'BRouter est installé : les trajets se calculent aussi sans connexion, dans les zones dont BRouter a les données'**
+  String get brouterInstalled;
+
+  /// No description provided for @brouterMissing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Installez l\'application libre BRouter (F-Droid) et ses données de votre région pour calculer des trajets sans connexion'**
+  String get brouterMissing;
+
+  /// No description provided for @mapUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fond de carte indisponible hors ligne pour l\'instant'**
+  String get mapUnavailable;
 }
 
 class _AppLocalizationsDelegate
