@@ -90,6 +90,45 @@ class SavedFilters extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+/// Files attached to an event (schema v5); metadata only, synchronized.
+/// The file itself is on the device (`attachments/<id>/<name>`) and/or in
+/// the private cloud Storage (`<user id>/<eventId>/<id>`).
+@DataClassName('AttachmentRow')
+@TableIndex(name: 'attachments_event', columns: {#eventId})
+class Attachments extends Table {
+  TextColumn get id => text()();
+
+  /// The event, or the series master for a recurring event.
+  TextColumn get eventId => text()();
+  TextColumn get name => text()();
+  TextColumn get mimeType => text()();
+  IntColumn get size => integer()();
+  IntColumn get createdAt => integer()();
+  IntColumn get updatedAt => integer()();
+  IntColumn get deletedAt => integer().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// What this device has of each attachment file (schema v5, not synced).
+@DataClassName('AttachmentFileRow')
+class AttachmentFiles extends Table {
+  TextColumn get attachmentId => text()();
+
+  /// The file is on this device.
+  BoolColumn get stored => boolean().withDefault(const Constant(false))();
+
+  /// Keep the file on this device (downloaded as soon as possible).
+  BoolColumn get keepOffline => boolean().withDefault(const Constant(false))();
+
+  /// This device has sent the file to the cloud.
+  BoolColumn get uploaded => boolean().withDefault(const Constant(false))();
+
+  @override
+  Set<Column> get primaryKey => {attachmentId};
+}
+
 /// Synchronization state of a record (schema v3). The pending-changes queue
 /// is the set of rows with `dirty = true`: it survives restarts.
 @DataClassName('SyncMetaRow')

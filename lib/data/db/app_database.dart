@@ -24,13 +24,15 @@ const defaultCategories = [
     SavedFilters,
     SyncMeta,
     SyncConflicts,
+    Attachments,
+    AttachmentFiles,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -58,6 +60,11 @@ class AppDatabase extends _$AppDatabase {
       }
       if (from < 4) {
         await m.addColumn(events, events.reminders);
+      }
+      if (from < 5) {
+        await m.createTable(attachments);
+        await m.createIndex(attachmentsEvent);
+        await m.createTable(attachmentFiles);
       }
     },
     beforeOpen: (details) async {

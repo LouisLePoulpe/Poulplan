@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase/supabase.dart';
 
 import '../../../core/config/cloud_config.dart';
+import '../../../data/attachments/attachment_transfer.dart';
 import '../../../data/cloud/cloud_session.dart';
 import '../../../data/cloud/supabase_remote.dart';
 import '../../../data/db/app_database.dart';
@@ -77,6 +78,19 @@ final pendingChangesProvider = StreamProvider<int>((ref) {
         ..where(db.syncMeta.dirty.equals(true)))
       .watch()
       .map((rows) => rows.length);
+});
+
+/// File transfers of the attachments, when signed in.
+final attachmentTransferProvider = Provider<AttachmentTransfer?>((ref) {
+  ref.watch(syncControllerProvider.select((s) => s.signedIn));
+  final session = ref.watch(cloudSessionProvider);
+  final user = session?.client.auth.currentUser;
+  if (session == null || !session.isSignedIn || user == null) return null;
+  return AttachmentTransfer(
+    ref.watch(attachmentRepositoryProvider),
+    SupabaseAttachmentRemote(session.client),
+    userId: user.id,
+  );
 });
 
 /// Drives the optional cloud synchronization: after sign-in, a few seconds
@@ -161,6 +175,7 @@ class SyncController extends Notifier<SyncStatus> {
         _again = false;
         await _engine!.sync();
       } while (_again);
+      await ref.read(attachmentTransferProvider)?.run();
       state = state.copyWith(
         phase: SyncPhase.idle,
         lastSync: DateTime.now(),

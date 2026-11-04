@@ -68,6 +68,22 @@ class FileExchange {
     ];
   }
 
+  /// Opens [path] with the default application.
+  static Future<void> open(String path, String mimeType) async {
+    if (Platform.isAndroid) {
+      await _android.invokeMethod('openFile', {'path': path, 'mime': mimeType});
+      return;
+    }
+    // In a development distrobox, the desktop's opener is on the host.
+    final container = Platform.environment['CONTAINER_ID'];
+    final result = container == null || container.isEmpty
+        ? await Process.run('xdg-open', [path])
+        : await Process.run('distrobox-host-exec', ['xdg-open', path]);
+    if (result.exitCode != 0) {
+      throw PlatformException(code: 'NO_APP', message: '${result.stderr}');
+    }
+  }
+
   /// Free space where [path] is, or null when unknown.
   static Future<int?> freeBytes(String path) async {
     try {

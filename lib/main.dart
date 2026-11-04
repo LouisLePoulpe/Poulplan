@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'app.dart';
 import 'core/debug/screenshot_extension.dart';
@@ -27,6 +28,9 @@ Future<void> main() async {
       databaseProvider.overrideWithValue(database),
       hlcClockProvider.overrideWithValue(clock),
       deviceTimeZoneProvider.overrideWithValue(timeZone),
+      appDirectoryProvider.overrideWithValue(
+        await getApplicationSupportDirectory(),
+      ),
     ],
   );
   registerDebugExtensions(container);

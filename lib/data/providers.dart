@@ -1,4 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart' as p;
+
+import '../domain/entities/attachment.dart';
+import 'repositories/attachment_repository.dart';
 
 import '../domain/entities/app_settings.dart';
 import '../domain/entities/event_category.dart';
@@ -15,6 +21,27 @@ import 'repositories/settings_repository.dart';
 /// Overridden in `main()` (real file) and in tests (in-memory database).
 final databaseProvider = Provider<AppDatabase>(
   (ref) => throw UnimplementedError('databaseProvider must be overridden'),
+);
+
+/// Where this device keeps its files (application support directory);
+/// overridden in `main()`, a temporary directory otherwise (tests).
+final appDirectoryProvider = Provider<Directory>(
+  (ref) => Directory.systemTemp.createTempSync('poulplan'),
+);
+
+final attachmentRepositoryProvider = Provider(
+  (ref) => AttachmentRepository(
+    ref.watch(databaseProvider),
+    directory: Directory(
+      p.join(ref.watch(appDirectoryProvider).path, 'attachments'),
+    ),
+    recorder: ref.watch(changeRecorderProvider),
+  ),
+);
+
+final attachmentsProvider = StreamProvider.family<List<Attachment>, String>(
+  (ref, eventId) =>
+      ref.watch(attachmentRepositoryProvider).watchForEvent(eventId),
 );
 
 /// This device's clock; overridden in `main()` with the persisted one.

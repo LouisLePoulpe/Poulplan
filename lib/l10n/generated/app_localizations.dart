@@ -1304,6 +1304,66 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Accès aux contacts refusé'**
   String get importContactsDenied;
+
+  /// No description provided for @attachments.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pièces jointes'**
+  String get attachments;
+
+  /// No description provided for @attachmentAdd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un fichier'**
+  String get attachmentAdd;
+
+  /// No description provided for @attachmentTooBig.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fichier trop volumineux ({max} Mo maximum)'**
+  String attachmentTooBig(int max);
+
+  /// No description provided for @attachmentUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fichier indisponible : il n\'est pas sur cet appareil et le cloud n\'est pas joignable'**
+  String get attachmentUnavailable;
+
+  /// No description provided for @attachmentNoApp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune application pour ouvrir ce fichier'**
+  String get attachmentNoApp;
+
+  /// No description provided for @attachmentKeepOffline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Garder sur cet appareil'**
+  String get attachmentKeepOffline;
+
+  /// No description provided for @attachmentOnDevice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sur cet appareil'**
+  String get attachmentOnDevice;
+
+  /// No description provided for @attachmentInCloud.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dans le cloud'**
+  String get attachmentInCloud;
+
+  /// No description provided for @attachmentKept.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gardée sur cet appareil'**
+  String get attachmentKept;
+
+  /// No description provided for @attachmentPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoutée à l\'enregistrement'**
+  String get attachmentPending;
 }
 
 class _AppLocalizationsDelegate

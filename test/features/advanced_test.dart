@@ -9,6 +9,7 @@ import 'package:poulplan/app.dart';
 import 'package:poulplan/core/time/device_time_zone.dart';
 import 'package:poulplan/data/db/app_database.dart';
 import 'package:poulplan/data/providers.dart';
+import 'package:poulplan/data/repositories/attachment_repository.dart';
 import 'package:poulplan/data/repositories/event_repository.dart';
 import 'package:poulplan/data/repositories/settings_repository.dart';
 import 'package:poulplan/domain/calendar/day.dart';
@@ -33,7 +34,7 @@ void main() {
 
   tearDown(() => db.close());
 
-  Future<void> pumpApp(WidgetTester tester) async {
+  Future<void> pumpApp(WidgetTester tester, {Directory? directory}) async {
     tester.view.physicalSize = const Size(1200, 1000);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
@@ -41,6 +42,8 @@ void main() {
       ProviderScope(
         overrides: [
           databaseProvider.overrideWithValue(db),
+          if (directory != null)
+            appDirectoryProvider.overrideWithValue(directory),
           todayProvider.overrideWithValue(Day(2026, 11, 3)),
           deviceTimeZoneProvider.overrideWithValue('UTC'),
           // Asset loading does not complete under the fake test clock.
@@ -148,6 +151,34 @@ void main() {
       () => events.watchBetween(Day(2026, 11, 1), Day(2026, 11, 30)).first,
     );
     expect(saved!.single.reminders, [10, 60]);
+    await unmount(tester);
+  });
+
+  testWidgets('attachments are listed in the editor', (tester) async {
+    final dir = Directory.systemTemp.createTempSync('poulplan_editor');
+    addTearDown(() => dir.deleteSync(recursive: true));
+    final event = await tester.runAsync(
+      () => events.create(
+        title: 'Train',
+        start: DateTime.utc(2026, 11, 3, 8),
+        end: DateTime.utc(2026, 11, 3, 9),
+        timeZone: 'UTC',
+      ),
+    );
+    await tester.runAsync(
+      () => AttachmentRepository(
+        db,
+        directory: Directory('${dir.path}/attachments'),
+      ).add(event!.id, 'billet.pdf', List.filled(2048, 0)),
+    );
+    await pumpApp(tester, directory: dir);
+    await tester.tap(find.text('Train'));
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -3000));
+    await tester.pumpAndSettle();
+    expect(find.text('Pièces jointes'), findsOneWidget);
+    expect(find.text('billet.pdf'), findsOneWidget);
+    expect(find.text('2 ko · Sur cet appareil'), findsOneWidget);
     await unmount(tester);
   });
 

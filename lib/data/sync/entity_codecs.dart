@@ -27,6 +27,7 @@ const codecs = <EntityCodec>[
   _CategoryCodec(),
   _BirthdayCodec(),
   _SavedFilterCodec(),
+  _AttachmentCodec(),
 ];
 
 EntityCodec codecFor(String entity) =>
@@ -242,5 +243,46 @@ class _SavedFilterCodec extends EntityCodec {
   Future<List<String>> allIds(AppDatabase db) =>
       (db.selectOnly(db.savedFilters)..addColumns([db.savedFilters.id]))
           .map((r) => r.read(db.savedFilters.id)!)
+          .get();
+}
+
+class _AttachmentCodec extends EntityCodec {
+  const _AttachmentCodec();
+
+  @override
+  String get entity => 'attachment';
+
+  @override
+  Future<Map<String, Object?>?> read(AppDatabase db, String id) async {
+    final row = await (db.select(
+      db.attachments,
+    )..where((a) => a.id.equals(id))).getSingleOrNull();
+    return row == null ? null : _toFields(row.toJson());
+  }
+
+  @override
+  Future<void> write(
+    AppDatabase db,
+    String id,
+    Map<String, Object?> fields,
+  ) async {
+    final existing = await (db.select(
+      db.attachments,
+    )..where((a) => a.id.equals(id))).getSingleOrNull();
+    final row = AttachmentRow.fromJson(
+      _toJson(id, fields, existing?.toJson(), const {
+        'eventId': '',
+        'name': 'fichier',
+        'mimeType': 'application/octet-stream',
+        'size': 0,
+      }),
+    );
+    await db.into(db.attachments).insertOnConflictUpdate(row);
+  }
+
+  @override
+  Future<List<String>> allIds(AppDatabase db) =>
+      (db.selectOnly(db.attachments)..addColumns([db.attachments.id]))
+          .map((r) => r.read(db.attachments.id)!)
           .get();
 }

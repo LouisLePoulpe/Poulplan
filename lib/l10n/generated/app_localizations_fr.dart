@@ -699,4 +699,37 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get importContactsDenied => 'Accès aux contacts refusé';
+
+  @override
+  String get attachments => 'Pièces jointes';
+
+  @override
+  String get attachmentAdd => 'Ajouter un fichier';
+
+  @override
+  String attachmentTooBig(int max) {
+    return 'Fichier trop volumineux ($max Mo maximum)';
+  }
+
+  @override
+  String get attachmentUnavailable =>
+      'Fichier indisponible : il n\'est pas sur cet appareil et le cloud n\'est pas joignable';
+
+  @override
+  String get attachmentNoApp => 'Aucune application pour ouvrir ce fichier';
+
+  @override
+  String get attachmentKeepOffline => 'Garder sur cet appareil';
+
+  @override
+  String get attachmentOnDevice => 'Sur cet appareil';
+
+  @override
+  String get attachmentInCloud => 'Dans le cloud';
+
+  @override
+  String get attachmentKept => 'Gardée sur cet appareil';
+
+  @override
+  String get attachmentPending => 'Ajoutée à l\'enregistrement';
 }

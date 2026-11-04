@@ -17,6 +17,7 @@ import '../../calendar/presentation/event_actions.dart';
 import '../../calendar/providers/calendar_providers.dart';
 import '../../categories/presentation/color_palette.dart';
 import 'quick_create.dart';
+import 'attachments_editor.dart';
 import 'recurrence_dialog.dart';
 import 'reminders_editor.dart';
 import 'recurrence_text.dart';
@@ -39,6 +40,7 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
   bool _notFound = false;
   String? _titleError;
   String? _timeError;
+  final _pendingAttachments = <PendingAttachment>[];
 
   final _title = TextEditingController();
   final _location = TextEditingController();
@@ -135,7 +137,11 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
     final original = _original;
     final repository = ref.read(eventRepositoryProvider);
     if (original == null) {
-      await createFromDraft(ref, draft);
+      final created = await createFromDraft(ref, draft);
+      final attachments = ref.read(attachmentRepositoryProvider);
+      for (final f in _pendingAttachments) {
+        await attachments.add(created.id, f.name, f.bytes);
+      }
     } else if (original.seriesId != null) {
       final scope = await askSeriesScope(context, deleting: false);
       if (scope == null) return;
@@ -415,6 +421,14 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
                     labelText: l10n.fieldDescription,
                     alignLabelWithHint: true,
                   ),
+                ),
+                const SizedBox(height: 8),
+                AttachmentsEditor(
+                  eventId: _original == null
+                      ? null
+                      : _original!.seriesId ?? _original!.id,
+                  pending: _pendingAttachments,
+                  onPendingChanged: () => setState(() {}),
                 ),
               ],
             ),

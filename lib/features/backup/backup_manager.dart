@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 
 import '../../data/backup/backup_service.dart';
 import '../../data/backup/backup_store.dart';
@@ -45,7 +44,7 @@ class BackupManager {
   void dispose() => _timer?.cancel();
 
   Future<LocalBackupStore> localStore() async => LocalBackupStore(
-    Directory(p.join((await getApplicationSupportDirectory()).path, 'backups')),
+    Directory(p.join(_ref.read(appDirectoryProvider).path, 'backups')),
   );
 
   /// The cloud store when signed in.
@@ -59,13 +58,13 @@ class BackupManager {
   BackupService _service() => BackupService(
     _ref.read(databaseProvider),
     recorder: _ref.read(changeRecorderProvider),
+    attachments: _ref.read(attachmentRepositoryProvider),
   );
 
+  /// Shown when restoring (« Linux », « Android »).
   static String get deviceName {
-    final host = Platform.localHostname;
-    return host.isEmpty || host == 'localhost'
-        ? Platform.operatingSystem
-        : '${Platform.operatingSystem} ($host)';
+    final os = Platform.operatingSystem;
+    return os[0].toUpperCase() + os.substring(1);
   }
 
   Future<List<int>> createBytes() => _service().create(device: deviceName);

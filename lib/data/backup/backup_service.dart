@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:archive/archive.dart';
 
+import '../../domain/entities/attachment.dart';
 import '../db/app_database.dart';
+import '../repositories/attachment_repository.dart';
 import '../sync/change_recorder.dart';
 import '../sync/entity_codecs.dart';
 import '../../domain/sync/sync_record.dart';
@@ -48,10 +50,14 @@ class RestoreResult {
 /// the same id, nothing else is deleted. Restored records are recorded as
 /// local changes, so that they reach the cloud and the other devices.
 class BackupService {
-  BackupService(this._db, {this.recorder});
+  BackupService(this._db, {this.recorder, this.attachments});
 
   final AppDatabase _db;
   final ChangeRecorder? recorder;
+
+  /// When given, the attachment files on this device go in the archive
+  /// (`files/<id>`) and are put back when restoring.
+  final AttachmentRepository? attachments;
 
   static const format = 'poulplan-backup';
   static const version = 1;
@@ -63,7 +69,9 @@ class BackupService {
     'event',
     'birthday',
     'saved_filter',
+    'attachment',
   ];
+  static const _filesFolder = 'files/';
 
   Future<List<int>> create({required String device, DateTime? now}) async {
     final records = <String, Map<String, Object?>>{};
@@ -87,16 +95,25 @@ class BackupService {
       ..addFile(
         ArchiveFile.bytes(manifestName, utf8.encode(jsonEncode(manifest))),
       );
+    for (final a in await attachments?.all() ?? const <Attachment>[]) {
+      final file = attachments!.file(a);
+      if (!a.stored || !file.existsSync()) continue;
+      archive.addFile(
+        ArchiveFile.bytes('$_filesFolder${a.id}', await file.readAsBytes()),
+      );
+    }
     return ZipEncoder().encode(archive);
   }
 
-  static Map<String, dynamic> _manifest(List<int> bytes) {
-    final Archive archive;
+  static Archive _archive(List<int> bytes) {
     try {
-      archive = ZipDecoder().decodeBytes(bytes);
+      return ZipDecoder().decodeBytes(bytes);
     } catch (_) {
       throw const BackupFormatException('not a zip archive');
     }
+  }
+
+  static Map<String, dynamic> _manifest(Archive archive) {
     final file = archive.findFile(manifestName);
     if (file == null) throw const BackupFormatException('no manifest');
     final Object? manifest;
@@ -124,7 +141,7 @@ class BackupService {
   };
 
   static Future<BackupInfo> inspect(List<int> bytes) async {
-    final manifest = _manifest(bytes);
+    final manifest = _manifest(_archive(bytes));
     return BackupInfo(
       createdAt:
           DateTime.tryParse(manifest['createdAt'] as String? ?? '') ??
@@ -138,7 +155,8 @@ class BackupService {
   }
 
   Future<RestoreResult> restore(List<int> bytes) async {
-    final records = _records(_manifest(bytes));
+    final archive = _archive(bytes);
+    final records = _records(_manifest(archive));
     final known = {for (final c in codecs) c.entity};
     final entities = [
       ..._restoreOrder,
@@ -155,6 +173,15 @@ class BackupService {
       });
       await recorder?.record(entity, entityRecords.keys);
       count += entityRecords.length;
+    }
+    final repository = attachments;
+    if (repository != null) {
+      for (final file in archive.files) {
+        if (!file.isFile || !file.name.startsWith(_filesFolder)) continue;
+        final id = file.name.substring(_filesFolder.length);
+        if (await repository.find(id) == null) continue;
+        await repository.storeFile(id, file.content, uploaded: false);
+      }
     }
     return RestoreResult(records: count);
   }

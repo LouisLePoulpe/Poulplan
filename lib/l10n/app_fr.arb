@@ -356,5 +356,22 @@
       }
     }
   },
-  "importContactsDenied": "Accès aux contacts refusé"
+  "importContactsDenied": "Accès aux contacts refusé",
+  "attachments": "Pièces jointes",
+  "attachmentAdd": "Ajouter un fichier",
+  "attachmentTooBig": "Fichier trop volumineux ({max} Mo maximum)",
+  "@attachmentTooBig": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "attachmentUnavailable": "Fichier indisponible : il n'est pas sur cet appareil et le cloud n'est pas joignable",
+  "attachmentNoApp": "Aucune application pour ouvrir ce fichier",
+  "attachmentKeepOffline": "Garder sur cet appareil",
+  "attachmentOnDevice": "Sur cet appareil",
+  "attachmentInCloud": "Dans le cloud",
+  "attachmentKept": "Gardée sur cet appareil",
+  "attachmentPending": "Ajoutée à l'enregistrement"
 }
