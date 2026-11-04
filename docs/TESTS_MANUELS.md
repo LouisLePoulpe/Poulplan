@@ -144,3 +144,39 @@ Préparation :
 - [ ] Dans les trois widgets Android : toucher un événement l'ouvre, le bouton jaune **+** ouvre « Nouvel événement », le titre ouvre l'application.
 - [ ] KDE : ajouter **Poulplan — Journée** ; régler la commande de lancement ; même contenu que sur Android.
 - [ ] KDE (« À venir » et « Journée ») : clic sur un événement → l'événement ; bouton **+** → « Nouvel événement » ; clic sur le titre → l'application.
+
+# v0.7.0 — Fonctions complémentaires
+
+## E1. Sauvegarde → restauration sur un autre appareil (critère du jalon)
+- [ ] PC : Paramètres → **Sauvegardes et export** → **Sauvegarder maintenant** : une ligne apparaît sous « Sur cet appareil ».
+- [ ] PC : **Exporter une sauvegarde…** → enregistrer le fichier `.zip` (ex. dans Téléchargements).
+- [ ] Copier ce fichier sur le Pixel (ou l'inverse), puis sur l'autre appareil : **Restaurer depuis un fichier…** → la fenêtre de confirmation indique la date, l'appareil, le nombre d'événements et d'anniversaires → **Restaurer**.
+- [ ] Les événements, catégories, anniversaires, filtres et pièces jointes de la sauvegarde sont là ; ce qui existait déjà sur l'appareil est toujours là (fusion, rien n'est supprimé).
+- [ ] Connecté au cloud : **Sauvegarder dans le cloud** → la sauvegarde apparaît sous « Dans le cloud » sur l'autre appareil → menu ⋮ → **Restaurer** fonctionne aussi.
+- [ ] Sauvegarde automatique : le lendemain, une nouvelle sauvegarde locale (et cloud si connecté) existe sans rien faire.
+
+## E2. Export et import
+- [ ] **Exporter le calendrier (ICS)…** → ouvrir le fichier dans un autre agenda (ex. Thunderbird, ou l'importer dans un agenda de test) : heures justes, séries répétées, exceptions, rappels.
+- [ ] Anniversaires → icône d'import → **Importer un fichier VCF…** (export de contacts) : les anniversaires sont ajoutés, un deuxième import n'ajoute pas de doublons.
+- [ ] Pixel : **Importer depuis les contacts** → l'autorisation des contacts est demandée → les anniversaires des contacts sont ajoutés ; refuser l'autorisation affiche « Accès aux contacts refusé ».
+
+## E3. Pièces jointes
+- [ ] Ouvrir un événement → **Pièces jointes** → **Ajouter un fichier** (PDF, photo) → le fichier s'affiche (« Sur cet appareil ») ; le toucher l'ouvre dans l'application par défaut.
+- [ ] Nouvel événement : ajouter un fichier avant d'enregistrer → il est bien rattaché après l'enregistrement.
+- [ ] Connecté : sur l'autre appareil, la pièce jointe apparaît « Dans le cloud » ; la toucher la télécharge et l'ouvre (il faut Internet).
+- [ ] Menu ⋮ → **Garder sur cet appareil** → couper Internet → la pièce jointe s'ouvre quand même.
+- [ ] Supprimer la pièce jointe → elle disparaît aussi de l'autre appareil après la synchro.
+
+## E4. Verrouillage
+- [ ] Paramètres → Sécurité → **Verrouillage par code** → code de 4 à 8 chiffres (deux fois).
+- [ ] Fermer / rouvrir l'app (ou attendre le délai choisi en arrière-plan) → écran « Poulplan est verrouillé » ; mauvais code → « Code incorrect » ; 5 erreurs → attente de 30 s.
+- [ ] Pixel : **Déverrouillage biométrique** → l'empreinte ou le visage est proposé à l'ouverture.
+- [ ] Désactiver le verrouillage demande le code actuel.
+- Limite connue : les widgets et les notifications restent visibles quand l'app est verrouillée.
+
+## E5. Répétitions (demande de Louis)
+- [ ] Événement répété : lignes **Début de la répétition** et **Fin de la répétition** dans l'éditeur ; choisir une date de fin → plus d'occurrences après cette date ; la croix rend la série sans fin.
+
+## E6. Espace de stockage
+- [ ] Paramètres → **Espace de stockage** : tailles de la base, des pièces jointes, des sauvegardes et espace libre.
+- [ ] Avec des pièces jointes dans le cloud et plusieurs sauvegardes : **Libérer…** et **Supprimer les anciennes sauvegardes** libèrent la place annoncée.

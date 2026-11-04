@@ -11,7 +11,7 @@ Dernière mise à jour : 2026-11-04
 | v0.4.0 Cloud Poulapp | **Terminé** — validé par Louis : connexion et synchro Linux ↔ Pixel |
 | v0.5.0 Notifications | **Terminé** — validé par Louis : Pixel (déverrouillé, verrouillé) et Linux (KDE) |
 | v0.6.0 Intégrations | **Terminé** — validé par Louis le 2026-11-04 (widgets Android et KDE, actions, barre système), version 0.6.4 |
-| v0.7.0 Fonctions complémentaires | **En cours** |
+| v0.7.0 Fonctions complémentaires | **Code terminé, non tagué** — en attente des tests manuels (section v0.7.0 de `docs/TESTS_MANUELS.md`), version 0.7.0 |
 | v0.8.0 → v1.0.0 | À faire |
 
 ## Reprendre le travail à froid
@@ -171,7 +171,19 @@ Mini-plan (dans l'ordre, un commit par étape) :
 5. Verrouillage facultatif : PIN (haché, salé) partout, biométrie Android (`local_auth`), au lancement et après 5 min en arrière-plan.
 6. Nettoyage d'espace : tailles (base, pièces jointes, sauvegardes), suppression des anciennes sauvegardes et des copies locales récupérables, alerte quand l'espace libre est faible.
 
+- Fait :
+  - sauvegardes zip (`poulplan-backup.json` + `files/<id>`), restauration par fusion enregistrée pour la synchro, automatiques (1/jour, 7 locales, 5 cloud dans `<uid>/backups/`), écran Sauvegardes et export ;
+  - export ICS (TZID IANA sans VTIMEZONE, UNTIL converti en UTC, EXDATE/RECURRENCE-ID, VALARM), import VCF 2.1/3.0/4.0 (quoted-printable, lignes repliées, années omises) et contacts Android (READ_CONTACTS à l'usage), sans doublons ;
+  - pièces jointes : tables `attachments` (synchronisée) et `attachment_files` (locale), schéma v5, transfert Storage après chaque synchro, « garder sur cet appareil », ouverture (FileProvider / xdg-open), 25 Mo max ;
+  - verrouillage par code (PBKDF2-HMAC-SHA256, 20 000 itérations, sel aléatoire), biométrie Android (`local_auth`, `FlutterFragmentActivity`), délai réglable, 5 essais puis 30 s ;
+  - espace de stockage et proposition de nettoyage (SnackBar au démarrage, une fois par semaine, sous 500 Mo libres) ;
+  - demande de Louis : dates de début et de fin des répétitions dans l'éditeur.
+- Testé : 273 tests verts (sauvegarde aller-retour, fusion, archive invalide, ICS, vCard, PIN dont vecteur RFC, transfert des pièces jointes avec serveur simulé, écran de verrouillage, éditeur) ; sous Linux réel : sauvegarde automatique locale **et** cloud effectuées 30 s après le démarrage, écrans Sauvegardes, Paramètres et Espace de stockage (captures).
+- Non testé : tout sur le Pixel (ADB « unauthorized » au moment du déploiement), restauration sur un autre appareil, ouverture réelle des pièces jointes, biométrie, import des contacts, sélecteurs de fichiers natifs → tests manuels E1–E6.
+- Limites : pièces jointes d'un événement supprimé conservées (non visibles) ; widgets et notifications visibles malgré le verrouillage ; le code oublié n'est pas récupérable (données récupérables par la synchro ou une sauvegarde).
+
 ## Journal
+- 2026-11-04 : v0.7.0 codée (sauvegardes, export ICS, import VCF/contacts, pièces jointes, verrouillage, espace de stockage) + dates de début/fin des répétitions (demande de Louis) ; arrêt pour les tests manuels E1–E6.
 - 2026-11-03 : dépôt initialisé (CLAUDE.md, spec, roadmap, CI, licence GPL-3.0).
 - 2026-11-04 : 0.6.3 — retours de Louis sur la 0.6.2 : Android, ouvrir un événement → page d'erreur et + sans effet (Flutter routait lui-même les liens poulplan:// : `flutter_deeplinking_enabled=false`) ; KDE, aucune action (commande de lancement non configurée → actions envoyées par D-Bus à l'app, commande en secours) ; widget Journée redessiné en frise horaire avec ligne de l'heure (Android 12+ et KDE).
 - 2026-11-04 : 0.6.4 — retours sur la 0.6.3 : Android OK (+, ouverture, heures, ligne). Widget Journée Android défilant sur 24 h (une ligne de liste par heure, 52 dp, se cale sur l'heure courante), événements en pleine largeur partagée seulement par groupe de chevauchement (largeur par poids de layout, plus de dépendance à la taille déclarée par le lanceur). Linux : l'entrée de menu pointait vers un dossier absent → `tool/install_linux_dev.sh` (copie du bundle, commande `~/.local/bin/poulplan` via distrobox, entrée de menu, icônes, widgets KDE) ; autostart via `distrobox enter` dans un conteneur ; widgets KDE en secours sur `~/.local/bin/poulplan` puis Flatpak. À vérifier par Louis : rendu du widget défilant, widgets KDE après redémarrage de plasmashell.
