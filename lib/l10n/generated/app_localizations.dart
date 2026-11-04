@@ -1388,6 +1388,132 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Sans fin'**
   String get recurrenceNoEnd;
+
+  /// No description provided for @lockTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Poulplan est verrouillé'**
+  String get lockTitle;
+
+  /// No description provided for @lockEnterPin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code'**
+  String get lockEnterPin;
+
+  /// No description provided for @lockUnlock.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déverrouiller'**
+  String get lockUnlock;
+
+  /// No description provided for @lockWrongPin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code incorrect'**
+  String get lockWrongPin;
+
+  /// No description provided for @lockBlocked.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trop d\'essais : réessayez dans {seconds} s'**
+  String lockBlocked(int seconds);
+
+  /// No description provided for @lockBiometric.
+  ///
+  /// In fr, this message translates to:
+  /// **'Empreinte, visage ou verrouillage de l\'appareil'**
+  String get lockBiometric;
+
+  /// No description provided for @lockBiometricReason.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déverrouiller Poulplan'**
+  String get lockBiometricReason;
+
+  /// No description provided for @securitySection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sécurité'**
+  String get securitySection;
+
+  /// No description provided for @lockSetting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Verrouillage par code'**
+  String get lockSetting;
+
+  /// No description provided for @lockSettingSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code de 4 à 8 chiffres demandé à l\'ouverture'**
+  String get lockSettingSubtitle;
+
+  /// No description provided for @lockBiometricSetting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déverrouillage biométrique'**
+  String get lockBiometricSetting;
+
+  /// No description provided for @lockDelaySetting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Verrouiller après'**
+  String get lockDelaySetting;
+
+  /// No description provided for @lockDelayImmediate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Immédiatement'**
+  String get lockDelayImmediate;
+
+  /// No description provided for @lockDelayMinutes.
+  ///
+  /// In fr, this message translates to:
+  /// **'{minutes} min'**
+  String lockDelayMinutes(int minutes);
+
+  /// No description provided for @lockNewPin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau code'**
+  String get lockNewPin;
+
+  /// No description provided for @lockConfirmPin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer le code'**
+  String get lockConfirmPin;
+
+  /// No description provided for @lockPinMismatch.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les codes ne correspondent pas'**
+  String get lockPinMismatch;
+
+  /// No description provided for @lockPinInvalid.
+  ///
+  /// In fr, this message translates to:
+  /// **'4 à 8 chiffres'**
+  String get lockPinInvalid;
+
+  /// No description provided for @lockForgotHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans ce code, l\'application ne s\'ouvre plus : après réinstallation, seules la synchronisation cloud ou une sauvegarde exportée rendent les données.'**
+  String get lockForgotHint;
+
+  /// No description provided for @lockCurrentPin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code actuel'**
+  String get lockCurrentPin;
+
+  /// No description provided for @lockNow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Verrouiller maintenant'**
+  String get lockNow;
 }
 
 class _AppLocalizationsDelegate

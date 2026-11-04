@@ -9,6 +9,7 @@ import '../../../data/providers.dart';
 import '../../../domain/entities/app_settings.dart';
 import '../../../domain/holidays/school_holidays.dart';
 import 'reminders_settings.dart';
+import '../../lock/presentation/lock_settings.dart';
 import '../../../l10n/generated/app_localizations.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -54,6 +55,8 @@ class SettingsPage extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push(Routes.backups),
           ),
+          section(l10n.securitySection),
+          const LockSettings(),
           section(l10n.settingsAppearance),
           ListTile(
             title: Text(l10n.settingsTheme),

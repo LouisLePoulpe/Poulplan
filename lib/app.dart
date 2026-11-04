@@ -5,6 +5,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_widget/home_widget.dart';
 
+import 'features/lock/lock_controller.dart';
+import 'features/lock/presentation/lock_screen.dart';
 import 'core/platform/desktop_integration.dart';
 import 'core/routing/app_router.dart';
 import 'core/theme/app_theme.dart';
@@ -82,6 +84,20 @@ class _PoulplanAppState extends ConsumerState<PoulplanApp> {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: ref.watch(routerProvider),
+      builder: (context, child) => Stack(
+        children: [
+          ?child,
+          if (ref.watch(lockControllerProvider.select((l) => l.locked)))
+            // Above the router's navigator: its own overlay for the field.
+            Positioned.fill(
+              child: Overlay(
+                initialEntries: [
+                  OverlayEntry(builder: (context) => const LockScreen()),
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

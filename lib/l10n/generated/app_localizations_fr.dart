@@ -746,4 +746,74 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get recurrenceNoEnd => 'Sans fin';
+
+  @override
+  String get lockTitle => 'Poulplan est verrouillé';
+
+  @override
+  String get lockEnterPin => 'Code';
+
+  @override
+  String get lockUnlock => 'Déverrouiller';
+
+  @override
+  String get lockWrongPin => 'Code incorrect';
+
+  @override
+  String lockBlocked(int seconds) {
+    return 'Trop d\'essais : réessayez dans $seconds s';
+  }
+
+  @override
+  String get lockBiometric =>
+      'Empreinte, visage ou verrouillage de l\'appareil';
+
+  @override
+  String get lockBiometricReason => 'Déverrouiller Poulplan';
+
+  @override
+  String get securitySection => 'Sécurité';
+
+  @override
+  String get lockSetting => 'Verrouillage par code';
+
+  @override
+  String get lockSettingSubtitle =>
+      'Code de 4 à 8 chiffres demandé à l\'ouverture';
+
+  @override
+  String get lockBiometricSetting => 'Déverrouillage biométrique';
+
+  @override
+  String get lockDelaySetting => 'Verrouiller après';
+
+  @override
+  String get lockDelayImmediate => 'Immédiatement';
+
+  @override
+  String lockDelayMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get lockNewPin => 'Nouveau code';
+
+  @override
+  String get lockConfirmPin => 'Confirmer le code';
+
+  @override
+  String get lockPinMismatch => 'Les codes ne correspondent pas';
+
+  @override
+  String get lockPinInvalid => '4 à 8 chiffres';
+
+  @override
+  String get lockForgotHint =>
+      'Sans ce code, l\'application ne s\'ouvre plus : après réinstallation, seules la synchronisation cloud ou une sauvegarde exportée rendent les données.';
+
+  @override
+  String get lockCurrentPin => 'Code actuel';
+
+  @override
+  String get lockNow => 'Verrouiller maintenant';
 }

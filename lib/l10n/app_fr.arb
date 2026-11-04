@@ -384,5 +384,40 @@
       }
     }
   },
-  "recurrenceNoEnd": "Sans fin"
+  "recurrenceNoEnd": "Sans fin",
+  "lockTitle": "Poulplan est verrouillé",
+  "lockEnterPin": "Code",
+  "lockUnlock": "Déverrouiller",
+  "lockWrongPin": "Code incorrect",
+  "lockBlocked": "Trop d'essais : réessayez dans {seconds} s",
+  "@lockBlocked": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "lockBiometric": "Empreinte, visage ou verrouillage de l'appareil",
+  "lockBiometricReason": "Déverrouiller Poulplan",
+  "securitySection": "Sécurité",
+  "lockSetting": "Verrouillage par code",
+  "lockSettingSubtitle": "Code de 4 à 8 chiffres demandé à l'ouverture",
+  "lockBiometricSetting": "Déverrouillage biométrique",
+  "lockDelaySetting": "Verrouiller après",
+  "lockDelayImmediate": "Immédiatement",
+  "lockDelayMinutes": "{minutes} min",
+  "@lockDelayMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "lockNewPin": "Nouveau code",
+  "lockConfirmPin": "Confirmer le code",
+  "lockPinMismatch": "Les codes ne correspondent pas",
+  "lockPinInvalid": "4 à 8 chiffres",
+  "lockForgotHint": "Sans ce code, l'application ne s'ouvre plus : après réinstallation, seules la synchronisation cloud ou une sauvegarde exportée rendent les données.",
+  "lockCurrentPin": "Code actuel",
+  "lockNow": "Verrouiller maintenant"
 }

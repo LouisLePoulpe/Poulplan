@@ -14,6 +14,8 @@ import 'data/db/connection.dart';
 import 'data/sync/change_recorder.dart';
 import 'features/reminders/reminder_scheduler.dart';
 import 'features/backup/backup_manager.dart';
+import 'features/lock/lock_controller.dart';
+import 'data/repositories/settings_repository.dart';
 import 'features/widgets/widget_exporter.dart';
 import 'data/providers.dart';
 
@@ -28,6 +30,9 @@ Future<void> main() async {
       databaseProvider.overrideWithValue(database),
       hlcClockProvider.overrideWithValue(clock),
       deviceTimeZoneProvider.overrideWithValue(timeZone),
+      initialLockStateProvider.overrideWithValue(
+        await loadLockState(SettingsRepository(database)),
+      ),
       appDirectoryProvider.overrideWithValue(
         await getApplicationSupportDirectory(),
       ),
