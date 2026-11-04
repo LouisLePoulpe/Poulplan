@@ -28,6 +28,7 @@ const codecs = <EntityCodec>[
   _BirthdayCodec(),
   _SavedFilterCodec(),
   _AttachmentCodec(),
+  _RouteCodec(),
 ];
 
 EntityCodec codecFor(String entity) =>
@@ -285,4 +286,52 @@ class _AttachmentCodec extends EntityCodec {
       (db.selectOnly(db.attachments)..addColumns([db.attachments.id]))
           .map((r) => r.read(db.attachments.id)!)
           .get();
+}
+
+class _RouteCodec extends EntityCodec {
+  const _RouteCodec();
+
+  @override
+  String get entity => 'route';
+
+  @override
+  Future<Map<String, Object?>?> read(AppDatabase db, String id) async {
+    final row = await (db.select(
+      db.routes,
+    )..where((r) => r.id.equals(id))).getSingleOrNull();
+    return row == null ? null : _toFields(row.toJson());
+  }
+
+  @override
+  Future<void> write(
+    AppDatabase db,
+    String id,
+    Map<String, Object?> fields,
+  ) async {
+    final existing = await (db.select(
+      db.routes,
+    )..where((r) => r.id.equals(id))).getSingleOrNull();
+    final row = RouteRow.fromJson(
+      _toJson(id, fields, existing?.toJson(), const {
+        'eventId': '',
+        'mode': 'car',
+        'originLabel': '',
+        'originLatitude': 0.0,
+        'originLongitude': 0.0,
+        'destinationLatitude': 0.0,
+        'destinationLongitude': 0.0,
+        'distanceMeters': 0,
+        'durationSeconds': 0,
+        'geometry': '',
+        'engine': 'osrm',
+        'computedAt': 0,
+      }),
+    );
+    await db.into(db.routes).insertOnConflictUpdate(row);
+  }
+
+  @override
+  Future<List<String>> allIds(AppDatabase db) => (db.selectOnly(
+    db.routes,
+  )..addColumns([db.routes.id])).map((r) => r.read(db.routes.id)!).get();
 }

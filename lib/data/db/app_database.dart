@@ -26,13 +26,15 @@ const defaultCategories = [
     SyncConflicts,
     Attachments,
     AttachmentFiles,
+    Routes,
+    MapZones,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -65,6 +67,13 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(attachments);
         await m.createIndex(attachmentsEvent);
         await m.createTable(attachmentFiles);
+      }
+      if (from < 6) {
+        await m.addColumn(events, events.latitude);
+        await m.addColumn(events, events.longitude);
+        await m.createTable(routes);
+        await m.createIndex(routesEvent);
+        await m.createTable(mapZones);
       }
     },
     beforeOpen: (details) async {

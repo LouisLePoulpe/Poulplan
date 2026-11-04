@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
+import '../geo/geo.dart';
+
 /// Where a displayed event comes from: only [event] is stored and editable
 /// as such; the others are generated for display.
 enum EventKind { event, holiday, schoolHoliday, birthday }
@@ -26,6 +28,7 @@ class CalendarEvent {
     this.color,
     this.location,
     this.videoLink,
+    this.placePoint,
     this.busy = true,
     this.allDay = false,
     required this.start,
@@ -51,6 +54,9 @@ class CalendarEvent {
   final int? color;
   final String? location;
   final String? videoLink;
+
+  /// Coordinates of [location], when it was found on the map.
+  final GeoPoint? placePoint;
 
   /// Free/busy status: `true` means busy.
   final bool busy;
@@ -95,6 +101,7 @@ class CalendarEvent {
     int? Function()? color,
     String? Function()? location,
     String? Function()? videoLink,
+    GeoPoint? Function()? placePoint,
     bool? busy,
     bool? allDay,
     DateTime? start,
@@ -117,6 +124,7 @@ class CalendarEvent {
       color: color != null ? color() : this.color,
       location: location != null ? location() : this.location,
       videoLink: videoLink != null ? videoLink() : this.videoLink,
+      placePoint: placePoint != null ? placePoint() : this.placePoint,
       busy: busy ?? this.busy,
       allDay: allDay ?? this.allDay,
       start: start ?? this.start,
@@ -146,6 +154,7 @@ class CalendarEvent {
       other.color == color &&
       other.location == location &&
       other.videoLink == videoLink &&
+      other.placePoint == placePoint &&
       other.busy == busy &&
       other.allDay == allDay &&
       other.start == start &&

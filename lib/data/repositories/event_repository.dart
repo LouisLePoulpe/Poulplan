@@ -14,6 +14,7 @@ import '../../domain/recurrence/series_edit.dart';
 import '../../domain/search/search_query.dart';
 import '../db/app_database.dart';
 import '../sync/change_recorder.dart';
+import '../../domain/geo/geo.dart';
 
 /// Which occurrences of a series an edit or a deletion applies to.
 enum SeriesScope { thisOccurrence, thisAndFollowing, all }
@@ -140,6 +141,7 @@ class EventRepository {
     int? color,
     String? location,
     String? videoLink,
+    GeoPoint? placePoint,
     bool busy = true,
     bool allDay = false,
     required DateTime start,
@@ -161,6 +163,7 @@ class EventRepository {
       color: color,
       location: location,
       videoLink: videoLink,
+      placePoint: placePoint,
       busy: busy,
       allDay: allDay,
       start: start.toUtc(),
@@ -199,6 +202,7 @@ class EventRepository {
     color: event.color,
     location: event.location,
     videoLink: event.videoLink,
+    placePoint: event.placePoint,
     busy: event.busy,
     allDay: event.allDay,
     start: event.start,
@@ -258,6 +262,7 @@ class EventRepository {
             color: edited.color,
             location: edited.location,
             videoLink: edited.videoLink,
+            placePoint: edited.placePoint,
             busy: edited.busy,
             allDay: edited.allDay,
             start: edited.start,
@@ -360,6 +365,7 @@ class EventRepository {
         color: () => edited.color,
         location: () => edited.location,
         videoLink: () => edited.videoLink,
+        placePoint: () => edited.placePoint,
         busy: edited.busy,
         allDay: edited.allDay,
         start: start,
@@ -410,6 +416,7 @@ class EventRepository {
       color: occurrence.color,
       location: occurrence.location,
       videoLink: occurrence.videoLink,
+      placePoint: occurrence.placePoint,
       busy: occurrence.busy,
       allDay: occurrence.allDay,
       start: occurrence.start,
@@ -470,6 +477,9 @@ class EventRepository {
     color: r.color,
     location: r.location,
     videoLink: r.videoLink,
+    placePoint: r.latitude == null || r.longitude == null
+        ? null
+        : GeoPoint(r.latitude!, r.longitude!),
     busy: r.busy,
     allDay: r.allDay,
     start: _utc(r.startUtc),
@@ -496,6 +506,8 @@ class EventRepository {
     color: Value(e.color),
     location: Value(e.location),
     videoLink: Value(e.videoLink),
+    latitude: Value(e.placePoint?.latitude),
+    longitude: Value(e.placePoint?.longitude),
     busy: Value(e.busy),
     allDay: Value(e.allDay),
     startUtc: Value(e.start.millisecondsSinceEpoch),

@@ -35,6 +35,9 @@ Future<CalendarEvent> createFromDraft(WidgetRef ref, EventDraft draft) {
         videoLink: blank.hasMatch(draft.videoLink ?? '')
             ? null
             : draft.videoLink!.trim(),
+        placePoint: blank.hasMatch(draft.location ?? '')
+            ? null
+            : draft.placePoint,
         busy: draft.busy,
         allDay: draft.allDay,
         start: times.start,

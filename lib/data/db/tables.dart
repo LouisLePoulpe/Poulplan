@@ -30,6 +30,10 @@ class Events extends Table {
   IntColumn get color => integer().nullable()();
   TextColumn get location => text().nullable()();
   TextColumn get videoLink => text().nullable()();
+
+  /// Coordinates of [location] (schema v6), when found on the map.
+  RealColumn get latitude => real().nullable()();
+  RealColumn get longitude => real().nullable()();
   BoolColumn get busy => boolean().withDefault(const Constant(true))();
   BoolColumn get allDay => boolean().withDefault(const Constant(false))();
   IntColumn get startUtc => integer()();
@@ -127,6 +131,59 @@ class AttachmentFiles extends Table {
 
   @override
   Set<Column> get primaryKey => {attachmentId};
+}
+
+/// Remembered route to an event (schema v6, synchronized): computed once,
+/// readable offline.
+@DataClassName('RouteRow')
+@TableIndex(name: 'routes_event', columns: {#eventId})
+class Routes extends Table {
+  TextColumn get id => text()();
+  TextColumn get eventId => text()();
+
+  /// `car`, `bike` or `foot` (see `TravelMode`).
+  TextColumn get mode => text()();
+  TextColumn get originLabel => text()();
+  RealColumn get originLatitude => real()();
+  RealColumn get originLongitude => real()();
+  RealColumn get destinationLatitude => real()();
+  RealColumn get destinationLongitude => real()();
+  IntColumn get distanceMeters => integer()();
+  IntColumn get durationSeconds => integer()();
+
+  /// Encoded polyline (precision 5).
+  TextColumn get geometry => text()();
+
+  /// `osrm` (online) or `brouter` (offline, Android).
+  TextColumn get engine => text()();
+  IntColumn get computedAt => integer()();
+  IntColumn get createdAt => integer()();
+  IntColumn get updatedAt => integer()();
+  IntColumn get deletedAt => integer().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// Map areas downloaded on this device (schema v6, not synced); tiles are
+/// in `map_zones/<id>/<z>/<x>/<y>.pbf`.
+@DataClassName('MapZoneRow')
+class MapZones extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  RealColumn get south => real()();
+  RealColumn get west => real()();
+  RealColumn get north => real()();
+  RealColumn get east => real()();
+  IntColumn get maxZoom => integer()();
+  IntColumn get tileCount => integer()();
+  IntColumn get bytes => integer().withDefault(const Constant(0))();
+
+  /// Null while the download is not complete.
+  IntColumn get downloadedAt => integer().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
 }
 
 /// Synchronization state of a record (schema v3). The pending-changes queue

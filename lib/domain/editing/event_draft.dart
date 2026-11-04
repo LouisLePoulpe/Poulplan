@@ -3,6 +3,7 @@ import 'package:timezone/timezone.dart' as tz;
 import '../calendar/day.dart';
 import '../calendar/event_timing.dart';
 import '../entities/calendar_event.dart';
+import '../geo/geo.dart';
 
 enum DraftError { emptyTitle, endBeforeStart, unknownTimeZone }
 
@@ -18,6 +19,7 @@ class EventDraft {
     this.color,
     this.location,
     this.videoLink,
+    this.placePoint,
     this.busy = true,
     this.allDay = false,
     required this.startDay,
@@ -65,6 +67,7 @@ class EventDraft {
       color: event.color,
       location: event.location,
       videoLink: event.videoLink,
+      placePoint: event.placePoint,
       busy: event.busy,
       allDay: event.allDay,
       startDay: Day.fromDateTime(event.start),
@@ -100,6 +103,9 @@ class EventDraft {
   int? color;
   String? location;
   String? videoLink;
+
+  /// Coordinates of [location], cleared when the location text changes.
+  GeoPoint? placePoint;
   bool busy;
   bool allDay;
   Day startDay;
@@ -156,6 +162,7 @@ class EventDraft {
       color: () => color,
       location: () => _blankToNull(location),
       videoLink: () => _blankToNull(videoLink),
+      placePoint: () => _blankToNull(location) == null ? null : placePoint,
       busy: busy,
       allDay: allDay,
       start: times.start,

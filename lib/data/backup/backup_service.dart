@@ -70,6 +70,7 @@ class BackupService {
     'birthday',
     'saved_filter',
     'attachment',
+    'route',
   ];
   static const _filesFolder = 'files/';
 

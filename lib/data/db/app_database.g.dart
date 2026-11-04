@@ -535,6 +535,28 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _latitudeMeta = const VerificationMeta(
+    'latitude',
+  );
+  @override
+  late final GeneratedColumn<double> latitude = GeneratedColumn<double>(
+    'latitude',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _longitudeMeta = const VerificationMeta(
+    'longitude',
+  );
+  @override
+  late final GeneratedColumn<double> longitude = GeneratedColumn<double>(
+    'longitude',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _busyMeta = const VerificationMeta('busy');
   @override
   late final GeneratedColumn<bool> busy = GeneratedColumn<bool>(
@@ -727,6 +749,8 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
     color,
     location,
     videoLink,
+    latitude,
+    longitude,
     busy,
     allDay,
     startUtc,
@@ -800,6 +824,18 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
       context.handle(
         _videoLinkMeta,
         videoLink.isAcceptableOrUnknown(data['video_link']!, _videoLinkMeta),
+      );
+    }
+    if (data.containsKey('latitude')) {
+      context.handle(
+        _latitudeMeta,
+        latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta),
+      );
+    }
+    if (data.containsKey('longitude')) {
+      context.handle(
+        _longitudeMeta,
+        longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta),
       );
     }
     if (data.containsKey('busy')) {
@@ -954,6 +990,14 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
         DriftSqlType.string,
         data['${effectivePrefix}video_link'],
       ),
+      latitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}latitude'],
+      ),
+      longitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}longitude'],
+      ),
       busy: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}busy'],
@@ -1035,6 +1079,10 @@ class EventRow extends DataClass implements Insertable<EventRow> {
   final int? color;
   final String? location;
   final String? videoLink;
+
+  /// Coordinates of [location] (schema v6), when found on the map.
+  final double? latitude;
+  final double? longitude;
   final bool busy;
   final bool allDay;
   final int startUtc;
@@ -1065,6 +1113,8 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     this.color,
     this.location,
     this.videoLink,
+    this.latitude,
+    this.longitude,
     required this.busy,
     required this.allDay,
     required this.startUtc,
@@ -1099,6 +1149,12 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     }
     if (!nullToAbsent || videoLink != null) {
       map['video_link'] = Variable<String>(videoLink);
+    }
+    if (!nullToAbsent || latitude != null) {
+      map['latitude'] = Variable<double>(latitude);
+    }
+    if (!nullToAbsent || longitude != null) {
+      map['longitude'] = Variable<double>(longitude);
     }
     map['busy'] = Variable<bool>(busy);
     map['all_day'] = Variable<bool>(allDay);
@@ -1146,6 +1202,12 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       videoLink: videoLink == null && nullToAbsent
           ? const Value.absent()
           : Value(videoLink),
+      latitude: latitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(latitude),
+      longitude: longitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(longitude),
       busy: Value(busy),
       allDay: Value(allDay),
       startUtc: Value(startUtc),
@@ -1188,6 +1250,8 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       color: serializer.fromJson<int?>(json['color']),
       location: serializer.fromJson<String?>(json['location']),
       videoLink: serializer.fromJson<String?>(json['videoLink']),
+      latitude: serializer.fromJson<double?>(json['latitude']),
+      longitude: serializer.fromJson<double?>(json['longitude']),
       busy: serializer.fromJson<bool>(json['busy']),
       allDay: serializer.fromJson<bool>(json['allDay']),
       startUtc: serializer.fromJson<int>(json['startUtc']),
@@ -1217,6 +1281,8 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       'color': serializer.toJson<int?>(color),
       'location': serializer.toJson<String?>(location),
       'videoLink': serializer.toJson<String?>(videoLink),
+      'latitude': serializer.toJson<double?>(latitude),
+      'longitude': serializer.toJson<double?>(longitude),
       'busy': serializer.toJson<bool>(busy),
       'allDay': serializer.toJson<bool>(allDay),
       'startUtc': serializer.toJson<int>(startUtc),
@@ -1244,6 +1310,8 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     Value<int?> color = const Value.absent(),
     Value<String?> location = const Value.absent(),
     Value<String?> videoLink = const Value.absent(),
+    Value<double?> latitude = const Value.absent(),
+    Value<double?> longitude = const Value.absent(),
     bool? busy,
     bool? allDay,
     int? startUtc,
@@ -1268,6 +1336,8 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     color: color.present ? color.value : this.color,
     location: location.present ? location.value : this.location,
     videoLink: videoLink.present ? videoLink.value : this.videoLink,
+    latitude: latitude.present ? latitude.value : this.latitude,
+    longitude: longitude.present ? longitude.value : this.longitude,
     busy: busy ?? this.busy,
     allDay: allDay ?? this.allDay,
     startUtc: startUtc ?? this.startUtc,
@@ -1302,6 +1372,8 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       color: data.color.present ? data.color.value : this.color,
       location: data.location.present ? data.location.value : this.location,
       videoLink: data.videoLink.present ? data.videoLink.value : this.videoLink,
+      latitude: data.latitude.present ? data.latitude.value : this.latitude,
+      longitude: data.longitude.present ? data.longitude.value : this.longitude,
       busy: data.busy.present ? data.busy.value : this.busy,
       allDay: data.allDay.present ? data.allDay.value : this.allDay,
       startUtc: data.startUtc.present ? data.startUtc.value : this.startUtc,
@@ -1339,6 +1411,8 @@ class EventRow extends DataClass implements Insertable<EventRow> {
           ..write('color: $color, ')
           ..write('location: $location, ')
           ..write('videoLink: $videoLink, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
           ..write('busy: $busy, ')
           ..write('allDay: $allDay, ')
           ..write('startUtc: $startUtc, ')
@@ -1368,6 +1442,8 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     color,
     location,
     videoLink,
+    latitude,
+    longitude,
     busy,
     allDay,
     startUtc,
@@ -1396,6 +1472,8 @@ class EventRow extends DataClass implements Insertable<EventRow> {
           other.color == this.color &&
           other.location == this.location &&
           other.videoLink == this.videoLink &&
+          other.latitude == this.latitude &&
+          other.longitude == this.longitude &&
           other.busy == this.busy &&
           other.allDay == this.allDay &&
           other.startUtc == this.startUtc &&
@@ -1422,6 +1500,8 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
   final Value<int?> color;
   final Value<String?> location;
   final Value<String?> videoLink;
+  final Value<double?> latitude;
+  final Value<double?> longitude;
   final Value<bool> busy;
   final Value<bool> allDay;
   final Value<int> startUtc;
@@ -1447,6 +1527,8 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     this.color = const Value.absent(),
     this.location = const Value.absent(),
     this.videoLink = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
     this.busy = const Value.absent(),
     this.allDay = const Value.absent(),
     this.startUtc = const Value.absent(),
@@ -1473,6 +1555,8 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     this.color = const Value.absent(),
     this.location = const Value.absent(),
     this.videoLink = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
     this.busy = const Value.absent(),
     this.allDay = const Value.absent(),
     required int startUtc,
@@ -1505,6 +1589,8 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     Expression<int>? color,
     Expression<String>? location,
     Expression<String>? videoLink,
+    Expression<double>? latitude,
+    Expression<double>? longitude,
     Expression<bool>? busy,
     Expression<bool>? allDay,
     Expression<int>? startUtc,
@@ -1531,6 +1617,8 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
       if (color != null) 'color': color,
       if (location != null) 'location': location,
       if (videoLink != null) 'video_link': videoLink,
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
       if (busy != null) 'busy': busy,
       if (allDay != null) 'all_day': allDay,
       if (startUtc != null) 'start_utc': startUtc,
@@ -1559,6 +1647,8 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     Value<int?>? color,
     Value<String?>? location,
     Value<String?>? videoLink,
+    Value<double?>? latitude,
+    Value<double?>? longitude,
     Value<bool>? busy,
     Value<bool>? allDay,
     Value<int>? startUtc,
@@ -1585,6 +1675,8 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
       color: color ?? this.color,
       location: location ?? this.location,
       videoLink: videoLink ?? this.videoLink,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
       busy: busy ?? this.busy,
       allDay: allDay ?? this.allDay,
       startUtc: startUtc ?? this.startUtc,
@@ -1628,6 +1720,12 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     }
     if (videoLink.present) {
       map['video_link'] = Variable<String>(videoLink.value);
+    }
+    if (latitude.present) {
+      map['latitude'] = Variable<double>(latitude.value);
+    }
+    if (longitude.present) {
+      map['longitude'] = Variable<double>(longitude.value);
     }
     if (busy.present) {
       map['busy'] = Variable<bool>(busy.value);
@@ -1693,6 +1791,8 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
           ..write('color: $color, ')
           ..write('location: $location, ')
           ..write('videoLink: $videoLink, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
           ..write('busy: $busy, ')
           ..write('allDay: $allDay, ')
           ..write('startUtc: $startUtc, ')
@@ -4593,6 +4693,1551 @@ class AttachmentFilesCompanion extends UpdateCompanion<AttachmentFileRow> {
   }
 }
 
+class $RoutesTable extends Routes with TableInfo<$RoutesTable, RouteRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RoutesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _eventIdMeta = const VerificationMeta(
+    'eventId',
+  );
+  @override
+  late final GeneratedColumn<String> eventId = GeneratedColumn<String>(
+    'event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _modeMeta = const VerificationMeta('mode');
+  @override
+  late final GeneratedColumn<String> mode = GeneratedColumn<String>(
+    'mode',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _originLabelMeta = const VerificationMeta(
+    'originLabel',
+  );
+  @override
+  late final GeneratedColumn<String> originLabel = GeneratedColumn<String>(
+    'origin_label',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _originLatitudeMeta = const VerificationMeta(
+    'originLatitude',
+  );
+  @override
+  late final GeneratedColumn<double> originLatitude = GeneratedColumn<double>(
+    'origin_latitude',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _originLongitudeMeta = const VerificationMeta(
+    'originLongitude',
+  );
+  @override
+  late final GeneratedColumn<double> originLongitude = GeneratedColumn<double>(
+    'origin_longitude',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _destinationLatitudeMeta =
+      const VerificationMeta('destinationLatitude');
+  @override
+  late final GeneratedColumn<double> destinationLatitude =
+      GeneratedColumn<double>(
+        'destination_latitude',
+        aliasedName,
+        false,
+        type: DriftSqlType.double,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _destinationLongitudeMeta =
+      const VerificationMeta('destinationLongitude');
+  @override
+  late final GeneratedColumn<double> destinationLongitude =
+      GeneratedColumn<double>(
+        'destination_longitude',
+        aliasedName,
+        false,
+        type: DriftSqlType.double,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _distanceMetersMeta = const VerificationMeta(
+    'distanceMeters',
+  );
+  @override
+  late final GeneratedColumn<int> distanceMeters = GeneratedColumn<int>(
+    'distance_meters',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _durationSecondsMeta = const VerificationMeta(
+    'durationSeconds',
+  );
+  @override
+  late final GeneratedColumn<int> durationSeconds = GeneratedColumn<int>(
+    'duration_seconds',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _geometryMeta = const VerificationMeta(
+    'geometry',
+  );
+  @override
+  late final GeneratedColumn<String> geometry = GeneratedColumn<String>(
+    'geometry',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _engineMeta = const VerificationMeta('engine');
+  @override
+  late final GeneratedColumn<String> engine = GeneratedColumn<String>(
+    'engine',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _computedAtMeta = const VerificationMeta(
+    'computedAt',
+  );
+  @override
+  late final GeneratedColumn<int> computedAt = GeneratedColumn<int>(
+    'computed_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<int> deletedAt = GeneratedColumn<int>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    eventId,
+    mode,
+    originLabel,
+    originLatitude,
+    originLongitude,
+    destinationLatitude,
+    destinationLongitude,
+    distanceMeters,
+    durationSeconds,
+    geometry,
+    engine,
+    computedAt,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'routes';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<RouteRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('event_id')) {
+      context.handle(
+        _eventIdMeta,
+        eventId.isAcceptableOrUnknown(data['event_id']!, _eventIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_eventIdMeta);
+    }
+    if (data.containsKey('mode')) {
+      context.handle(
+        _modeMeta,
+        mode.isAcceptableOrUnknown(data['mode']!, _modeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_modeMeta);
+    }
+    if (data.containsKey('origin_label')) {
+      context.handle(
+        _originLabelMeta,
+        originLabel.isAcceptableOrUnknown(
+          data['origin_label']!,
+          _originLabelMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_originLabelMeta);
+    }
+    if (data.containsKey('origin_latitude')) {
+      context.handle(
+        _originLatitudeMeta,
+        originLatitude.isAcceptableOrUnknown(
+          data['origin_latitude']!,
+          _originLatitudeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_originLatitudeMeta);
+    }
+    if (data.containsKey('origin_longitude')) {
+      context.handle(
+        _originLongitudeMeta,
+        originLongitude.isAcceptableOrUnknown(
+          data['origin_longitude']!,
+          _originLongitudeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_originLongitudeMeta);
+    }
+    if (data.containsKey('destination_latitude')) {
+      context.handle(
+        _destinationLatitudeMeta,
+        destinationLatitude.isAcceptableOrUnknown(
+          data['destination_latitude']!,
+          _destinationLatitudeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_destinationLatitudeMeta);
+    }
+    if (data.containsKey('destination_longitude')) {
+      context.handle(
+        _destinationLongitudeMeta,
+        destinationLongitude.isAcceptableOrUnknown(
+          data['destination_longitude']!,
+          _destinationLongitudeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_destinationLongitudeMeta);
+    }
+    if (data.containsKey('distance_meters')) {
+      context.handle(
+        _distanceMetersMeta,
+        distanceMeters.isAcceptableOrUnknown(
+          data['distance_meters']!,
+          _distanceMetersMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_distanceMetersMeta);
+    }
+    if (data.containsKey('duration_seconds')) {
+      context.handle(
+        _durationSecondsMeta,
+        durationSeconds.isAcceptableOrUnknown(
+          data['duration_seconds']!,
+          _durationSecondsMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_durationSecondsMeta);
+    }
+    if (data.containsKey('geometry')) {
+      context.handle(
+        _geometryMeta,
+        geometry.isAcceptableOrUnknown(data['geometry']!, _geometryMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_geometryMeta);
+    }
+    if (data.containsKey('engine')) {
+      context.handle(
+        _engineMeta,
+        engine.isAcceptableOrUnknown(data['engine']!, _engineMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_engineMeta);
+    }
+    if (data.containsKey('computed_at')) {
+      context.handle(
+        _computedAtMeta,
+        computedAt.isAcceptableOrUnknown(data['computed_at']!, _computedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_computedAtMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  RouteRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RouteRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      eventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}event_id'],
+      )!,
+      mode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}mode'],
+      )!,
+      originLabel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}origin_label'],
+      )!,
+      originLatitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}origin_latitude'],
+      )!,
+      originLongitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}origin_longitude'],
+      )!,
+      destinationLatitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}destination_latitude'],
+      )!,
+      destinationLongitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}destination_longitude'],
+      )!,
+      distanceMeters: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}distance_meters'],
+      )!,
+      durationSeconds: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}duration_seconds'],
+      )!,
+      geometry: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}geometry'],
+      )!,
+      engine: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}engine'],
+      )!,
+      computedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}computed_at'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}deleted_at'],
+      ),
+    );
+  }
+
+  @override
+  $RoutesTable createAlias(String alias) {
+    return $RoutesTable(attachedDatabase, alias);
+  }
+}
+
+class RouteRow extends DataClass implements Insertable<RouteRow> {
+  final String id;
+  final String eventId;
+
+  /// `car`, `bike` or `foot` (see `TravelMode`).
+  final String mode;
+  final String originLabel;
+  final double originLatitude;
+  final double originLongitude;
+  final double destinationLatitude;
+  final double destinationLongitude;
+  final int distanceMeters;
+  final int durationSeconds;
+
+  /// Encoded polyline (precision 5).
+  final String geometry;
+
+  /// `osrm` (online) or `brouter` (offline, Android).
+  final String engine;
+  final int computedAt;
+  final int createdAt;
+  final int updatedAt;
+  final int? deletedAt;
+  const RouteRow({
+    required this.id,
+    required this.eventId,
+    required this.mode,
+    required this.originLabel,
+    required this.originLatitude,
+    required this.originLongitude,
+    required this.destinationLatitude,
+    required this.destinationLongitude,
+    required this.distanceMeters,
+    required this.durationSeconds,
+    required this.geometry,
+    required this.engine,
+    required this.computedAt,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['event_id'] = Variable<String>(eventId);
+    map['mode'] = Variable<String>(mode);
+    map['origin_label'] = Variable<String>(originLabel);
+    map['origin_latitude'] = Variable<double>(originLatitude);
+    map['origin_longitude'] = Variable<double>(originLongitude);
+    map['destination_latitude'] = Variable<double>(destinationLatitude);
+    map['destination_longitude'] = Variable<double>(destinationLongitude);
+    map['distance_meters'] = Variable<int>(distanceMeters);
+    map['duration_seconds'] = Variable<int>(durationSeconds);
+    map['geometry'] = Variable<String>(geometry);
+    map['engine'] = Variable<String>(engine);
+    map['computed_at'] = Variable<int>(computedAt);
+    map['created_at'] = Variable<int>(createdAt);
+    map['updated_at'] = Variable<int>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<int>(deletedAt);
+    }
+    return map;
+  }
+
+  RoutesCompanion toCompanion(bool nullToAbsent) {
+    return RoutesCompanion(
+      id: Value(id),
+      eventId: Value(eventId),
+      mode: Value(mode),
+      originLabel: Value(originLabel),
+      originLatitude: Value(originLatitude),
+      originLongitude: Value(originLongitude),
+      destinationLatitude: Value(destinationLatitude),
+      destinationLongitude: Value(destinationLongitude),
+      distanceMeters: Value(distanceMeters),
+      durationSeconds: Value(durationSeconds),
+      geometry: Value(geometry),
+      engine: Value(engine),
+      computedAt: Value(computedAt),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+    );
+  }
+
+  factory RouteRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RouteRow(
+      id: serializer.fromJson<String>(json['id']),
+      eventId: serializer.fromJson<String>(json['eventId']),
+      mode: serializer.fromJson<String>(json['mode']),
+      originLabel: serializer.fromJson<String>(json['originLabel']),
+      originLatitude: serializer.fromJson<double>(json['originLatitude']),
+      originLongitude: serializer.fromJson<double>(json['originLongitude']),
+      destinationLatitude: serializer.fromJson<double>(
+        json['destinationLatitude'],
+      ),
+      destinationLongitude: serializer.fromJson<double>(
+        json['destinationLongitude'],
+      ),
+      distanceMeters: serializer.fromJson<int>(json['distanceMeters']),
+      durationSeconds: serializer.fromJson<int>(json['durationSeconds']),
+      geometry: serializer.fromJson<String>(json['geometry']),
+      engine: serializer.fromJson<String>(json['engine']),
+      computedAt: serializer.fromJson<int>(json['computedAt']),
+      createdAt: serializer.fromJson<int>(json['createdAt']),
+      updatedAt: serializer.fromJson<int>(json['updatedAt']),
+      deletedAt: serializer.fromJson<int?>(json['deletedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'eventId': serializer.toJson<String>(eventId),
+      'mode': serializer.toJson<String>(mode),
+      'originLabel': serializer.toJson<String>(originLabel),
+      'originLatitude': serializer.toJson<double>(originLatitude),
+      'originLongitude': serializer.toJson<double>(originLongitude),
+      'destinationLatitude': serializer.toJson<double>(destinationLatitude),
+      'destinationLongitude': serializer.toJson<double>(destinationLongitude),
+      'distanceMeters': serializer.toJson<int>(distanceMeters),
+      'durationSeconds': serializer.toJson<int>(durationSeconds),
+      'geometry': serializer.toJson<String>(geometry),
+      'engine': serializer.toJson<String>(engine),
+      'computedAt': serializer.toJson<int>(computedAt),
+      'createdAt': serializer.toJson<int>(createdAt),
+      'updatedAt': serializer.toJson<int>(updatedAt),
+      'deletedAt': serializer.toJson<int?>(deletedAt),
+    };
+  }
+
+  RouteRow copyWith({
+    String? id,
+    String? eventId,
+    String? mode,
+    String? originLabel,
+    double? originLatitude,
+    double? originLongitude,
+    double? destinationLatitude,
+    double? destinationLongitude,
+    int? distanceMeters,
+    int? durationSeconds,
+    String? geometry,
+    String? engine,
+    int? computedAt,
+    int? createdAt,
+    int? updatedAt,
+    Value<int?> deletedAt = const Value.absent(),
+  }) => RouteRow(
+    id: id ?? this.id,
+    eventId: eventId ?? this.eventId,
+    mode: mode ?? this.mode,
+    originLabel: originLabel ?? this.originLabel,
+    originLatitude: originLatitude ?? this.originLatitude,
+    originLongitude: originLongitude ?? this.originLongitude,
+    destinationLatitude: destinationLatitude ?? this.destinationLatitude,
+    destinationLongitude: destinationLongitude ?? this.destinationLongitude,
+    distanceMeters: distanceMeters ?? this.distanceMeters,
+    durationSeconds: durationSeconds ?? this.durationSeconds,
+    geometry: geometry ?? this.geometry,
+    engine: engine ?? this.engine,
+    computedAt: computedAt ?? this.computedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+  );
+  RouteRow copyWithCompanion(RoutesCompanion data) {
+    return RouteRow(
+      id: data.id.present ? data.id.value : this.id,
+      eventId: data.eventId.present ? data.eventId.value : this.eventId,
+      mode: data.mode.present ? data.mode.value : this.mode,
+      originLabel: data.originLabel.present
+          ? data.originLabel.value
+          : this.originLabel,
+      originLatitude: data.originLatitude.present
+          ? data.originLatitude.value
+          : this.originLatitude,
+      originLongitude: data.originLongitude.present
+          ? data.originLongitude.value
+          : this.originLongitude,
+      destinationLatitude: data.destinationLatitude.present
+          ? data.destinationLatitude.value
+          : this.destinationLatitude,
+      destinationLongitude: data.destinationLongitude.present
+          ? data.destinationLongitude.value
+          : this.destinationLongitude,
+      distanceMeters: data.distanceMeters.present
+          ? data.distanceMeters.value
+          : this.distanceMeters,
+      durationSeconds: data.durationSeconds.present
+          ? data.durationSeconds.value
+          : this.durationSeconds,
+      geometry: data.geometry.present ? data.geometry.value : this.geometry,
+      engine: data.engine.present ? data.engine.value : this.engine,
+      computedAt: data.computedAt.present
+          ? data.computedAt.value
+          : this.computedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RouteRow(')
+          ..write('id: $id, ')
+          ..write('eventId: $eventId, ')
+          ..write('mode: $mode, ')
+          ..write('originLabel: $originLabel, ')
+          ..write('originLatitude: $originLatitude, ')
+          ..write('originLongitude: $originLongitude, ')
+          ..write('destinationLatitude: $destinationLatitude, ')
+          ..write('destinationLongitude: $destinationLongitude, ')
+          ..write('distanceMeters: $distanceMeters, ')
+          ..write('durationSeconds: $durationSeconds, ')
+          ..write('geometry: $geometry, ')
+          ..write('engine: $engine, ')
+          ..write('computedAt: $computedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    eventId,
+    mode,
+    originLabel,
+    originLatitude,
+    originLongitude,
+    destinationLatitude,
+    destinationLongitude,
+    distanceMeters,
+    durationSeconds,
+    geometry,
+    engine,
+    computedAt,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RouteRow &&
+          other.id == this.id &&
+          other.eventId == this.eventId &&
+          other.mode == this.mode &&
+          other.originLabel == this.originLabel &&
+          other.originLatitude == this.originLatitude &&
+          other.originLongitude == this.originLongitude &&
+          other.destinationLatitude == this.destinationLatitude &&
+          other.destinationLongitude == this.destinationLongitude &&
+          other.distanceMeters == this.distanceMeters &&
+          other.durationSeconds == this.durationSeconds &&
+          other.geometry == this.geometry &&
+          other.engine == this.engine &&
+          other.computedAt == this.computedAt &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt);
+}
+
+class RoutesCompanion extends UpdateCompanion<RouteRow> {
+  final Value<String> id;
+  final Value<String> eventId;
+  final Value<String> mode;
+  final Value<String> originLabel;
+  final Value<double> originLatitude;
+  final Value<double> originLongitude;
+  final Value<double> destinationLatitude;
+  final Value<double> destinationLongitude;
+  final Value<int> distanceMeters;
+  final Value<int> durationSeconds;
+  final Value<String> geometry;
+  final Value<String> engine;
+  final Value<int> computedAt;
+  final Value<int> createdAt;
+  final Value<int> updatedAt;
+  final Value<int?> deletedAt;
+  final Value<int> rowid;
+  const RoutesCompanion({
+    this.id = const Value.absent(),
+    this.eventId = const Value.absent(),
+    this.mode = const Value.absent(),
+    this.originLabel = const Value.absent(),
+    this.originLatitude = const Value.absent(),
+    this.originLongitude = const Value.absent(),
+    this.destinationLatitude = const Value.absent(),
+    this.destinationLongitude = const Value.absent(),
+    this.distanceMeters = const Value.absent(),
+    this.durationSeconds = const Value.absent(),
+    this.geometry = const Value.absent(),
+    this.engine = const Value.absent(),
+    this.computedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  RoutesCompanion.insert({
+    required String id,
+    required String eventId,
+    required String mode,
+    required String originLabel,
+    required double originLatitude,
+    required double originLongitude,
+    required double destinationLatitude,
+    required double destinationLongitude,
+    required int distanceMeters,
+    required int durationSeconds,
+    required String geometry,
+    required String engine,
+    required int computedAt,
+    required int createdAt,
+    required int updatedAt,
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       eventId = Value(eventId),
+       mode = Value(mode),
+       originLabel = Value(originLabel),
+       originLatitude = Value(originLatitude),
+       originLongitude = Value(originLongitude),
+       destinationLatitude = Value(destinationLatitude),
+       destinationLongitude = Value(destinationLongitude),
+       distanceMeters = Value(distanceMeters),
+       durationSeconds = Value(durationSeconds),
+       geometry = Value(geometry),
+       engine = Value(engine),
+       computedAt = Value(computedAt),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<RouteRow> custom({
+    Expression<String>? id,
+    Expression<String>? eventId,
+    Expression<String>? mode,
+    Expression<String>? originLabel,
+    Expression<double>? originLatitude,
+    Expression<double>? originLongitude,
+    Expression<double>? destinationLatitude,
+    Expression<double>? destinationLongitude,
+    Expression<int>? distanceMeters,
+    Expression<int>? durationSeconds,
+    Expression<String>? geometry,
+    Expression<String>? engine,
+    Expression<int>? computedAt,
+    Expression<int>? createdAt,
+    Expression<int>? updatedAt,
+    Expression<int>? deletedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (eventId != null) 'event_id': eventId,
+      if (mode != null) 'mode': mode,
+      if (originLabel != null) 'origin_label': originLabel,
+      if (originLatitude != null) 'origin_latitude': originLatitude,
+      if (originLongitude != null) 'origin_longitude': originLongitude,
+      if (destinationLatitude != null)
+        'destination_latitude': destinationLatitude,
+      if (destinationLongitude != null)
+        'destination_longitude': destinationLongitude,
+      if (distanceMeters != null) 'distance_meters': distanceMeters,
+      if (durationSeconds != null) 'duration_seconds': durationSeconds,
+      if (geometry != null) 'geometry': geometry,
+      if (engine != null) 'engine': engine,
+      if (computedAt != null) 'computed_at': computedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  RoutesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? eventId,
+    Value<String>? mode,
+    Value<String>? originLabel,
+    Value<double>? originLatitude,
+    Value<double>? originLongitude,
+    Value<double>? destinationLatitude,
+    Value<double>? destinationLongitude,
+    Value<int>? distanceMeters,
+    Value<int>? durationSeconds,
+    Value<String>? geometry,
+    Value<String>? engine,
+    Value<int>? computedAt,
+    Value<int>? createdAt,
+    Value<int>? updatedAt,
+    Value<int?>? deletedAt,
+    Value<int>? rowid,
+  }) {
+    return RoutesCompanion(
+      id: id ?? this.id,
+      eventId: eventId ?? this.eventId,
+      mode: mode ?? this.mode,
+      originLabel: originLabel ?? this.originLabel,
+      originLatitude: originLatitude ?? this.originLatitude,
+      originLongitude: originLongitude ?? this.originLongitude,
+      destinationLatitude: destinationLatitude ?? this.destinationLatitude,
+      destinationLongitude: destinationLongitude ?? this.destinationLongitude,
+      distanceMeters: distanceMeters ?? this.distanceMeters,
+      durationSeconds: durationSeconds ?? this.durationSeconds,
+      geometry: geometry ?? this.geometry,
+      engine: engine ?? this.engine,
+      computedAt: computedAt ?? this.computedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (eventId.present) {
+      map['event_id'] = Variable<String>(eventId.value);
+    }
+    if (mode.present) {
+      map['mode'] = Variable<String>(mode.value);
+    }
+    if (originLabel.present) {
+      map['origin_label'] = Variable<String>(originLabel.value);
+    }
+    if (originLatitude.present) {
+      map['origin_latitude'] = Variable<double>(originLatitude.value);
+    }
+    if (originLongitude.present) {
+      map['origin_longitude'] = Variable<double>(originLongitude.value);
+    }
+    if (destinationLatitude.present) {
+      map['destination_latitude'] = Variable<double>(destinationLatitude.value);
+    }
+    if (destinationLongitude.present) {
+      map['destination_longitude'] = Variable<double>(
+        destinationLongitude.value,
+      );
+    }
+    if (distanceMeters.present) {
+      map['distance_meters'] = Variable<int>(distanceMeters.value);
+    }
+    if (durationSeconds.present) {
+      map['duration_seconds'] = Variable<int>(durationSeconds.value);
+    }
+    if (geometry.present) {
+      map['geometry'] = Variable<String>(geometry.value);
+    }
+    if (engine.present) {
+      map['engine'] = Variable<String>(engine.value);
+    }
+    if (computedAt.present) {
+      map['computed_at'] = Variable<int>(computedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<int>(deletedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RoutesCompanion(')
+          ..write('id: $id, ')
+          ..write('eventId: $eventId, ')
+          ..write('mode: $mode, ')
+          ..write('originLabel: $originLabel, ')
+          ..write('originLatitude: $originLatitude, ')
+          ..write('originLongitude: $originLongitude, ')
+          ..write('destinationLatitude: $destinationLatitude, ')
+          ..write('destinationLongitude: $destinationLongitude, ')
+          ..write('distanceMeters: $distanceMeters, ')
+          ..write('durationSeconds: $durationSeconds, ')
+          ..write('geometry: $geometry, ')
+          ..write('engine: $engine, ')
+          ..write('computedAt: $computedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MapZonesTable extends MapZones
+    with TableInfo<$MapZonesTable, MapZoneRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MapZonesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _southMeta = const VerificationMeta('south');
+  @override
+  late final GeneratedColumn<double> south = GeneratedColumn<double>(
+    'south',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _westMeta = const VerificationMeta('west');
+  @override
+  late final GeneratedColumn<double> west = GeneratedColumn<double>(
+    'west',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _northMeta = const VerificationMeta('north');
+  @override
+  late final GeneratedColumn<double> north = GeneratedColumn<double>(
+    'north',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _eastMeta = const VerificationMeta('east');
+  @override
+  late final GeneratedColumn<double> east = GeneratedColumn<double>(
+    'east',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _maxZoomMeta = const VerificationMeta(
+    'maxZoom',
+  );
+  @override
+  late final GeneratedColumn<int> maxZoom = GeneratedColumn<int>(
+    'max_zoom',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tileCountMeta = const VerificationMeta(
+    'tileCount',
+  );
+  @override
+  late final GeneratedColumn<int> tileCount = GeneratedColumn<int>(
+    'tile_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bytesMeta = const VerificationMeta('bytes');
+  @override
+  late final GeneratedColumn<int> bytes = GeneratedColumn<int>(
+    'bytes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _downloadedAtMeta = const VerificationMeta(
+    'downloadedAt',
+  );
+  @override
+  late final GeneratedColumn<int> downloadedAt = GeneratedColumn<int>(
+    'downloaded_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    south,
+    west,
+    north,
+    east,
+    maxZoom,
+    tileCount,
+    bytes,
+    downloadedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'map_zones';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MapZoneRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('south')) {
+      context.handle(
+        _southMeta,
+        south.isAcceptableOrUnknown(data['south']!, _southMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_southMeta);
+    }
+    if (data.containsKey('west')) {
+      context.handle(
+        _westMeta,
+        west.isAcceptableOrUnknown(data['west']!, _westMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_westMeta);
+    }
+    if (data.containsKey('north')) {
+      context.handle(
+        _northMeta,
+        north.isAcceptableOrUnknown(data['north']!, _northMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_northMeta);
+    }
+    if (data.containsKey('east')) {
+      context.handle(
+        _eastMeta,
+        east.isAcceptableOrUnknown(data['east']!, _eastMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_eastMeta);
+    }
+    if (data.containsKey('max_zoom')) {
+      context.handle(
+        _maxZoomMeta,
+        maxZoom.isAcceptableOrUnknown(data['max_zoom']!, _maxZoomMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_maxZoomMeta);
+    }
+    if (data.containsKey('tile_count')) {
+      context.handle(
+        _tileCountMeta,
+        tileCount.isAcceptableOrUnknown(data['tile_count']!, _tileCountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tileCountMeta);
+    }
+    if (data.containsKey('bytes')) {
+      context.handle(
+        _bytesMeta,
+        bytes.isAcceptableOrUnknown(data['bytes']!, _bytesMeta),
+      );
+    }
+    if (data.containsKey('downloaded_at')) {
+      context.handle(
+        _downloadedAtMeta,
+        downloadedAt.isAcceptableOrUnknown(
+          data['downloaded_at']!,
+          _downloadedAtMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MapZoneRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MapZoneRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      south: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}south'],
+      )!,
+      west: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}west'],
+      )!,
+      north: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}north'],
+      )!,
+      east: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}east'],
+      )!,
+      maxZoom: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}max_zoom'],
+      )!,
+      tileCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}tile_count'],
+      )!,
+      bytes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}bytes'],
+      )!,
+      downloadedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}downloaded_at'],
+      ),
+    );
+  }
+
+  @override
+  $MapZonesTable createAlias(String alias) {
+    return $MapZonesTable(attachedDatabase, alias);
+  }
+}
+
+class MapZoneRow extends DataClass implements Insertable<MapZoneRow> {
+  final String id;
+  final String name;
+  final double south;
+  final double west;
+  final double north;
+  final double east;
+  final int maxZoom;
+  final int tileCount;
+  final int bytes;
+
+  /// Null while the download is not complete.
+  final int? downloadedAt;
+  const MapZoneRow({
+    required this.id,
+    required this.name,
+    required this.south,
+    required this.west,
+    required this.north,
+    required this.east,
+    required this.maxZoom,
+    required this.tileCount,
+    required this.bytes,
+    this.downloadedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['south'] = Variable<double>(south);
+    map['west'] = Variable<double>(west);
+    map['north'] = Variable<double>(north);
+    map['east'] = Variable<double>(east);
+    map['max_zoom'] = Variable<int>(maxZoom);
+    map['tile_count'] = Variable<int>(tileCount);
+    map['bytes'] = Variable<int>(bytes);
+    if (!nullToAbsent || downloadedAt != null) {
+      map['downloaded_at'] = Variable<int>(downloadedAt);
+    }
+    return map;
+  }
+
+  MapZonesCompanion toCompanion(bool nullToAbsent) {
+    return MapZonesCompanion(
+      id: Value(id),
+      name: Value(name),
+      south: Value(south),
+      west: Value(west),
+      north: Value(north),
+      east: Value(east),
+      maxZoom: Value(maxZoom),
+      tileCount: Value(tileCount),
+      bytes: Value(bytes),
+      downloadedAt: downloadedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(downloadedAt),
+    );
+  }
+
+  factory MapZoneRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MapZoneRow(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      south: serializer.fromJson<double>(json['south']),
+      west: serializer.fromJson<double>(json['west']),
+      north: serializer.fromJson<double>(json['north']),
+      east: serializer.fromJson<double>(json['east']),
+      maxZoom: serializer.fromJson<int>(json['maxZoom']),
+      tileCount: serializer.fromJson<int>(json['tileCount']),
+      bytes: serializer.fromJson<int>(json['bytes']),
+      downloadedAt: serializer.fromJson<int?>(json['downloadedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'south': serializer.toJson<double>(south),
+      'west': serializer.toJson<double>(west),
+      'north': serializer.toJson<double>(north),
+      'east': serializer.toJson<double>(east),
+      'maxZoom': serializer.toJson<int>(maxZoom),
+      'tileCount': serializer.toJson<int>(tileCount),
+      'bytes': serializer.toJson<int>(bytes),
+      'downloadedAt': serializer.toJson<int?>(downloadedAt),
+    };
+  }
+
+  MapZoneRow copyWith({
+    String? id,
+    String? name,
+    double? south,
+    double? west,
+    double? north,
+    double? east,
+    int? maxZoom,
+    int? tileCount,
+    int? bytes,
+    Value<int?> downloadedAt = const Value.absent(),
+  }) => MapZoneRow(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    south: south ?? this.south,
+    west: west ?? this.west,
+    north: north ?? this.north,
+    east: east ?? this.east,
+    maxZoom: maxZoom ?? this.maxZoom,
+    tileCount: tileCount ?? this.tileCount,
+    bytes: bytes ?? this.bytes,
+    downloadedAt: downloadedAt.present ? downloadedAt.value : this.downloadedAt,
+  );
+  MapZoneRow copyWithCompanion(MapZonesCompanion data) {
+    return MapZoneRow(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      south: data.south.present ? data.south.value : this.south,
+      west: data.west.present ? data.west.value : this.west,
+      north: data.north.present ? data.north.value : this.north,
+      east: data.east.present ? data.east.value : this.east,
+      maxZoom: data.maxZoom.present ? data.maxZoom.value : this.maxZoom,
+      tileCount: data.tileCount.present ? data.tileCount.value : this.tileCount,
+      bytes: data.bytes.present ? data.bytes.value : this.bytes,
+      downloadedAt: data.downloadedAt.present
+          ? data.downloadedAt.value
+          : this.downloadedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MapZoneRow(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('south: $south, ')
+          ..write('west: $west, ')
+          ..write('north: $north, ')
+          ..write('east: $east, ')
+          ..write('maxZoom: $maxZoom, ')
+          ..write('tileCount: $tileCount, ')
+          ..write('bytes: $bytes, ')
+          ..write('downloadedAt: $downloadedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    name,
+    south,
+    west,
+    north,
+    east,
+    maxZoom,
+    tileCount,
+    bytes,
+    downloadedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MapZoneRow &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.south == this.south &&
+          other.west == this.west &&
+          other.north == this.north &&
+          other.east == this.east &&
+          other.maxZoom == this.maxZoom &&
+          other.tileCount == this.tileCount &&
+          other.bytes == this.bytes &&
+          other.downloadedAt == this.downloadedAt);
+}
+
+class MapZonesCompanion extends UpdateCompanion<MapZoneRow> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<double> south;
+  final Value<double> west;
+  final Value<double> north;
+  final Value<double> east;
+  final Value<int> maxZoom;
+  final Value<int> tileCount;
+  final Value<int> bytes;
+  final Value<int?> downloadedAt;
+  final Value<int> rowid;
+  const MapZonesCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.south = const Value.absent(),
+    this.west = const Value.absent(),
+    this.north = const Value.absent(),
+    this.east = const Value.absent(),
+    this.maxZoom = const Value.absent(),
+    this.tileCount = const Value.absent(),
+    this.bytes = const Value.absent(),
+    this.downloadedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MapZonesCompanion.insert({
+    required String id,
+    required String name,
+    required double south,
+    required double west,
+    required double north,
+    required double east,
+    required int maxZoom,
+    required int tileCount,
+    this.bytes = const Value.absent(),
+    this.downloadedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name),
+       south = Value(south),
+       west = Value(west),
+       north = Value(north),
+       east = Value(east),
+       maxZoom = Value(maxZoom),
+       tileCount = Value(tileCount);
+  static Insertable<MapZoneRow> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<double>? south,
+    Expression<double>? west,
+    Expression<double>? north,
+    Expression<double>? east,
+    Expression<int>? maxZoom,
+    Expression<int>? tileCount,
+    Expression<int>? bytes,
+    Expression<int>? downloadedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (south != null) 'south': south,
+      if (west != null) 'west': west,
+      if (north != null) 'north': north,
+      if (east != null) 'east': east,
+      if (maxZoom != null) 'max_zoom': maxZoom,
+      if (tileCount != null) 'tile_count': tileCount,
+      if (bytes != null) 'bytes': bytes,
+      if (downloadedAt != null) 'downloaded_at': downloadedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MapZonesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? name,
+    Value<double>? south,
+    Value<double>? west,
+    Value<double>? north,
+    Value<double>? east,
+    Value<int>? maxZoom,
+    Value<int>? tileCount,
+    Value<int>? bytes,
+    Value<int?>? downloadedAt,
+    Value<int>? rowid,
+  }) {
+    return MapZonesCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      south: south ?? this.south,
+      west: west ?? this.west,
+      north: north ?? this.north,
+      east: east ?? this.east,
+      maxZoom: maxZoom ?? this.maxZoom,
+      tileCount: tileCount ?? this.tileCount,
+      bytes: bytes ?? this.bytes,
+      downloadedAt: downloadedAt ?? this.downloadedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (south.present) {
+      map['south'] = Variable<double>(south.value);
+    }
+    if (west.present) {
+      map['west'] = Variable<double>(west.value);
+    }
+    if (north.present) {
+      map['north'] = Variable<double>(north.value);
+    }
+    if (east.present) {
+      map['east'] = Variable<double>(east.value);
+    }
+    if (maxZoom.present) {
+      map['max_zoom'] = Variable<int>(maxZoom.value);
+    }
+    if (tileCount.present) {
+      map['tile_count'] = Variable<int>(tileCount.value);
+    }
+    if (bytes.present) {
+      map['bytes'] = Variable<int>(bytes.value);
+    }
+    if (downloadedAt.present) {
+      map['downloaded_at'] = Variable<int>(downloadedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MapZonesCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('south: $south, ')
+          ..write('west: $west, ')
+          ..write('north: $north, ')
+          ..write('east: $east, ')
+          ..write('maxZoom: $maxZoom, ')
+          ..write('tileCount: $tileCount, ')
+          ..write('bytes: $bytes, ')
+          ..write('downloadedAt: $downloadedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4607,6 +6252,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $AttachmentFilesTable attachmentFiles = $AttachmentFilesTable(
     this,
   );
+  late final $RoutesTable routes = $RoutesTable(this);
+  late final $MapZonesTable mapZones = $MapZonesTable(this);
   late final Index eventsRange = Index(
     'events_range',
     'CREATE INDEX events_range ON events (start_utc, end_utc)',
@@ -4618,6 +6265,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final Index attachmentsEvent = Index(
     'attachments_event',
     'CREATE INDEX attachments_event ON attachments (event_id)',
+  );
+  late final Index routesEvent = Index(
+    'routes_event',
+    'CREATE INDEX routes_event ON routes (event_id)',
   );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -4633,9 +6284,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     syncConflicts,
     attachments,
     attachmentFiles,
+    routes,
+    mapZones,
     eventsRange,
     eventsSeries,
     attachmentsEvent,
+    routesEvent,
   ];
 }
 
@@ -4982,6 +6636,8 @@ typedef $$EventsTableCreateCompanionBuilder = EventsCompanion Function({
   Value<int?> color,
   Value<String?> location,
   Value<String?> videoLink,
+  Value<double?> latitude,
+  Value<double?> longitude,
   Value<bool> busy,
   Value<bool> allDay,
   required int startUtc,
@@ -5008,6 +6664,8 @@ typedef $$EventsTableUpdateCompanionBuilder = EventsCompanion Function({
   Value<int?> color,
   Value<String?> location,
   Value<String?> videoLink,
+  Value<double?> latitude,
+  Value<double?> longitude,
   Value<bool> busy,
   Value<bool> allDay,
   Value<int> startUtc,
@@ -5085,6 +6743,16 @@ class $$EventsTableFilterComposer
 
   ColumnFilters<String> get videoLink => $composableBuilder(
     column: $table.videoLink,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get latitude => $composableBuilder(
+    column: $table.latitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get longitude => $composableBuilder(
+    column: $table.longitude,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5231,6 +6899,16 @@ class $$EventsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get latitude => $composableBuilder(
+    column: $table.latitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get longitude => $composableBuilder(
+    column: $table.longitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get busy => $composableBuilder(
     column: $table.busy,
     builder: (column) => ColumnOrderings(column),
@@ -5364,6 +7042,12 @@ class $$EventsTableAnnotationComposer
   GeneratedColumn<String> get videoLink =>
       $composableBuilder(column: $table.videoLink, builder: (column) => column);
 
+  GeneratedColumn<double> get latitude =>
+      $composableBuilder(column: $table.latitude, builder: (column) => column);
+
+  GeneratedColumn<double> get longitude =>
+      $composableBuilder(column: $table.longitude, builder: (column) => column);
+
   GeneratedColumn<bool> get busy =>
       $composableBuilder(column: $table.busy, builder: (column) => column);
 
@@ -5479,6 +7163,8 @@ class $$EventsTableTableManager
                 Value<int?> color = const Value.absent(),
                 Value<String?> location = const Value.absent(),
                 Value<String?> videoLink = const Value.absent(),
+                Value<double?> latitude = const Value.absent(),
+                Value<double?> longitude = const Value.absent(),
                 Value<bool> busy = const Value.absent(),
                 Value<bool> allDay = const Value.absent(),
                 Value<int> startUtc = const Value.absent(),
@@ -5504,6 +7190,8 @@ class $$EventsTableTableManager
                 color: color,
                 location: location,
                 videoLink: videoLink,
+                latitude: latitude,
+                longitude: longitude,
                 busy: busy,
                 allDay: allDay,
                 startUtc: startUtc,
@@ -5531,6 +7219,8 @@ class $$EventsTableTableManager
                 Value<int?> color = const Value.absent(),
                 Value<String?> location = const Value.absent(),
                 Value<String?> videoLink = const Value.absent(),
+                Value<double?> latitude = const Value.absent(),
+                Value<double?> longitude = const Value.absent(),
                 Value<bool> busy = const Value.absent(),
                 Value<bool> allDay = const Value.absent(),
                 required int startUtc,
@@ -5556,6 +7246,8 @@ class $$EventsTableTableManager
                 color: color,
                 location: location,
                 videoLink: videoLink,
+                latitude: latitude,
+                longitude: longitude,
                 busy: busy,
                 allDay: allDay,
                 startUtc: startUtc,
@@ -7214,6 +8906,733 @@ typedef $$AttachmentFilesTableProcessedTableManager =
       AttachmentFileRow,
       PrefetchHooks Function()
     >;
+typedef $$RoutesTableCreateCompanionBuilder = RoutesCompanion Function({
+  required String id,
+  required String eventId,
+  required String mode,
+  required String originLabel,
+  required double originLatitude,
+  required double originLongitude,
+  required double destinationLatitude,
+  required double destinationLongitude,
+  required int distanceMeters,
+  required int durationSeconds,
+  required String geometry,
+  required String engine,
+  required int computedAt,
+  required int createdAt,
+  required int updatedAt,
+  Value<int?> deletedAt,
+  Value<int> rowid,
+});
+typedef $$RoutesTableUpdateCompanionBuilder = RoutesCompanion Function({
+  Value<String> id,
+  Value<String> eventId,
+  Value<String> mode,
+  Value<String> originLabel,
+  Value<double> originLatitude,
+  Value<double> originLongitude,
+  Value<double> destinationLatitude,
+  Value<double> destinationLongitude,
+  Value<int> distanceMeters,
+  Value<int> durationSeconds,
+  Value<String> geometry,
+  Value<String> engine,
+  Value<int> computedAt,
+  Value<int> createdAt,
+  Value<int> updatedAt,
+  Value<int?> deletedAt,
+  Value<int> rowid,
+});
+
+class $$RoutesTableFilterComposer
+    extends Composer<_$AppDatabase, $RoutesTable> {
+  $$RoutesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get eventId => $composableBuilder(
+    column: $table.eventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get mode => $composableBuilder(
+    column: $table.mode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get originLabel => $composableBuilder(
+    column: $table.originLabel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get originLatitude => $composableBuilder(
+    column: $table.originLatitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get originLongitude => $composableBuilder(
+    column: $table.originLongitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get destinationLatitude => $composableBuilder(
+    column: $table.destinationLatitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get destinationLongitude => $composableBuilder(
+    column: $table.destinationLongitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get distanceMeters => $composableBuilder(
+    column: $table.distanceMeters,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get durationSeconds => $composableBuilder(
+    column: $table.durationSeconds,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get geometry => $composableBuilder(
+    column: $table.geometry,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get engine => $composableBuilder(
+    column: $table.engine,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get computedAt => $composableBuilder(
+    column: $table.computedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$RoutesTableOrderingComposer
+    extends Composer<_$AppDatabase, $RoutesTable> {
+  $$RoutesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get eventId => $composableBuilder(
+    column: $table.eventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get mode => $composableBuilder(
+    column: $table.mode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get originLabel => $composableBuilder(
+    column: $table.originLabel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get originLatitude => $composableBuilder(
+    column: $table.originLatitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get originLongitude => $composableBuilder(
+    column: $table.originLongitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get destinationLatitude => $composableBuilder(
+    column: $table.destinationLatitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get destinationLongitude => $composableBuilder(
+    column: $table.destinationLongitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get distanceMeters => $composableBuilder(
+    column: $table.distanceMeters,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get durationSeconds => $composableBuilder(
+    column: $table.durationSeconds,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get geometry => $composableBuilder(
+    column: $table.geometry,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get engine => $composableBuilder(
+    column: $table.engine,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get computedAt => $composableBuilder(
+    column: $table.computedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$RoutesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $RoutesTable> {
+  $$RoutesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => column);
+
+  GeneratedColumn<String> get mode =>
+      $composableBuilder(column: $table.mode, builder: (column) => column);
+
+  GeneratedColumn<String> get originLabel => $composableBuilder(
+    column: $table.originLabel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get originLatitude => $composableBuilder(
+    column: $table.originLatitude,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get originLongitude => $composableBuilder(
+    column: $table.originLongitude,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get destinationLatitude => $composableBuilder(
+    column: $table.destinationLatitude,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get destinationLongitude => $composableBuilder(
+    column: $table.destinationLongitude,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get distanceMeters => $composableBuilder(
+    column: $table.distanceMeters,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get durationSeconds => $composableBuilder(
+    column: $table.durationSeconds,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get geometry =>
+      $composableBuilder(column: $table.geometry, builder: (column) => column);
+
+  GeneratedColumn<String> get engine =>
+      $composableBuilder(column: $table.engine, builder: (column) => column);
+
+  GeneratedColumn<int> get computedAt => $composableBuilder(
+    column: $table.computedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<int> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<int> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+}
+
+class $$RoutesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $RoutesTable,
+          RouteRow,
+          $$RoutesTableFilterComposer,
+          $$RoutesTableOrderingComposer,
+          $$RoutesTableAnnotationComposer,
+          $$RoutesTableCreateCompanionBuilder,
+          $$RoutesTableUpdateCompanionBuilder,
+          (RouteRow, BaseReferences<_$AppDatabase, $RoutesTable, RouteRow>),
+          RouteRow,
+          PrefetchHooks Function()
+        > {
+  $$RoutesTableTableManager(_$AppDatabase db, $RoutesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$RoutesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$RoutesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$RoutesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> eventId = const Value.absent(),
+                Value<String> mode = const Value.absent(),
+                Value<String> originLabel = const Value.absent(),
+                Value<double> originLatitude = const Value.absent(),
+                Value<double> originLongitude = const Value.absent(),
+                Value<double> destinationLatitude = const Value.absent(),
+                Value<double> destinationLongitude = const Value.absent(),
+                Value<int> distanceMeters = const Value.absent(),
+                Value<int> durationSeconds = const Value.absent(),
+                Value<String> geometry = const Value.absent(),
+                Value<String> engine = const Value.absent(),
+                Value<int> computedAt = const Value.absent(),
+                Value<int> createdAt = const Value.absent(),
+                Value<int> updatedAt = const Value.absent(),
+                Value<int?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => RoutesCompanion(
+                id: id,
+                eventId: eventId,
+                mode: mode,
+                originLabel: originLabel,
+                originLatitude: originLatitude,
+                originLongitude: originLongitude,
+                destinationLatitude: destinationLatitude,
+                destinationLongitude: destinationLongitude,
+                distanceMeters: distanceMeters,
+                durationSeconds: durationSeconds,
+                geometry: geometry,
+                engine: engine,
+                computedAt: computedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String eventId,
+                required String mode,
+                required String originLabel,
+                required double originLatitude,
+                required double originLongitude,
+                required double destinationLatitude,
+                required double destinationLongitude,
+                required int distanceMeters,
+                required int durationSeconds,
+                required String geometry,
+                required String engine,
+                required int computedAt,
+                required int createdAt,
+                required int updatedAt,
+                Value<int?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => RoutesCompanion.insert(
+                id: id,
+                eventId: eventId,
+                mode: mode,
+                originLabel: originLabel,
+                originLatitude: originLatitude,
+                originLongitude: originLongitude,
+                destinationLatitude: destinationLatitude,
+                destinationLongitude: destinationLongitude,
+                distanceMeters: distanceMeters,
+                durationSeconds: durationSeconds,
+                geometry: geometry,
+                engine: engine,
+                computedAt: computedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$RoutesTable, RouteRow>(table),
+                  BaseReferences<_$AppDatabase, $RoutesTable, RouteRow>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$RoutesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $RoutesTable,
+      RouteRow,
+      $$RoutesTableFilterComposer,
+      $$RoutesTableOrderingComposer,
+      $$RoutesTableAnnotationComposer,
+      $$RoutesTableCreateCompanionBuilder,
+      $$RoutesTableUpdateCompanionBuilder,
+      (RouteRow, BaseReferences<_$AppDatabase, $RoutesTable, RouteRow>),
+      RouteRow,
+      PrefetchHooks Function()
+    >;
+typedef $$MapZonesTableCreateCompanionBuilder = MapZonesCompanion Function({
+  required String id,
+  required String name,
+  required double south,
+  required double west,
+  required double north,
+  required double east,
+  required int maxZoom,
+  required int tileCount,
+  Value<int> bytes,
+  Value<int?> downloadedAt,
+  Value<int> rowid,
+});
+typedef $$MapZonesTableUpdateCompanionBuilder = MapZonesCompanion Function({
+  Value<String> id,
+  Value<String> name,
+  Value<double> south,
+  Value<double> west,
+  Value<double> north,
+  Value<double> east,
+  Value<int> maxZoom,
+  Value<int> tileCount,
+  Value<int> bytes,
+  Value<int?> downloadedAt,
+  Value<int> rowid,
+});
+
+class $$MapZonesTableFilterComposer
+    extends Composer<_$AppDatabase, $MapZonesTable> {
+  $$MapZonesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get south => $composableBuilder(
+    column: $table.south,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get west => $composableBuilder(
+    column: $table.west,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get north => $composableBuilder(
+    column: $table.north,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get east => $composableBuilder(
+    column: $table.east,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get maxZoom => $composableBuilder(
+    column: $table.maxZoom,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get tileCount => $composableBuilder(
+    column: $table.tileCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get bytes => $composableBuilder(
+    column: $table.bytes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get downloadedAt => $composableBuilder(
+    column: $table.downloadedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$MapZonesTableOrderingComposer
+    extends Composer<_$AppDatabase, $MapZonesTable> {
+  $$MapZonesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get south => $composableBuilder(
+    column: $table.south,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get west => $composableBuilder(
+    column: $table.west,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get north => $composableBuilder(
+    column: $table.north,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get east => $composableBuilder(
+    column: $table.east,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get maxZoom => $composableBuilder(
+    column: $table.maxZoom,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get tileCount => $composableBuilder(
+    column: $table.tileCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get bytes => $composableBuilder(
+    column: $table.bytes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get downloadedAt => $composableBuilder(
+    column: $table.downloadedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$MapZonesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $MapZonesTable> {
+  $$MapZonesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<double> get south =>
+      $composableBuilder(column: $table.south, builder: (column) => column);
+
+  GeneratedColumn<double> get west =>
+      $composableBuilder(column: $table.west, builder: (column) => column);
+
+  GeneratedColumn<double> get north =>
+      $composableBuilder(column: $table.north, builder: (column) => column);
+
+  GeneratedColumn<double> get east =>
+      $composableBuilder(column: $table.east, builder: (column) => column);
+
+  GeneratedColumn<int> get maxZoom =>
+      $composableBuilder(column: $table.maxZoom, builder: (column) => column);
+
+  GeneratedColumn<int> get tileCount =>
+      $composableBuilder(column: $table.tileCount, builder: (column) => column);
+
+  GeneratedColumn<int> get bytes =>
+      $composableBuilder(column: $table.bytes, builder: (column) => column);
+
+  GeneratedColumn<int> get downloadedAt => $composableBuilder(
+    column: $table.downloadedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$MapZonesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $MapZonesTable,
+          MapZoneRow,
+          $$MapZonesTableFilterComposer,
+          $$MapZonesTableOrderingComposer,
+          $$MapZonesTableAnnotationComposer,
+          $$MapZonesTableCreateCompanionBuilder,
+          $$MapZonesTableUpdateCompanionBuilder,
+          (
+            MapZoneRow,
+            BaseReferences<_$AppDatabase, $MapZonesTable, MapZoneRow>,
+          ),
+          MapZoneRow,
+          PrefetchHooks Function()
+        > {
+  $$MapZonesTableTableManager(_$AppDatabase db, $MapZonesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MapZonesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MapZonesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$MapZonesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<double> south = const Value.absent(),
+                Value<double> west = const Value.absent(),
+                Value<double> north = const Value.absent(),
+                Value<double> east = const Value.absent(),
+                Value<int> maxZoom = const Value.absent(),
+                Value<int> tileCount = const Value.absent(),
+                Value<int> bytes = const Value.absent(),
+                Value<int?> downloadedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MapZonesCompanion(
+                id: id,
+                name: name,
+                south: south,
+                west: west,
+                north: north,
+                east: east,
+                maxZoom: maxZoom,
+                tileCount: tileCount,
+                bytes: bytes,
+                downloadedAt: downloadedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String name,
+                required double south,
+                required double west,
+                required double north,
+                required double east,
+                required int maxZoom,
+                required int tileCount,
+                Value<int> bytes = const Value.absent(),
+                Value<int?> downloadedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MapZonesCompanion.insert(
+                id: id,
+                name: name,
+                south: south,
+                west: west,
+                north: north,
+                east: east,
+                maxZoom: maxZoom,
+                tileCount: tileCount,
+                bytes: bytes,
+                downloadedAt: downloadedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$MapZonesTable, MapZoneRow>(table),
+                  BaseReferences<_$AppDatabase, $MapZonesTable, MapZoneRow>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$MapZonesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $MapZonesTable,
+      MapZoneRow,
+      $$MapZonesTableFilterComposer,
+      $$MapZonesTableOrderingComposer,
+      $$MapZonesTableAnnotationComposer,
+      $$MapZonesTableCreateCompanionBuilder,
+      $$MapZonesTableUpdateCompanionBuilder,
+      (MapZoneRow, BaseReferences<_$AppDatabase, $MapZonesTable, MapZoneRow>),
+      MapZoneRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -7236,4 +9655,8 @@ class $AppDatabaseManager {
       $$AttachmentsTableTableManager(_db, _db.attachments);
   $$AttachmentFilesTableTableManager get attachmentFiles =>
       $$AttachmentFilesTableTableManager(_db, _db.attachmentFiles);
+  $$RoutesTableTableManager get routes =>
+      $$RoutesTableTableManager(_db, _db.routes);
+  $$MapZonesTableTableManager get mapZones =>
+      $$MapZonesTableTableManager(_db, _db.mapZones);
 }
