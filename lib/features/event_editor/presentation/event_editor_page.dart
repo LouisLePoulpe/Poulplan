@@ -328,7 +328,12 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
                       if (zone != null) setState(() => draft.timeZone = zone);
                     },
                   ),
-                _RecurrenceTile(draft: draft, onChanged: () => setState(() {})),
+                _RecurrenceTile(
+                  draft: draft,
+                  // An occurrence's date is not the series' start.
+                  editableStart: _original?.seriesId == null,
+                  onChanged: () => setState(() {}),
+                ),
                 RemindersEditor(draft: draft, onChanged: () => setState(() {})),
                 _OverlapWarning(draft: draft, ignoreId: _original?.id),
                 const Divider(),
@@ -539,10 +544,26 @@ class _OverlapWarning extends ConsumerWidget {
 }
 
 class _RecurrenceTile extends StatelessWidget {
-  const _RecurrenceTile({required this.draft, required this.onChanged});
+  const _RecurrenceTile({
+    required this.draft,
+    required this.editableStart,
+    required this.onChanged,
+  });
 
   final EventDraft draft;
+  final bool editableStart;
   final VoidCallback onChanged;
+
+  Future<Day?> _pickDay(BuildContext context, Day initial, Day first) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: (initial.isBefore(first) ? first : initial)
+          .toLocalMidnight(),
+      firstDate: first.toLocalMidnight(),
+      lastDate: DateTime(2200),
+    );
+    return picked == null ? null : Day.fromDateTime(picked);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -571,10 +592,85 @@ class _RecurrenceTile extends StatelessWidget {
               current: rule,
             );
             if (choice == null) return;
-            draft.rrule = choice.rule?.toString();
+            var picked = choice.rule;
+            // A preset keeps the end date chosen below.
+            if (picked != null && !picked.isBounded && rule?.until != null) {
+              picked = picked.copyWith(until: () => rule!.until);
+            }
+            draft.rrule = picked?.toString();
             onChanged();
           },
         ),
+        if (rule != null && editableStart)
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.first_page),
+            title: Text(l10n.recurrenceStartDate),
+            trailing: TextButton(
+              onPressed: () async {
+                final day = await _pickDay(
+                  context,
+                  draft.startDay,
+                  Day(1900, 1, 1),
+                );
+                if (day == null) return;
+                // The event moves with the start of the series.
+                final shift = day.differenceInDays(draft.startDay);
+                draft
+                  ..startDay = day
+                  ..endDay = draft.endDay.addDays(shift);
+                if (rule!.until != null && rule.until!.isBefore(day)) {
+                  draft.rrule = rule.copyWith(until: () => day).toString();
+                }
+                onChanged();
+              },
+              child: Text(formatDayShort(context, draft.startDay)),
+            ),
+          ),
+        if (rule != null)
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.last_page),
+            title: Text(l10n.recurrenceEndDate),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextButton(
+                  key: const ValueKey('recurrence-end'),
+                  onPressed: () async {
+                    final day = await _pickDay(
+                      context,
+                      rule!.until ?? draft.startDay.addMonths(1),
+                      draft.startDay,
+                    );
+                    if (day == null) return;
+                    draft.rrule = rule!
+                        .copyWith(count: () => null, until: () => day)
+                        .toString();
+                    onChanged();
+                  },
+                  child: Text(
+                    rule.until != null
+                        ? formatDayShort(context, rule.until!)
+                        : rule.count != null
+                        ? l10n.recurrenceEndCount(rule.count!)
+                        : l10n.recurrenceNever,
+                  ),
+                ),
+                if (rule.isBounded)
+                  IconButton(
+                    tooltip: l10n.recurrenceNoEnd,
+                    icon: const Icon(Icons.close),
+                    onPressed: () {
+                      draft.rrule = rule!
+                          .copyWith(count: () => null, until: () => null)
+                          .toString();
+                      onChanged();
+                    },
+                  ),
+              ],
+            ),
+          ),
         if (rule != null)
           ListTile(
             contentPadding: EdgeInsets.zero,

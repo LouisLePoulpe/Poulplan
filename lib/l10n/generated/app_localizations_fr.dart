@@ -732,4 +732,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get attachmentPending => 'Ajoutée à l\'enregistrement';
+
+  @override
+  String get recurrenceStartDate => 'Début de la répétition';
+
+  @override
+  String get recurrenceEndDate => 'Fin de la répétition';
+
+  @override
+  String recurrenceEndCount(int count) {
+    return 'Après $count fois';
+  }
+
+  @override
+  String get recurrenceNoEnd => 'Sans fin';
 }

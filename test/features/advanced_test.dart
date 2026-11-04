@@ -129,6 +129,32 @@ void main() {
     await unmount(tester);
   });
 
+  testWidgets('a series gets an end date from the editor', (tester) async {
+    await pumpApp(tester);
+    await tester.tap(find.byTooltip('Nouvel événement'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'Yoga');
+    await tester.tap(find.text("Plus d'options"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ne se répète pas'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Toutes les semaines le mardi'));
+    await tester.pumpAndSettle();
+    expect(find.text('Début de la répétition'), findsOneWidget);
+    await tester.ensureVisible(find.byKey(const ValueKey('recurrence-end')));
+    await tester.tap(find.byKey(const ValueKey('recurrence-end')));
+    await tester.pumpAndSettle();
+    // The picker opens on 3 December 2026.
+    await tester.tap(find.text('17'));
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Enregistrer'));
+    await tester.pumpAndSettle();
+    final rows = await tester.runAsync(() => db.select(db.events).get());
+    expect(rows!.single.rrule, 'FREQ=WEEKLY;UNTIL=20261217');
+    await unmount(tester);
+  });
+
   testWidgets('reminders: default one plus one added in the editor', (
     tester,
   ) async {

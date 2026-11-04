@@ -1364,6 +1364,30 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Ajoutée à l\'enregistrement'**
   String get attachmentPending;
+
+  /// No description provided for @recurrenceStartDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Début de la répétition'**
+  String get recurrenceStartDate;
+
+  /// No description provided for @recurrenceEndDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fin de la répétition'**
+  String get recurrenceEndDate;
+
+  /// No description provided for @recurrenceEndCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Après {count} fois'**
+  String recurrenceEndCount(int count);
+
+  /// No description provided for @recurrenceNoEnd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans fin'**
+  String get recurrenceNoEnd;
 }
 
 class _AppLocalizationsDelegate

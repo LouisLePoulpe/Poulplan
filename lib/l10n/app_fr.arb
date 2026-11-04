@@ -373,5 +373,16 @@
   "attachmentOnDevice": "Sur cet appareil",
   "attachmentInCloud": "Dans le cloud",
   "attachmentKept": "Gardée sur cet appareil",
-  "attachmentPending": "Ajoutée à l'enregistrement"
+  "attachmentPending": "Ajoutée à l'enregistrement",
+  "recurrenceStartDate": "Début de la répétition",
+  "recurrenceEndDate": "Fin de la répétition",
+  "recurrenceEndCount": "Après {count} fois",
+  "@recurrenceEndCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "recurrenceNoEnd": "Sans fin"
 }
