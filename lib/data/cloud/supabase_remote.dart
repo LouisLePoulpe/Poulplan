@@ -25,7 +25,7 @@ class SupabaseRemote implements SyncRemote {
         .from(_table)
         .select('entity, id, data, deleted, rev')
         .gt('rev', afterRev)
-        .order('rev')
+        .order('rev', ascending: true)
         .limit(limit);
     return rows.map(_toRecord).toList();
   }

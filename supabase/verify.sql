@@ -16,6 +16,9 @@ union all
 select 'bucket', id, 'public = ' || public::text
 from storage.buckets where id = 'poulplan-attachments'
 union all
+select 'types acceptés', conname, pg_get_constraintdef(oid)
+from pg_constraint where conname = 'poulplan_records_entity_check'
+union all
 select 'accès poulplan', u.email, a.approved_at::text
 from public.poulapp_access a join auth.users u on u.id = a.user_id
 where a.app_id = 'poulplan'

@@ -9,6 +9,7 @@ Ils sont idempotents : on peut les relancer sans casse.
 | `migrations/0001_poulapp_access.sql` | Table commune `poulapp_access` — **déjà installée** dans le projet Poulapp (script de Poulpoints), à ne pas relancer |
 | `migrations/0002_poulplan_records.sql` | Table `poulplan_records` (RLS par utilisateur **et** accès `app_id = 'poulplan'`, pierres tombales), révisions, fonction d'envoi `poulplan_push()` |
 | `migrations/0003_poulplan_storage.sql` | Bucket privé `poulplan-attachments` (pièces jointes, v0.7) et ses politiques |
+| `migrations/0004_poulplan_new_entities.sql` | Accepte les pièces jointes (v0.7) et les trajets (v0.8) dans la synchro |
 | `verify.sql` | Requêtes de vérification après installation |
 
 ## 1. Réglages d'authentification (tableau de bord)
@@ -24,6 +25,7 @@ Dans **SQL Editor**, exécuter (un onglet « New » par fichier) :
 1. ~~`0001_poulapp_access.sql`~~ : déjà en place dans le projet Poulapp.
 2. `migrations/0002_poulplan_records.sql`
 3. `migrations/0003_poulplan_storage.sql`
+4. `migrations/0004_poulplan_new_entities.sql`
 
 ## 3. Créer le compte et accorder l'accès
 

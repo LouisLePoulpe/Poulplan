@@ -222,7 +222,12 @@ class SyncEngine {
     final pending = await (_db.select(
       _db.syncMeta,
     )..where((m) => m.dirty.equals(true))).get();
-    for (final batch in pending.slices(_pushBatch)) {
+    // One entity type per call: a type the server refuses (older server
+    // schema) must not block the others.
+    Object? failure;
+    StackTrace? failureTrace;
+    final byEntity = groupBy(pending, (SyncMetaRow m) => m.entity).values;
+    for (final batch in byEntity.expand((rows) => rows.slices(_pushBatch))) {
       final items = [
         for (final m in batch)
           PushItem(
@@ -238,7 +243,14 @@ class SyncEngine {
             baseRev: m.serverRev,
           ),
       ];
-      final results = await _remote.push(items);
+      final List<PushResult> results;
+      try {
+        results = await _remote.push(items);
+      } catch (error, trace) {
+        failure ??= error;
+        failureTrace ??= trace;
+        continue;
+      }
       for (final r in results) {
         if (r.conflict) {
           conflicts.add((r.entity, r.id));
@@ -264,6 +276,7 @@ class SyncEngine {
         pushed++;
       }
     }
+    if (failure != null) Error.throwWithStackTrace(failure, failureTrace!);
     return (pushed: pushed, conflicts: conflicts);
   }
 

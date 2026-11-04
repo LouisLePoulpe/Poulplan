@@ -20,6 +20,9 @@ class FakeRemote implements SyncRemote {
   var offline = false;
   var pushCalls = 0;
 
+  /// Entities the server refuses (older server schema).
+  var refused = <String>{};
+
   void _check() {
     if (offline) throw Exception('network unreachable');
   }
@@ -37,6 +40,11 @@ class FakeRemote implements SyncRemote {
   Future<List<PushResult>> push(List<PushItem> items) async {
     _check();
     pushCalls++;
+    if (items.any((i) => refused.contains(i.entity))) {
+      throw Exception(
+        'violates check constraint "poulplan_records_entity_check"',
+      );
+    }
     return [
       for (final item in items)
         () {
@@ -384,6 +392,23 @@ void main() {
     expect(meta.fieldValues, contains('"categoryId":"gone"'));
   });
 
+  test('a type refused by the server does not block the others', () async {
+    remote.refused = {'category'};
+    await a.categories.create(name: 'Nouvelle', color: 1);
+    await meeting(a);
+    await expectLater(a.sync(), throwsException);
+    // The event went through; the categories wait for a server update
+    // (B's default categories too).
+    await expectLater(b.sync(), throwsException);
+    expect((await b.all()).single.title, 'Réunion');
+    remote.refused = {};
+    await a.sync();
+    final dirty = await (a.db.select(
+      a.db.syncMeta,
+    )..where((m) => m.dirty.equals(true))).get();
+    expect(dirty, isEmpty);
+  });
+
   test('records are pushed in batches, one call per batch', () async {
     await a.db.batch((batch) {
       for (var i = 0; i < 250; i++) {
@@ -403,8 +428,8 @@ void main() {
       }
     });
     await a.sync();
-    // 250 events + 4 default categories, by 100.
-    expect(remote.pushCalls, 3);
+    // 250 events by 100, then the 4 default categories (one type per call).
+    expect(remote.pushCalls, 4);
     await b.sync();
     expect(await b.db.select(b.db.events).get().then((r) => r.length), 250);
   });
