@@ -12,6 +12,8 @@ class AppSettings {
     this.schoolZone,
     this.defaultReminder = 10,
     this.runInBackground = true,
+    this.autoBackup = true,
+    this.cloudBackup = true,
   });
 
   static const defaults = AppSettings();
@@ -36,6 +38,12 @@ class AppSettings {
   /// Linux: closing the window keeps the app running for reminders.
   final bool runInBackground;
 
+  /// One local backup a day, the last ones kept.
+  final bool autoBackup;
+
+  /// When signed in, the automatic backups also go to the cloud.
+  final bool cloudBackup;
+
   AppSettings copyWith({
     AppThemeMode? themeMode,
     int? firstDayOfWeek,
@@ -44,6 +52,8 @@ class AppSettings {
     String? Function()? schoolZone,
     int? Function()? defaultReminder,
     bool? runInBackground,
+    bool? autoBackup,
+    bool? cloudBackup,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     firstDayOfWeek: firstDayOfWeek ?? this.firstDayOfWeek,
@@ -54,6 +64,8 @@ class AppSettings {
         ? defaultReminder()
         : this.defaultReminder,
     runInBackground: runInBackground ?? this.runInBackground,
+    autoBackup: autoBackup ?? this.autoBackup,
+    cloudBackup: cloudBackup ?? this.cloudBackup,
   );
 
   @override
@@ -65,7 +77,9 @@ class AppSettings {
       other.alsaceMoselle == alsaceMoselle &&
       other.schoolZone == schoolZone &&
       other.defaultReminder == defaultReminder &&
-      other.runInBackground == runInBackground;
+      other.runInBackground == runInBackground &&
+      other.autoBackup == autoBackup &&
+      other.cloudBackup == cloudBackup;
 
   @override
   int get hashCode => Object.hash(
@@ -76,5 +90,7 @@ class AppSettings {
     schoolZone,
     defaultReminder,
     runInBackground,
+    autoBackup,
+    cloudBackup,
   );
 }

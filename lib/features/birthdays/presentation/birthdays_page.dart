@@ -1,16 +1,69 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/input/digits_formatter.dart';
+import '../../../core/platform/file_exchange.dart';
 import '../../../core/format/formatters.dart';
 import '../../../data/providers.dart';
 import '../../../domain/calendar/day.dart';
 import '../../../domain/entities/birthday.dart';
+import '../../../domain/exchange/vcard.dart';
 import '../../../l10n/generated/app_localizations.dart';
 
 class BirthdaysPage extends ConsumerWidget {
   const BirthdaysPage({super.key});
+
+  Future<void> _import(
+    BuildContext context,
+    WidgetRef ref,
+    String source,
+  ) async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    void show(String text) => messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(text)));
+    try {
+      final List<VCardBirthday> found;
+      if (source == 'contacts') {
+        found = [
+          for (final c in await FileExchange.contactBirthdays())
+            if (parseBirthdayDate(c.date) case final date?)
+              VCardBirthday(
+                name: c.name,
+                month: date.month,
+                day: date.day,
+                year: date.year,
+              ),
+        ];
+      } else {
+        final file = await FileExchange.pick(
+          label: 'vCard',
+          extensions: const ['vcf', 'vcard'],
+          mimeTypes: const ['text/x-vcard', 'text/vcard', 'text/directory'],
+        );
+        if (file == null) return;
+        found = parseVCardBirthdays(
+          utf8.decode(file.bytes, allowMalformed: true),
+        );
+      }
+      final added = await ref.read(birthdayRepositoryProvider).importAll(found);
+      show(l10n.importDone(added));
+    } on PlatformException catch (e) {
+      show(
+        e.code == 'PERMISSION_DENIED'
+            ? l10n.importContactsDenied
+            : l10n.operationFailed(e.message ?? e.code),
+      );
+    } catch (e) {
+      show(l10n.operationFailed('$e'));
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,7 +73,23 @@ class BirthdaysPage extends ConsumerWidget {
     final dayMonth = DateFormat.MMMMd(localeOf(context));
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.birthdays)),
+      appBar: AppBar(
+        title: Text(l10n.birthdays),
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.file_download_outlined),
+            onSelected: (source) => _import(context, ref, source),
+            itemBuilder: (context) => [
+              PopupMenuItem(value: 'vcf', child: Text(l10n.importVcf)),
+              if (Platform.isAndroid)
+                PopupMenuItem(
+                  value: 'contacts',
+                  child: Text(l10n.importContacts),
+                ),
+            ],
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton.extended(
         icon: const Icon(Icons.add),
         label: Text(l10n.newBirthday),

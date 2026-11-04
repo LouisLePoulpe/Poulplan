@@ -2,6 +2,8 @@ import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../domain/entities/birthday.dart';
+import '../../domain/exchange/vcard.dart';
+import '../../domain/search/search_query.dart';
 import '../db/app_database.dart';
 import '../sync/change_recorder.dart';
 
@@ -67,6 +69,41 @@ class BirthdayRepository {
       ),
     );
     await _changed(birthday.id);
+  }
+
+  /// Adds the [birthdays] not already known (same name and date, ignoring
+  /// case and accents); returns how many were added.
+  Future<int> importAll(Iterable<VCardBirthday> birthdays) async {
+    final rows = await (_db.select(
+      _db.birthdays,
+    )..where((b) => b.deletedAt.isNull())).get();
+    String key(String name, int month, int day) =>
+        '${normalizeForSearch(name)}|$month|$day';
+    final known = {for (final r in rows) key(r.name, r.month, r.day)};
+    final added = <String>[];
+    final now = _now();
+    await _db.transaction(() async {
+      for (final b in birthdays) {
+        if (!known.add(key(b.name, b.month, b.day))) continue;
+        final id = _uuid.v4();
+        await _db
+            .into(_db.birthdays)
+            .insert(
+              BirthdaysCompanion.insert(
+                id: id,
+                name: b.name,
+                month: b.month,
+                day: b.day,
+                birthYear: Value(b.year),
+                createdAt: now,
+                updatedAt: now,
+              ),
+            );
+        added.add(id);
+      }
+    });
+    await recorder?.record('birthday', added);
+    return added.length;
   }
 
   Future<void> delete(String id) async {

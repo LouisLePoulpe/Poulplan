@@ -269,5 +269,92 @@
   "enterTime": "Saisir une heure",
   "timeHour": "Heure",
   "timeMinute": "Minute",
-  "invalidTime": "Heure invalide (00:00 à 23:59)"
+  "invalidTime": "Heure invalide (00:00 à 23:59)",
+  "dataSection": "Données",
+  "backupsTitle": "Sauvegardes et export",
+  "backupsSubtitle": "Sauvegardes automatiques, restauration, export ICS",
+  "backupAuto": "Sauvegarde automatique quotidienne",
+  "backupAutoSubtitle": "Les {count} dernières sont gardées sur cet appareil",
+  "@backupAutoSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupCloudAuto": "Aussi dans le cloud Poulapp",
+  "backupCloudAutoSubtitle": "Les {count} dernières, quand vous êtes connecté",
+  "@backupCloudAutoSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupNow": "Sauvegarder maintenant",
+  "backupNowCloud": "Sauvegarder dans le cloud",
+  "backupLocalList": "Sur cet appareil",
+  "backupCloudList": "Dans le cloud",
+  "backupNone": "Aucune sauvegarde",
+  "backupRestore": "Restaurer",
+  "backupRestoreFile": "Restaurer depuis un fichier…",
+  "backupExport": "Exporter une sauvegarde…",
+  "exportIcs": "Exporter le calendrier (ICS)…",
+  "backupRestoreConfirmTitle": "Restaurer cette sauvegarde ?",
+  "backupRestoreConfirmBody": "Sauvegarde du {date} ({device}) : {events} événements, {birthdays} anniversaires.\n\nLes éléments de la sauvegarde remplacent ceux qui existent ici ; rien d'autre n'est supprimé. Si vous êtes connecté, ils seront synchronisés.",
+  "@backupRestoreConfirmBody": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "device": {
+        "type": "String"
+      },
+      "events": {
+        "type": "int"
+      },
+      "birthdays": {
+        "type": "int"
+      }
+    }
+  },
+  "backupRestored": "{count} éléments restaurés",
+  "@backupRestored": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupDone": "Sauvegarde effectuée",
+  "backupInvalid": "Ce fichier n'est pas une sauvegarde Poulplan valide",
+  "operationFailed": "Échec : {error}",
+  "@operationFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileSaved": "Fichier enregistré",
+  "backupLast": "Dernière sauvegarde : {date}",
+  "@backupLast": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "backupNever": "Aucune sauvegarde pour l'instant",
+  "importVcf": "Importer un fichier VCF…",
+  "importContacts": "Importer depuis les contacts",
+  "importDone": "{count, plural, =0{Aucun nouvel anniversaire} =1{1 anniversaire ajouté} other{{count} anniversaires ajoutés}}",
+  "@importDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importContactsDenied": "Accès aux contacts refusé"
 }

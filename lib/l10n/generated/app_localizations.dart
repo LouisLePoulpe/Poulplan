@@ -1125,6 +1125,185 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Heure invalide (00:00 à 23:59)'**
   String get invalidTime;
+
+  /// No description provided for @dataSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Données'**
+  String get dataSection;
+
+  /// No description provided for @backupsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegardes et export'**
+  String get backupsTitle;
+
+  /// No description provided for @backupsSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegardes automatiques, restauration, export ICS'**
+  String get backupsSubtitle;
+
+  /// No description provided for @backupAuto.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarde automatique quotidienne'**
+  String get backupAuto;
+
+  /// No description provided for @backupAutoSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les {count} dernières sont gardées sur cet appareil'**
+  String backupAutoSubtitle(int count);
+
+  /// No description provided for @backupCloudAuto.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aussi dans le cloud Poulapp'**
+  String get backupCloudAuto;
+
+  /// No description provided for @backupCloudAutoSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les {count} dernières, quand vous êtes connecté'**
+  String backupCloudAutoSubtitle(int count);
+
+  /// No description provided for @backupNow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarder maintenant'**
+  String get backupNow;
+
+  /// No description provided for @backupNowCloud.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarder dans le cloud'**
+  String get backupNowCloud;
+
+  /// No description provided for @backupLocalList.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sur cet appareil'**
+  String get backupLocalList;
+
+  /// No description provided for @backupCloudList.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dans le cloud'**
+  String get backupCloudList;
+
+  /// No description provided for @backupNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune sauvegarde'**
+  String get backupNone;
+
+  /// No description provided for @backupRestore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurer'**
+  String get backupRestore;
+
+  /// No description provided for @backupRestoreFile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurer depuis un fichier…'**
+  String get backupRestoreFile;
+
+  /// No description provided for @backupExport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exporter une sauvegarde…'**
+  String get backupExport;
+
+  /// No description provided for @exportIcs.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exporter le calendrier (ICS)…'**
+  String get exportIcs;
+
+  /// No description provided for @backupRestoreConfirmTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurer cette sauvegarde ?'**
+  String get backupRestoreConfirmTitle;
+
+  /// No description provided for @backupRestoreConfirmBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarde du {date} ({device}) : {events} événements, {birthdays} anniversaires.\n\nLes éléments de la sauvegarde remplacent ceux qui existent ici ; rien d\'autre n\'est supprimé. Si vous êtes connecté, ils seront synchronisés.'**
+  String backupRestoreConfirmBody(
+    String date,
+    String device,
+    int events,
+    int birthdays,
+  );
+
+  /// No description provided for @backupRestored.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} éléments restaurés'**
+  String backupRestored(int count);
+
+  /// No description provided for @backupDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarde effectuée'**
+  String get backupDone;
+
+  /// No description provided for @backupInvalid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce fichier n\'est pas une sauvegarde Poulplan valide'**
+  String get backupInvalid;
+
+  /// No description provided for @operationFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Échec : {error}'**
+  String operationFailed(String error);
+
+  /// No description provided for @fileSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fichier enregistré'**
+  String get fileSaved;
+
+  /// No description provided for @backupLast.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dernière sauvegarde : {date}'**
+  String backupLast(String date);
+
+  /// No description provided for @backupNever.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune sauvegarde pour l\'instant'**
+  String get backupNever;
+
+  /// No description provided for @importVcf.
+  ///
+  /// In fr, this message translates to:
+  /// **'Importer un fichier VCF…'**
+  String get importVcf;
+
+  /// No description provided for @importContacts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Importer depuis les contacts'**
+  String get importContacts;
+
+  /// No description provided for @importDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucun nouvel anniversaire} =1{1 anniversaire ajouté} other{{count} anniversaires ajoutés}}'**
+  String importDone(int count);
+
+  /// No description provided for @importContactsDenied.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accès aux contacts refusé'**
+  String get importContactsDenied;
 }
 
 class _AppLocalizationsDelegate

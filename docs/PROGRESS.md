@@ -1,6 +1,6 @@
 # Avancement
 
-Dernière mise à jour : 2026-11-03
+Dernière mise à jour : 2026-11-04
 
 | Jalon | État |
 |---|---|
@@ -11,7 +11,8 @@ Dernière mise à jour : 2026-11-03
 | v0.4.0 Cloud Poulapp | **Terminé** — validé par Louis : connexion et synchro Linux ↔ Pixel |
 | v0.5.0 Notifications | **Terminé** — validé par Louis : Pixel (déverrouillé, verrouillé) et Linux (KDE) |
 | v0.6.0 Intégrations | **Terminé** — validé par Louis le 2026-11-04 (widgets Android et KDE, actions, barre système), version 0.6.4 |
-| v0.7.0 → v1.0.0 | À faire |
+| v0.7.0 Fonctions complémentaires | **En cours** |
+| v0.8.0 → v1.0.0 | À faire |
 
 ## Reprendre le travail à froid
 ```bash
@@ -160,6 +161,15 @@ Mini-plan : instantané commun pour les widgets (tests d'abord) → exportateur 
   - builds release Linux et Android (widgets compris).
 - Non testé : affichage réel des widgets Android (Pixel débranché), plasmoïde (pas d'outil QML dans le conteneur), menu de l'icône (clics) → tests manuels.
 - Limites : le widget « Mois » montre le mois en cours seulement ; le plasmoïde lit le fichier toutes les minutes (pas d'événement immédiat).
+
+## v0.7.0 — Fonctions complémentaires
+Mini-plan (dans l'ordre, un commit par étape) :
+1. Sauvegarde = archive zip (`poulplan-backup`, version 1) des enregistrements tels que synchronisés (codecs de synchro) + fichiers des pièces jointes ; restauration par **fusion** (rien n'est effacé localement), enregistrée comme modification locale pour partir en synchro. Tests d'abord (aller-retour, fusion, archive invalide).
+2. Export ICS des événements (RRULE, exceptions, annulations) et import VCF des anniversaires (tests d'abord), import des anniversaires des contacts Android (canal Kotlin, permission READ_CONTACTS demandée à l'usage).
+3. Sauvegardes locales automatiques (1/jour, 7 conservées) et cloud (Storage privé `<uid>/backups/`, 5 conservées), écran Sauvegardes : sauvegarder, restaurer (fichier, liste locale, cloud), exporter.
+4. Pièces jointes : table `attachments` synchronisée (métadonnées) + table locale des fichiers, copie locale, envoi/récupération Storage, « garder hors ligne », ouverture (FileProvider Android, xdg-open Linux).
+5. Verrouillage facultatif : PIN (haché, salé) partout, biométrie Android (`local_auth`), au lancement et après 5 min en arrière-plan.
+6. Nettoyage d'espace : tailles (base, pièces jointes, sauvegardes), suppression des anciennes sauvegardes et des copies locales récupérables, alerte quand l'espace libre est faible.
 
 ## Journal
 - 2026-11-03 : dépôt initialisé (CLAUDE.md, spec, roadmap, CI, licence GPL-3.0).

@@ -13,6 +13,8 @@ class SettingsRepository {
   static const _schoolZone = 'school_zone';
   static const _defaultReminder = 'default_reminder';
   static const _runInBackground = 'run_in_background';
+  static const _autoBackup = 'backup_auto';
+  static const _cloudBackup = 'backup_cloud';
 
   Stream<AppSettings> watch() => _db.select(_db.settings).watch().map((rows) {
     final values = {for (final r in rows) r.key: r.value};
@@ -34,6 +36,8 @@ class SettingsRepository {
         final v => int.tryParse(v),
       },
       runInBackground: values[_runInBackground] != 'false',
+      autoBackup: values[_autoBackup] != 'false',
+      cloudBackup: values[_cloudBackup] != 'false',
     );
   });
 
@@ -55,6 +59,17 @@ class SettingsRepository {
 
   Future<void> setRunInBackground(bool value) =>
       _set(_runInBackground, '$value');
+
+  Future<void> setAutoBackup(bool value) => _set(_autoBackup, '$value');
+
+  Future<void> setCloudBackup(bool value) => _set(_cloudBackup, '$value');
+
+  /// Raw value of a local bookkeeping key (e.g. the last backup time).
+  Future<String?> getValue(String key) async => (await (_db.select(
+    _db.settings,
+  )..where((s) => s.key.equals(key))).getSingleOrNull())?.value;
+
+  Future<void> setValue(String key, String value) => _set(key, value);
 
   Future<void> _set(String key, String value) => _db
       .into(_db.settings)

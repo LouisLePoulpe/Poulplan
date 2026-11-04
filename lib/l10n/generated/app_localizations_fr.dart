@@ -584,4 +584,119 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get invalidTime => 'Heure invalide (00:00 à 23:59)';
+
+  @override
+  String get dataSection => 'Données';
+
+  @override
+  String get backupsTitle => 'Sauvegardes et export';
+
+  @override
+  String get backupsSubtitle =>
+      'Sauvegardes automatiques, restauration, export ICS';
+
+  @override
+  String get backupAuto => 'Sauvegarde automatique quotidienne';
+
+  @override
+  String backupAutoSubtitle(int count) {
+    return 'Les $count dernières sont gardées sur cet appareil';
+  }
+
+  @override
+  String get backupCloudAuto => 'Aussi dans le cloud Poulapp';
+
+  @override
+  String backupCloudAutoSubtitle(int count) {
+    return 'Les $count dernières, quand vous êtes connecté';
+  }
+
+  @override
+  String get backupNow => 'Sauvegarder maintenant';
+
+  @override
+  String get backupNowCloud => 'Sauvegarder dans le cloud';
+
+  @override
+  String get backupLocalList => 'Sur cet appareil';
+
+  @override
+  String get backupCloudList => 'Dans le cloud';
+
+  @override
+  String get backupNone => 'Aucune sauvegarde';
+
+  @override
+  String get backupRestore => 'Restaurer';
+
+  @override
+  String get backupRestoreFile => 'Restaurer depuis un fichier…';
+
+  @override
+  String get backupExport => 'Exporter une sauvegarde…';
+
+  @override
+  String get exportIcs => 'Exporter le calendrier (ICS)…';
+
+  @override
+  String get backupRestoreConfirmTitle => 'Restaurer cette sauvegarde ?';
+
+  @override
+  String backupRestoreConfirmBody(
+    String date,
+    String device,
+    int events,
+    int birthdays,
+  ) {
+    return 'Sauvegarde du $date ($device) : $events événements, $birthdays anniversaires.\n\nLes éléments de la sauvegarde remplacent ceux qui existent ici ; rien d\'autre n\'est supprimé. Si vous êtes connecté, ils seront synchronisés.';
+  }
+
+  @override
+  String backupRestored(int count) {
+    return '$count éléments restaurés';
+  }
+
+  @override
+  String get backupDone => 'Sauvegarde effectuée';
+
+  @override
+  String get backupInvalid =>
+      'Ce fichier n\'est pas une sauvegarde Poulplan valide';
+
+  @override
+  String operationFailed(String error) {
+    return 'Échec : $error';
+  }
+
+  @override
+  String get fileSaved => 'Fichier enregistré';
+
+  @override
+  String backupLast(String date) {
+    return 'Dernière sauvegarde : $date';
+  }
+
+  @override
+  String get backupNever => 'Aucune sauvegarde pour l\'instant';
+
+  @override
+  String get importVcf => 'Importer un fichier VCF…';
+
+  @override
+  String get importContacts => 'Importer depuis les contacts';
+
+  @override
+  String importDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count anniversaires ajoutés',
+      one: '1 anniversaire ajouté',
+      zero: 'Aucun nouvel anniversaire',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get importContactsDenied => 'Accès aux contacts refusé';
 }

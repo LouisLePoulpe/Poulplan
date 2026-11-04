@@ -8,6 +8,7 @@ import '../../features/categories/presentation/categories_page.dart';
 import '../../features/event_editor/presentation/event_editor_page.dart';
 import '../../features/search/presentation/search_page.dart';
 import '../../features/settings/presentation/settings_page.dart';
+import '../../features/backup/presentation/backup_page.dart';
 import '../../features/sync/presentation/account_page.dart';
 import '../../features/sync/presentation/conflicts_page.dart';
 
@@ -16,6 +17,7 @@ abstract final class Routes {
   static const settings = '/settings';
   static const categories = '/settings/categories';
   static const birthdays = '/settings/birthdays';
+  static const backups = '/settings/backups';
   static const search = '/search';
   static const account = '/settings/account';
   static const conflicts = '/settings/account/conflicts';
@@ -46,6 +48,10 @@ GoRouter createRouter() => GoRouter(
     GoRoute(
       path: Routes.birthdays,
       builder: (context, state) => const BirthdaysPage(),
+    ),
+    GoRoute(
+      path: Routes.backups,
+      builder: (context, state) => const BackupPage(),
     ),
     GoRoute(
       path: Routes.account,

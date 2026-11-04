@@ -1,12 +1,14 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poulplan/data/db/app_database.dart';
+import 'package:poulplan/data/repositories/birthday_repository.dart';
 import 'package:poulplan/data/repositories/category_repository.dart';
 import 'package:poulplan/data/repositories/event_repository.dart';
 import 'package:poulplan/data/repositories/settings_repository.dart';
 import 'package:poulplan/domain/calendar/day.dart';
 import 'package:poulplan/domain/entities/app_settings.dart';
 import 'package:poulplan/domain/entities/event_category.dart';
+import 'package:poulplan/domain/exchange/vcard.dart';
 
 void main() {
   late AppDatabase db;
@@ -144,6 +146,19 @@ void main() {
       all = await categories.watchAll().first;
       expect(all.map((c) => c.name), isNot(contains('Sports')));
     });
+  });
+
+  test('importing birthdays skips the ones already known', () async {
+    final birthdays = BirthdayRepository(db);
+    await birthdays.create(name: 'Léa Martin', month: 4, day: 12);
+    final added = await birthdays.importAll(const [
+      VCardBirthday(name: 'lea martin', month: 4, day: 12, year: 1996),
+      VCardBirthday(name: 'Paul', month: 7, day: 5),
+      VCardBirthday(name: 'Paul', month: 7, day: 5),
+    ]);
+    expect(added, 1);
+    final all = await birthdays.watchAll().first;
+    expect(all.map((b) => b.name), ['Léa Martin', 'Paul']);
   });
 
   group('SettingsRepository', () {
