@@ -180,3 +180,28 @@ Préparation :
 ## E6. Espace de stockage
 - [ ] Paramètres → **Espace de stockage** : tailles de la base, des pièces jointes, des sauvegardes et espace libre.
 - [ ] Avec des pièces jointes dans le cloud et plusieurs sauvegardes : **Libérer…** et **Supprimer les anciennes sauvegardes** libèrent la place annoncée.
+
+# v0.8.0 — Navigation
+
+## F1. Lieu et trajet en ligne
+- [ ] Paramètres → **Cartes et trajets** → **Adresse de départ** → chercher son adresse → la choisir.
+- [ ] Ouvrir un événement → champ **Lieu** → icône 🔍 (« Trouver sur la carte ») → choisir un résultat → « Position trouvée sur la carte » s'affiche sous le champ → **Enregistrer**.
+- [ ] Rouvrir l'événement → section **Trajet** : choisir Voiture / Vélo / À pied → **Calculer le trajet** → durée et distance, mini-carte avec le trajet ; toucher la mini-carte → carte plein écran.
+- [ ] Changer le texte du lieu → la position est oubliée (il faut la retrouver).
+
+## F2. Consultation hors ligne (critère du jalon)
+- [ ] Après F1, couper le réseau (mode avion / Wi-Fi coupé) → rouvrir l'événement : durée, distance et trajet sur la carte sont toujours là ; le fond de carte des lieux déjà affichés aussi.
+- [ ] Sur l'autre appareil (synchro) : le trajet calculé apparaît aussi.
+
+## F3. Cartes hors ligne
+- [ ] Cartes et trajets → **Télécharger une zone** → zoomer sur sa ville (le nombre de tuiles s'affiche ; au-delà de 6000 il faut zoomer) → nommer → **Télécharger** → la zone apparaît avec sa taille.
+- [ ] Hors ligne, la carte de cette zone s'affiche à tous les niveaux de zoom jusqu'au niveau des rues.
+- [ ] Supprimer la zone.
+
+## F4. Trajets hors ligne (Pixel, avec BRouter)
+- [ ] Installer **BRouter** depuis F-Droid, y télécharger les données de sa région (dans l'app BRouter).
+- [ ] Cartes et trajets : « BRouter est installé… ».
+- [ ] Hors ligne : **Recalculer** un trajet → « Calculé le …, hors ligne (BRouter) ».
+
+## F5. Rappel
+- [ ] Pièces jointes (correction 0.8.0) : ajouter un fichier, attendre la synchro → il apparaît « Dans le cloud » sur l'autre appareil.

@@ -12,7 +12,7 @@ Dernière mise à jour : 2026-11-04
 | v0.5.0 Notifications | **Terminé** — validé par Louis : Pixel (déverrouillé, verrouillé) et Linux (KDE) |
 | v0.6.0 Intégrations | **Terminé** — validé par Louis le 2026-11-04 (widgets Android et KDE, actions, barre système), version 0.6.4 |
 | v0.7.0 Fonctions complémentaires | **Terminé** — validé par Louis le 2026-11-04 (tests E1–E6), version 0.7.1 |
-| v0.8.0 Navigation | **En cours** — option A choisie par Louis |
+| v0.8.0 Navigation | **Code terminé, non tagué** — en attente des tests manuels F1–F5, version 0.8.0 |
 | v0.9.0 → v1.0.0 | À faire |
 
 ## Reprendre le travail à froid
@@ -192,7 +192,19 @@ Mini-plan (option A, détails dans `DECISIONS.md`) :
 5. Zones hors ligne (téléchargement d'une zone limitée, liste, suppression) et recalcul hors ligne Android via BRouter.
 6. Vérification : trajet calculé en ligne puis consulté hors ligne (critère du jalon).
 
+- Fait :
+  - schéma v6 : coordonnées du lieu sur l'événement, table `routes` synchronisée (géométrie en polyline encodée), table locale `map_zones` ;
+  - recherche de lieu Nominatim (sur action, 1/s, User-Agent), trajets OSRM FOSSGIS (voiture, vélo, à pied), trajet mémorisé affiché dans l'éditeur (durée, distance, mini-carte) et en plein écran ;
+  - carte vectorielle OpenFreeMap (`flutter_map` + `flutter_map_vector_tiles`, noms en français), source de tuiles locale d'abord : zones téléchargées (6000 tuiles max, 2 requêtes à la fois, reprise possible) puis cache des lieux vus (150 Mo) ;
+  - hors ligne Android : service AIDL de l'app BRouter (`IBRouterService`), réponse GeoJSON ou GPX ;
+  - paramètres « Cartes et trajets » : adresse de départ, zones, état de BRouter.
+- Corrigé : depuis la 0.7, la synchro se terminait en erreur à cause d'une dépendance circulaire (transfert des pièces jointes) — les données passaient, l'état affiché et l'envoi des fichiers non.
+- Testé : 297 tests (décodage polyline/OSRM/BRouter/Nominatim, tuiles d'une zone, téléchargement et reprise d'une zone, source locale d'abord, trajets mémorisés et synchronisés, section Trajet de l'éditeur) ; services réels interrogés (Nominatim, OSRM voiture/vélo/pied à Lyon, TileJSON OpenFreeMap) ; carte réelle affichée sous Linux (capture).
+- Non testé : Pixel (absent d'ADB), BRouter réel, téléchargement réel d'une zone, consultation hors ligne réelle → tests F1–F5.
+- Limites : pas de géolocalisation (point de départ = adresse) ; sous Linux pas de recalcul hors ligne ; glyphes de police non encore vus indisponibles hors ligne (rare).
+
 ## Journal
+- 2026-11-04 : v0.8.0 codée (cartes, lieux, trajets, zones hors ligne, BRouter) ; correction de la synchro (dépendance circulaire des pièces jointes) ; arrêt pour les tests F1–F5.
 - 2026-11-04 : 0.7.2 — la barre « supprimé / Annuler » ne se fermait jamais (Flutter garde par défaut les barres avec bouton) → fermeture après 6 s (test). Déployée sur le PC ; Pixel non détecté par ADB.
 - 2026-11-04 : v0.8.0 : option A choisie par Louis (fond OpenFreeMap, trajets OSRM FOSSGIS mémorisés, recalcul hors ligne via l'app BRouter sur Android).
 - 2026-11-04 : v0.7.0 validée par Louis (« Tout m'a l'air bon ») et taguée. Prochaine étape : v0.8.0, arrêt pour le choix du moteur de cartes/routage.
