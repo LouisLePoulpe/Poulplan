@@ -11,7 +11,7 @@ Dernière mise à jour : 2026-11-04
 | v0.4.0 Cloud Poulapp | **Terminé** — validé par Louis : connexion et synchro Linux ↔ Pixel |
 | v0.5.0 Notifications | **Terminé** — validé par Louis : Pixel (déverrouillé, verrouillé) et Linux (KDE) |
 | v0.6.0 Intégrations | **Terminé** — validé par Louis le 2026-11-04 (widgets Android et KDE, actions, barre système), version 0.6.4 |
-| v0.7.0 Fonctions complémentaires | **Code terminé, non tagué** — en attente des tests manuels (section v0.7.0 de `docs/TESTS_MANUELS.md`), version 0.7.0 |
+| v0.7.0 Fonctions complémentaires | **Code terminé, non tagué** — en attente des tests manuels (section v0.7.0 de `docs/TESTS_MANUELS.md`), version 0.7.1 |
 | v0.8.0 → v1.0.0 | À faire |
 
 ## Reprendre le travail à froid
@@ -183,6 +183,7 @@ Mini-plan (dans l'ordre, un commit par étape) :
 - Limites : pièces jointes d'un événement supprimé conservées (non visibles) ; widgets et notifications visibles malgré le verrouillage ; le code oublié n'est pas récupérable (données récupérables par la synchro ou une sauvegarde).
 
 ## Journal
+- 2026-11-04 : 0.7.1 — sur le Pixel, la synchro échouait (clé étrangère) : l'événement « Planning et démarrage » arrivait sans sa catégorie « 6 Month ». La catégorie manquante est maintenant récupérée dans le cloud, sinon l'événement est rangé sans catégorie localement (tests ajoutés). Cause exacte du « trou » non établie (base du Pixel illisible en release). Déployée Pixel + PC, plus d'erreur de synchro au lancement.
 - 2026-11-04 : v0.7.0 codée (sauvegardes, export ICS, import VCF/contacts, pièces jointes, verrouillage, espace de stockage) + dates de début/fin des répétitions (demande de Louis) ; arrêt pour les tests manuels E1–E6.
 - 2026-11-03 : dépôt initialisé (CLAUDE.md, spec, roadmap, CI, licence GPL-3.0).
 - 2026-11-04 : 0.6.3 — retours de Louis sur la 0.6.2 : Android, ouvrir un événement → page d'erreur et + sans effet (Flutter routait lui-même les liens poulplan:// : `flutter_deeplinking_enabled=false`) ; KDE, aucune action (commande de lancement non configurée → actions envoyées par D-Bus à l'app, commande en secours) ; widget Journée redessiné en frise horaire avec ligne de l'heure (Android 12+ et KDE).
