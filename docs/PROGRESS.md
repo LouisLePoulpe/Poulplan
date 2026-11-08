@@ -12,7 +12,7 @@ Dernière mise à jour : 2026-11-04
 | v0.5.0 Notifications | **Terminé** — validé par Louis : Pixel (déverrouillé, verrouillé) et Linux (KDE) |
 | v0.6.0 Intégrations | **Terminé** — validé par Louis le 2026-11-04 (widgets Android et KDE, actions, barre système), version 0.6.4 |
 | v0.7.0 Fonctions complémentaires | **Terminé** — validé par Louis le 2026-11-04 (tests E1–E6), version 0.7.1 |
-| v0.8.0 Navigation | **Code terminé, non tagué** — en attente des tests manuels F1–F5, version 0.8.0 |
+| v0.8.0 Navigation | **Terminé** — validé par Louis le 2026-11-08 (cartes, trajets, widgets 0.8.3) |
 | v0.9.0 → v1.0.0 | À faire |
 
 ## Reprendre le travail à froid
@@ -204,6 +204,7 @@ Mini-plan (option A, détails dans `DECISIONS.md`) :
 - Limites : pas de géolocalisation (point de départ = adresse) ; sous Linux pas de recalcul hors ligne ; glyphes de police non encore vus indisponibles hors ligne (rare).
 
 ## Journal
+- 2026-11-08 : v0.8.0 validée par Louis (« je valide les fonctions cartes », widgets 0.8.3 « C'est bon ») et taguée.
 - 2026-11-08 : 0.8.3 — retours de Louis : mode clair ✅ ; centrage Android pas fiable → la liste gardait sa position d'une mise à jour à l'autre (adaptateur conservé par le lanceur), or le calcul suppose un départ en haut : le nombre de types de vues alterne 1/2 à chaque mise à jour, ce qui donne un nouvel adaptateur et un départ en haut à chaque fois. KDE : boutons poussés en haut à droite (espace extensible). Installée Pixel + KDE (plasmashell relancé, pas d'erreur).
 - 2026-11-08 : 0.8.2 — widgets Android (demande de Louis) : bouton « Ouvrir Poulplan » à gauche du bouton « + » (widgets Journée et À venir), widget Journée centré sur la ligne de l'heure actuelle, thème clair des trois widgets (suit le thème du système ; couleurs dans `values/widget_colors.xml` et `values-night/`). **Non testé sur appareil** (aucun Android ici, seule la CI compile) : à vérifier sur le Pixel — bouton, centrage (précision visée : une demi-heure), bascule clair/sombre du système avec les trois widgets (Mois : deux images, `layout-night`). Limites : le centrage dépend du défilement natif d'Android (il peut ne pas se recentrer si la liste a été déplacée à la main avant la mise à jour) ; avant Android 12, le texte des widgets est mis à jour au thème à la prochaine actualisation seulement.
 - 2026-11-08 : 0.8.2 (suite, KDE) — même demande pour les widgets KDE : bouton « Ouvrir Poulplan » (icône de l'app) à côté du + (Journée et À venir), frise Journée centrée sur l'heure actuelle (laissée tranquille 2 min après un défilement manuel). Plasmoïdes installés, plasmashell relancé, pas d'erreur QML dans le journal. La même demande avait été traitée en parallèle par une autre session pour Android : sa version (poussée) est gardée ; ma variante Android est conservée dans la branche locale `widgets-0.8.2-local` (non poussée).
