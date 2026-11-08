@@ -1,0 +1,1 @@
+Première version stable : calendrier local d'abord, répétitions, rappels, jours fériés et vacances scolaires, anniversaires, pièces jointes, cartes et trajets, widgets, sauvegardes, export ICS, verrouillage.

@@ -13,7 +13,7 @@ Dernière mise à jour : 2026-11-04
 | v0.6.0 Intégrations | **Terminé** — validé par Louis le 2026-11-04 (widgets Android et KDE, actions, barre système), version 0.6.4 |
 | v0.7.0 Fonctions complémentaires | **Terminé** — validé par Louis le 2026-11-04 (tests E1–E6), version 0.7.1 |
 | v0.8.0 Navigation | **Terminé** — validé par Louis le 2026-11-08 (cartes, trajets, widgets 0.8.3) |
-| v0.9.0 → v1.0.0 | À faire |
+| v1.0.0 Version stable | **Prête, non taguée** — en attente de la validation de Louis (`docs/RAPPORT_V1.md`) |
 
 ## Reprendre le travail à froid
 ```bash
@@ -203,7 +203,14 @@ Mini-plan (option A, détails dans `DECISIONS.md`) :
 - Non testé : Pixel (absent d'ADB), BRouter réel, téléchargement réel d'une zone, consultation hors ligne réelle → tests F1–F5.
 - Limites : pas de géolocalisation (point de départ = adresse) ; sous Linux pas de recalcul hors ligne ; glyphes de police non encore vus indisponibles hors ligne (rare).
 
+## v1.0.0 — Version stable
+Mini-plan : audit des licences → performances (gros volume) → accessibilité → F-Droid (fastlane, SQLite depuis la source) → Flatpak (manifeste, AppStream) → README et captures → rapport final.
+
+- Fait : audit (`docs/LICENSES.md`, `tool/license_audit.dart` : 120 paquets BSD/MIT/Apache/MPL ; Gradle sans Google Play ni Firebase) ; tests de performance (`test/perf/`) ; accessibilité (`test/features/accessibility_test.dart`, cibles 48 dp, libellés des couleurs, contraste des jours hors du mois, étiquettes du mois exclues de la sémantique au profit de la case du jour) ; fiche F-Droid FR/EN, recette et SQLite depuis la source (`docs/PUBLICATION.md`) ; manifeste Flatpak + AppStream validés ; README avec captures d'un calendrier de démonstration (`tool/demo_data.dart`, `POULPLAN_DATA_DIR`) ; version 1.0.0 installée sur Pixel et PC.
+- Non testé : construction Flatpak, recette F-Droid réelle, lecteurs d'écran → `docs/RAPPORT_V1.md`.
+
 ## Journal
+- 2026-11-08 : v1.0.0 préparée (performances, accessibilité, F-Droid, Flatpak, README, rapport final) ; installée Pixel + PC ; tag en attente de la validation de Louis.
 - 2026-11-08 : v0.8.0 validée par Louis (« je valide les fonctions cartes », widgets 0.8.3 « C'est bon ») et taguée.
 - 2026-11-08 : 0.8.3 — retours de Louis : mode clair ✅ ; centrage Android pas fiable → la liste gardait sa position d'une mise à jour à l'autre (adaptateur conservé par le lanceur), or le calcul suppose un départ en haut : le nombre de types de vues alterne 1/2 à chaque mise à jour, ce qui donne un nouvel adaptateur et un départ en haut à chaque fois. KDE : boutons poussés en haut à droite (espace extensible). Installée Pixel + KDE (plasmashell relancé, pas d'erreur).
 - 2026-11-08 : 0.8.2 — widgets Android (demande de Louis) : bouton « Ouvrir Poulplan » à gauche du bouton « + » (widgets Journée et À venir), widget Journée centré sur la ligne de l'heure actuelle, thème clair des trois widgets (suit le thème du système ; couleurs dans `values/widget_colors.xml` et `values-night/`). **Non testé sur appareil** (aucun Android ici, seule la CI compile) : à vérifier sur le Pixel — bouton, centrage (précision visée : une demi-heure), bascule clair/sombre du système avec les trois widgets (Mois : deux images, `layout-night`). Limites : le centrage dépend du défilement natif d'Android (il peut ne pas se recentrer si la liste a été déplacée à la main avant la mise à jour) ; avant Android 12, le texte des widgets est mis à jour au thème à la prochaine actualisation seulement.

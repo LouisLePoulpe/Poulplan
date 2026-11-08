@@ -1,0 +1,1 @@
+First stable version: local-first calendar, recurring events, reminders, holidays, birthdays, attachments, maps and routes, widgets, backups, ICS export, lock.
