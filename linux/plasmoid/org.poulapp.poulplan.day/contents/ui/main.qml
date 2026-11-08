@@ -173,7 +173,12 @@ PlasmoidItem {
                     opacity: 0.7
                 }
             }
+            // Pushes the buttons to the top right corner.
+            Item {
+                Layout.fillWidth: true
+            }
             PlasmaComponents.ToolButton {
+                Layout.alignment: Qt.AlignRight | Qt.AlignTop
                 icon.name: "org.poulapp.poulplan"
                 text: "Ouvrir Poulplan"
                 display: PlasmaComponents.AbstractButton.IconOnly
@@ -182,6 +187,7 @@ PlasmoidItem {
                 onClicked: root.open(null)
             }
             PlasmaComponents.ToolButton {
+                Layout.alignment: Qt.AlignRight | Qt.AlignTop
                 icon.name: "list-add"
                 text: "Nouvel événement"
                 display: PlasmaComponents.AbstractButton.IconOnly

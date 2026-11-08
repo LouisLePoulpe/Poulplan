@@ -59,7 +59,7 @@ class DayWidgetProvider : HomeWidgetProvider() {
             .replaceFirstChar { it.titlecase(Locale.FRENCH) }
         val views = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val listDp = listHeightDp(context, manager, id, entries.any { it.allDay })
-            timeline(context, entries, now, zone, listDp)
+            timeline(context, entries, now, zone, listDp, nextViewTypeCount(context, id))
         } else {
             DayListRenderer.render(context, entries, now)
         }
@@ -75,6 +75,21 @@ class DayWidgetProvider : HomeWidgetProvider() {
      * or landscape size, as reported by the launcher) minus the padding, the
      * header and, when there are any, the all-day chips.
      */
+    /**
+     * 1, then 2, then 1… for each update of widget [id]. The launcher keeps
+     * the list's adapter, and its scroll position, while the number of view
+     * types stays the same: changing it gives a new adapter, so the list
+     * starts again from the top and [centeredScrollTarget] (which scrolls
+     * down from the top) always lands the « now » line in the middle,
+     * wherever the list was before.
+     */
+    private fun nextViewTypeCount(context: Context, id: Int): Int {
+        val prefs = context.getSharedPreferences("PoulplanDayWidget", Context.MODE_PRIVATE)
+        val next = if (prefs.getInt("view_types_$id", 1) == 1) 2 else 1
+        prefs.edit().putInt("view_types_$id", next).apply()
+        return next
+    }
+
     private fun listHeightDp(
         context: Context,
         manager: AppWidgetManager,
@@ -106,6 +121,7 @@ class DayWidgetProvider : HomeWidgetProvider() {
         now: Instant,
         zone: ZoneId,
         listDp: Float,
+        viewTypeCount: Int,
     ): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.widget_day)
         val nowMinute = now.atZone(zone).toLocalTime().let { it.hour * 60 + it.minute }
@@ -132,7 +148,8 @@ class DayWidgetProvider : HomeWidgetProvider() {
         val placed = layoutDay(entries.filter { !it.allDay })
         val hourDp = context.resources.getDimension(R.dimen.widget_hour_height) /
             context.resources.displayMetrics.density
-        val items = RemoteCollectionItems.Builder().setHasStableIds(true).setViewTypeCount(1)
+        val items = RemoteCollectionItems.Builder().setHasStableIds(true)
+            .setViewTypeCount(viewTypeCount)
         for (hour in 0 until 24) {
             items.addItem(hour.toLong(), hourItem(context, hour, hourDp, placed, now, nowMinute))
         }
