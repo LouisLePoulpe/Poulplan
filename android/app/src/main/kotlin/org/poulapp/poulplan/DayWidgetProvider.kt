@@ -88,7 +88,7 @@ class DayWidgetProvider : HomeWidgetProvider() {
         } else {
             AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT
         }
-        val heightDp = options.getInt(key, 0).takeIf { it > 0 } ?: DEFAULT_HEIGHT_DP
+        val heightDp = options.getInt(key, 0).takeIf { it > 0 }?.toFloat() ?: DEFAULT_HEIGHT_DP
         return max(0f, heightDp - CHROME_DP - (if (hasAllDay) ALL_DAY_ROW_DP else 0f))
     }
 
