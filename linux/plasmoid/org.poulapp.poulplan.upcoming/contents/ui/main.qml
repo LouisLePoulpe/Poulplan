@@ -142,6 +142,14 @@ PlasmoidItem {
                 }
             }
             PlasmaComponents.ToolButton {
+                icon.name: "org.poulapp.poulplan"
+                text: "Ouvrir Poulplan"
+                display: PlasmaComponents.AbstractButton.IconOnly
+                PlasmaComponents.ToolTip.text: text
+                PlasmaComponents.ToolTip.visible: hovered
+                onClicked: root.open(null)
+            }
+            PlasmaComponents.ToolButton {
                 icon.name: "list-add"
                 text: "Nouvel événement"
                 display: PlasmaComponents.AbstractButton.IconOnly

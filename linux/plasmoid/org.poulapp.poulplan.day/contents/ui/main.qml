@@ -174,6 +174,14 @@ PlasmoidItem {
                 }
             }
             PlasmaComponents.ToolButton {
+                icon.name: "org.poulapp.poulplan"
+                text: "Ouvrir Poulplan"
+                display: PlasmaComponents.AbstractButton.IconOnly
+                PlasmaComponents.ToolTip.text: text
+                PlasmaComponents.ToolTip.visible: hovered
+                onClicked: root.open(null)
+            }
+            PlasmaComponents.ToolButton {
                 icon.name: "list-add"
                 text: "Nouvel événement"
                 display: PlasmaComponents.AbstractButton.IconOnly
@@ -223,8 +231,32 @@ PlasmoidItem {
                 clip: true
                 contentWidth: width
                 contentHeight: 24 * full.hourHeight
-                Component.onCompleted: contentY = Math.max(0,
-                    (root.nowMinute / 60 - 1.5) * full.hourHeight)
+                // The « now » line in the middle; left alone for two minutes
+                // after the user scrolls.
+                property bool userScrolled: false
+                function centerOnNow() {
+                    if (moving || userScrolled || height <= 0) return;
+                    const y = root.nowMinute / 60 * full.hourHeight - height / 2;
+                    contentY = Math.max(0, Math.min(y, contentHeight - height));
+                }
+                Component.onCompleted: centerOnNow()
+                onHeightChanged: centerOnNow()
+                onMovementStarted: {
+                    userScrolled = true;
+                    release.restart();
+                }
+                Connections {
+                    target: root
+                    function onNowMinuteChanged() { flick.centerOnNow(); }
+                }
+                Timer {
+                    id: release
+                    interval: 120000
+                    onTriggered: {
+                        flick.userScrolled = false;
+                        flick.centerOnNow();
+                    }
+                }
 
                 Repeater {
                     model: 24
