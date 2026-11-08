@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'app.dart';
 import 'core/debug/screenshot_extension.dart';
@@ -18,6 +17,7 @@ import 'features/lock/lock_controller.dart';
 import 'data/repositories/settings_repository.dart';
 import 'features/widgets/widget_exporter.dart';
 import 'data/providers.dart';
+import 'core/platform/app_directory.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,9 +33,7 @@ Future<void> main() async {
       initialLockStateProvider.overrideWithValue(
         await loadLockState(SettingsRepository(database)),
       ),
-      appDirectoryProvider.overrideWithValue(
-        await getApplicationSupportDirectory(),
-      ),
+      appDirectoryProvider.overrideWithValue(await appDataDirectory()),
     ],
   );
   registerDebugExtensions(container);

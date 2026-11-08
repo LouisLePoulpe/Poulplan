@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../../core/platform/desktop_integration.dart';
@@ -18,6 +17,7 @@ import '../../domain/calendar/day.dart';
 import '../../domain/entities/calendar_event.dart';
 import '../../domain/widgets/widget_snapshot.dart';
 import '../calendar/providers/calendar_providers.dart';
+import '../../core/platform/app_directory.dart';
 
 /// Android widget providers (see android/app/src/main/kotlin).
 const _androidProviders = [
@@ -132,7 +132,7 @@ class WidgetExporter {
           await HomeWidget.updateWidget(qualifiedAndroidName: provider);
         }
       } else {
-        final dir = await getApplicationSupportDirectory();
+        final dir = await appDataDirectory();
         final file = File(p.join(dir.path, linuxSnapshotFile));
         final temp = File('${file.path}.tmp');
         await temp.writeAsString(json);
