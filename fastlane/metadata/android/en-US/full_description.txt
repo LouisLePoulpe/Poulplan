@@ -1,0 +1,12 @@
+<p>Poulplan is a <b>local-first</b> personal calendar: everything is stored on your device and the app works fully without an account or Internet access. The interface is in French.</p>
+<ul>
+<li>Day, week, month, year and agenda views; all-day and multi-day events, time zones.</li>
+<li>Recurring events with custom rules and exceptions, public holiday rule per series.</li>
+<li>Multiple, snoozable reminders, even when the app is closed.</li>
+<li>French public holidays and school holidays, birthdays (VCF or contacts import).</li>
+<li>Search with saved filters, categories and colours.</li>
+<li>Attachments, places on the map (OpenStreetMap), travel time by car, bike or on foot, offline maps; offline routes with the free BRouter app.</li>
+<li>Widgets: day, upcoming, month; light and dark themes.</li>
+<li>Automatic backups, restore, ICS export; PIN or biometric lock.</li>
+</ul>
+<p>Free software (GPL-3.0), no ads, no tracking.</p>

@@ -1,0 +1,13 @@
+<p>Poulplan est un calendrier personnel <b>local d'abord</b> : tout est enregistré sur votre appareil, l'application fonctionne entièrement sans compte ni Internet.</p>
+<ul>
+<li>Vues jour, semaine, mois, année et agenda ; événements sur la journée ou sur plusieurs jours, fuseaux horaires.</li>
+<li>Répétitions (tous les jours, semaines, mois, ans, règles personnalisées, exceptions), règle pour les jours fériés.</li>
+<li>Rappels multiples et reportables, même application fermée.</li>
+<li>Jours fériés français (dont Alsace-Moselle), vacances scolaires, anniversaires (import VCF ou contacts).</li>
+<li>Recherche avec filtres enregistrables, catégories et couleurs.</li>
+<li>Pièces jointes, lieux sur la carte (OpenStreetMap), temps de trajet en voiture, vélo ou à pied, cartes hors ligne ; trajets hors ligne avec l'application libre BRouter.</li>
+<li>Widgets : journée, à venir, mois ; thème clair et sombre.</li>
+<li>Sauvegardes automatiques, restauration, export ICS ; verrouillage par code ou biométrie.</li>
+</ul>
+<p>La synchronisation entre appareils (cloud Poulapp) est facultative et n'est pas incluse dans cette version : aucune donnée ne quitte l'appareil sauf pour les services cartographiques libres que vous utilisez (recherche d'adresse Nominatim, trajets OSRM de FOSSGIS, fond de carte OpenFreeMap).</p>
+<p>Logiciel libre sous licence GPL-3.0, sans publicité ni pistage.</p>

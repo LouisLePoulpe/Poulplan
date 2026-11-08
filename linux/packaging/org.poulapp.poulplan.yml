@@ -1,0 +1,49 @@
+# Flatpak of Poulplan, from the Linux release bundle:
+#   flutter build linux --release
+#   flatpak-builder --user --install --force-clean build-flatpak \
+#     linux/packaging/org.poulapp.poulplan.yml
+# (the cloud sync needs a build with --dart-define-from-file=.env).
+app-id: org.poulapp.poulplan
+runtime: org.gnome.Platform
+runtime-version: '51'
+sdk: org.gnome.Sdk
+command: poulplan
+finish-args:
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  # Maps, address search, routes and the optional cloud sync.
+  - --share=network
+  # Reminders (desktop notifications) and the tray icon.
+  - --talk-name=org.freedesktop.Notifications
+  - --talk-name=org.kde.StatusNotifierWatcher
+  # Single instance: the KDE widgets send their actions to it.
+  - --own-name=org.poulapp.poulplan
+  # Exports and backups chosen by the user.
+  - --filesystem=xdg-download
+modules:
+  - name: poulplan
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/lib/poulplan /app/bin
+      - cp -r bundle/. /app/lib/poulplan/
+      - ln -s /app/lib/poulplan/poulplan /app/bin/poulplan
+      - install -Dm644 org.poulapp.poulplan.desktop -t /app/share/applications
+      - install -Dm644 org.poulapp.poulplan.metainfo.xml -t /app/share/metainfo
+      - |
+        for size in 64 128 256 512; do
+          install -Dm644 icons/hicolor/${size}x${size}/apps/org.poulapp.poulplan.png \
+            -t /app/share/icons/hicolor/${size}x${size}/apps
+        done
+    sources:
+      - type: dir
+        path: ../../build/linux/x64/release/bundle
+        dest: bundle
+      - type: file
+        path: org.poulapp.poulplan.desktop
+      - type: file
+        path: org.poulapp.poulplan.metainfo.xml
+      - type: dir
+        path: icons
+        dest: icons

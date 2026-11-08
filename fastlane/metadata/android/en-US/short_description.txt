@@ -1,0 +1,1 @@
+Free, local-first personal calendar that works offline, optional sync

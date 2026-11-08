@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.poulapp.poulplan</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>Poulplan</name>
+  <summary>Personal calendar, local-first, works offline</summary>
+  <summary xml:lang="fr">Calendrier personnel local, utilisable hors ligne</summary>
+  <developer id="org.poulapp">
+    <name>Louis Le Poulpe</name>
+  </developer>
+  <description>
+    <p xml:lang="fr">
+      Poulplan est un calendrier personnel local d'abord : tout est enregistré
+      sur l'ordinateur et l'application fonctionne entièrement sans compte ni
+      Internet. La synchronisation entre appareils est facultative.
+    </p>
+    <p>
+      Poulplan is a local-first personal calendar: everything is stored on the
+      computer and the app works fully without an account or Internet access.
+      Syncing between devices is optional. The interface is in French.
+    </p>
+    <ul>
+      <li xml:lang="fr">Vues jour, semaine, mois, année et agenda, répétitions et exceptions</li>
+      <li>Day, week, month, year and agenda views, recurring events and exceptions</li>
+      <li xml:lang="fr">Rappels dans la zone de notification, même fenêtre fermée</li>
+      <li>Reminders from the system tray, even with the window closed</li>
+      <li xml:lang="fr">Jours fériés, vacances scolaires, anniversaires, pièces jointes</li>
+      <li>Public and school holidays, birthdays, attachments</li>
+      <li xml:lang="fr">Lieux sur la carte OpenStreetMap, temps de trajet, cartes hors ligne</li>
+      <li>Places on the OpenStreetMap map, travel time, offline maps</li>
+      <li xml:lang="fr">Widgets KDE Plasma, sauvegardes, export ICS, verrouillage par code</li>
+      <li>KDE Plasma widgets, backups, ICS export, PIN lock</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">org.poulapp.poulplan.desktop</launchable>
+  <url type="homepage">https://github.com/LouisLePoulpe/Poulplan</url>
+  <url type="bugtracker">https://github.com/LouisLePoulpe/Poulplan/issues</url>
+  <url type="vcs-browser">https://github.com/LouisLePoulpe/Poulplan</url>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Month view</caption>
+      <image>https://raw.githubusercontent.com/LouisLePoulpe/Poulplan/main/docs/screenshots/month.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Week view</caption>
+      <image>https://raw.githubusercontent.com/LouisLePoulpe/Poulplan/main/docs/screenshots/week.png</image>
+    </screenshot>
+  </screenshots>
+  <categories>
+    <category>Office</category>
+    <category>Calendar</category>
+  </categories>
+  <keywords>
+    <keyword>calendar</keyword>
+    <keyword xml:lang="fr">calendrier</keyword>
+    <keyword xml:lang="fr">agenda</keyword>
+  </keywords>
+  <content_rating type="oars-1.1"/>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </supports>
+  <releases>
+    <release version="1.0.0" date="2026-11-08">
+      <description>
+        <p>First stable version.</p>
+      </description>
+    </release>
+  </releases>
+</component>
