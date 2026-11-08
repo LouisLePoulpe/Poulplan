@@ -286,9 +286,8 @@ class _DayCell extends ConsumerWidget {
                                     ? scheme.onPrimary
                                     : inMonth
                                     ? scheme.onSurface
-                                    : scheme.onSurfaceVariant.withValues(
-                                        alpha: 0.6,
-                                      ),
+                                    // Dimmed, but readable (WCAG AA).
+                                    : scheme.onSurfaceVariant,
                                 fontWeight: isToday ? FontWeight.bold : null,
                               ),
                             ),
@@ -351,6 +350,8 @@ class MonthEventChip extends ConsumerWidget {
       continuesAfter: continuesAfter,
     );
     return GestureDetector(
+      // Too small a target for screen readers: they open the day cell.
+      excludeFromSemantics: true,
       onTap: () => openEvent(context, event),
       onSecondaryTapUp: (details) =>
           showEventMenu(context, ref, event, details.globalPosition),

@@ -1862,6 +1862,12 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Fond de carte indisponible hors ligne pour l\'instant'**
   String get mapUnavailable;
+
+  /// No description provided for @colorNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couleur {number}'**
+  String colorNumber(int number);
 }
 
 class _AppLocalizationsDelegate

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/generated/app_localizations.dart';
+
 /// Colors offered for categories and events (Material 600 shades, readable
 /// with white text, plus the Poulplan brown).
 const paletteColors = <int>[
@@ -41,8 +43,6 @@ class ColorPalette extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return Wrap(
-      spacing: 8,
-      runSpacing: 8,
       children: [
         if (allowNone)
           Tooltip(
@@ -51,11 +51,13 @@ class ColorPalette extends StatelessWidget {
               color: scheme.surfaceContainerHighest,
               selected: selected == null,
               icon: Icons.format_color_reset,
+              label: noneLabel,
               onTap: () => onSelected(null),
             ),
           ),
-        for (final c in paletteColors)
+        for (final (i, c) in paletteColors.indexed)
           _Swatch(
+            label: AppLocalizations.of(context).colorNumber(i + 1),
             color: Color(c),
             selected: selected == c,
             onTap: () => onSelected(c),
@@ -71,12 +73,14 @@ class _Swatch extends StatelessWidget {
     required this.selected,
     required this.onTap,
     this.icon,
+    this.label,
   });
 
   final Color color;
   final bool selected;
   final VoidCallback onTap;
   final IconData? icon;
+  final String? label;
 
   @override
   Widget build(BuildContext context) {
@@ -84,30 +88,35 @@ class _Swatch extends StatelessWidget {
         ThemeData.estimateBrightnessForColor(color) == Brightness.dark
         ? Colors.white
         : Colors.black;
+    // 32 px disc, 48 px touch target.
     return Semantics(
       selected: selected,
       button: true,
+      label: label,
       child: InkWell(
         onTap: onTap,
         customBorder: const CircleBorder(),
-        child: Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-            border: selected
-                ? Border.all(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    width: 3,
-                  )
-                : null,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+              border: selected
+                  ? Border.all(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      width: 3,
+                    )
+                  : null,
+            ),
+            child: selected
+                ? Icon(Icons.check, size: 18, color: onColor)
+                : icon == null
+                ? null
+                : Icon(icon, size: 18, color: onColor),
           ),
-          child: selected
-              ? Icon(Icons.check, size: 18, color: onColor)
-              : icon == null
-              ? null
-              : Icon(icon, size: 18, color: onColor),
         ),
       ),
     );

@@ -580,5 +580,13 @@
   "brouterTitle": "Calcul des trajets hors ligne",
   "brouterInstalled": "BRouter est installé : les trajets se calculent aussi sans connexion, dans les zones dont BRouter a les données",
   "brouterMissing": "Installez l'application libre BRouter (F-Droid) et ses données de votre région pour calculer des trajets sans connexion",
-  "mapUnavailable": "Fond de carte indisponible hors ligne pour l'instant"
+  "mapUnavailable": "Fond de carte indisponible hors ligne pour l'instant",
+  "colorNumber": "Couleur {number}",
+  "@colorNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  }
 }

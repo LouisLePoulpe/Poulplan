@@ -1026,4 +1026,9 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get mapUnavailable =>
       'Fond de carte indisponible hors ligne pour l\'instant';
+
+  @override
+  String colorNumber(int number) {
+    return 'Couleur $number';
+  }
 }
