@@ -13,7 +13,7 @@ Dernière mise à jour : 2026-11-04
 | v0.6.0 Intégrations | **Terminé** — validé par Louis le 2026-11-04 (widgets Android et KDE, actions, barre système), version 0.6.4 |
 | v0.7.0 Fonctions complémentaires | **Terminé** — validé par Louis le 2026-11-04 (tests E1–E6), version 0.7.1 |
 | v0.8.0 Navigation | **Terminé** — validé par Louis le 2026-11-08 (cartes, trajets, widgets 0.8.3) |
-| v1.0.0 Version stable | **Prête, non taguée** — en attente de la validation de Louis (`docs/RAPPORT_V1.md`) |
+| v1.0.0 Version stable | **Terminé** — validé par Louis le 2026-11-08 (rapport : `docs/RAPPORT_V1.md`) |
 
 ## Reprendre le travail à froid
 ```bash
@@ -210,6 +210,7 @@ Mini-plan : audit des licences → performances (gros volume) → accessibilité
 - Non testé : construction Flatpak, recette F-Droid réelle, lecteurs d'écran → `docs/RAPPORT_V1.md`.
 
 ## Journal
+- 2026-11-08 : v1.0.0 validée par Louis (« Oui, tague ») et taguée, CI verte. Restent avant publication : construction Flatpak, demande F-Droid, essais avec lecteur d'écran (voir `docs/RAPPORT_V1.md`).
 - 2026-11-08 : v1.0.0 préparée (performances, accessibilité, F-Droid, Flatpak, README, rapport final) ; installée Pixel + PC ; tag en attente de la validation de Louis.
 - 2026-11-08 : v0.8.0 validée par Louis (« je valide les fonctions cartes », widgets 0.8.3 « C'est bon ») et taguée.
 - 2026-11-08 : 0.8.3 — retours de Louis : mode clair ✅ ; centrage Android pas fiable → la liste gardait sa position d'une mise à jour à l'autre (adaptateur conservé par le lanceur), or le calcul suppose un départ en haut : le nombre de types de vues alterne 1/2 à chaque mise à jour, ce qui donne un nouvel adaptateur et un départ en haut à chaque fois. KDE : boutons poussés en haut à droite (espace extensible). Installée Pixel + KDE (plasmashell relancé, pas d'erreur).
