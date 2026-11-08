@@ -7,6 +7,7 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlin.math.roundToInt
 import org.json.JSONObject
 
 /** One upcoming event, as exported by the app (lib/domain/widgets). */
@@ -104,4 +105,37 @@ fun dayLabel(day: LocalDate, today: LocalDate): String = when (day) {
     today.plusDays(1) -> "Demain"
     else -> day.format(DateTimeFormatter.ofPattern("EEE d MMM", Locale.FRENCH))
         .replaceFirstChar { it.titlecase(Locale.FRENCH) }
+}
+
+/** Extra scroll Android adds when it scrolls an item into view (fading edge length). */
+private const val FADING_EDGE_DP = 12f
+
+/**
+ * Adapter position to hand to `smoothScrollToPosition` so that the red line
+ * (the current time) ends up in the middle of the time line.
+ *
+ * Scrolling down to a position that is not visible yet brings that item to
+ * the bottom of the list, [FADING_EDGE_DP] short of the edge (the list's
+ * extra scroll). The line is then `(position + 1 - nowHours)` hours above
+ * that bottom, so the position that puts it at half the height is
+ * `nowHours - 1 + (listDp / 2 - edge) / hourDp`, rounded to the nearest hour
+ * (precision: half an hour). Early in the morning the target is already on
+ * screen and nothing scrolls; late in the evening the list stops at 23:00.
+ */
+fun centeredScrollTarget(nowMinute: Int, listDp: Float, hourDp: Float): Int {
+    val nowHours = nowMinute / 60f
+    val target = nowHours - 1f + (listDp / 2f - FADING_EDGE_DP) / hourDp
+    return target.roundToInt().coerceIn(0, 23)
+}
+
+/** A colour resource resolved for the light or the dark theme, whatever the system's. */
+fun android.content.Context.themedColor(id: Int, night: Boolean): Int {
+    val config = android.content.res.Configuration(resources.configuration)
+    val mode = if (night) {
+        android.content.res.Configuration.UI_MODE_NIGHT_YES
+    } else {
+        android.content.res.Configuration.UI_MODE_NIGHT_NO
+    }
+    config.uiMode = (config.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK.inv()) or mode
+    return createConfigurationContext(config).getColor(id)
 }

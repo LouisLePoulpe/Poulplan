@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -57,14 +58,38 @@ class DayWidgetProvider : HomeWidgetProvider() {
         val date = today.format(DateTimeFormatter.ofPattern("EEEE d MMMM", Locale.FRENCH))
             .replaceFirstChar { it.titlecase(Locale.FRENCH) }
         val views = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            timeline(context, entries, now, zone)
+            val listDp = listHeightDp(context, manager, id, entries.any { it.allDay })
+            timeline(context, entries, now, zone, listDp)
         } else {
             DayListRenderer.render(context, entries, now)
         }
         views.setTextViewText(R.id.day_date, date)
         views.setOnClickPendingIntent(R.id.day_header, launchIntent(context, "open"))
+        views.setOnClickPendingIntent(R.id.widget_open, launchIntent(context, "open"))
         views.setOnClickPendingIntent(R.id.widget_add, launchIntent(context, "new"))
         manager.updateAppWidget(id, views)
+    }
+
+    /**
+     * Estimated height of the time line in dp: the widget's height (portrait
+     * or landscape size, as reported by the launcher) minus the padding, the
+     * header and, when there are any, the all-day chips.
+     */
+    private fun listHeightDp(
+        context: Context,
+        manager: AppWidgetManager,
+        id: Int,
+        hasAllDay: Boolean,
+    ): Float {
+        val options = manager.getAppWidgetOptions(id)
+        val landscape = context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        val key = if (landscape) {
+            AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT
+        } else {
+            AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT
+        }
+        val heightDp = options.getInt(key, 0).takeIf { it > 0 } ?: DEFAULT_HEIGHT_DP
+        return max(0f, heightDp - CHROME_DP - (if (hasAllDay) ALL_DAY_ROW_DP else 0f))
     }
 
     private fun target(entry: WidgetEntry) =
@@ -80,6 +105,7 @@ class DayWidgetProvider : HomeWidgetProvider() {
         entries: List<WidgetEntry>,
         now: Instant,
         zone: ZoneId,
+        listDp: Float,
     ): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.widget_day)
         val nowMinute = now.atZone(zone).toLocalTime().let { it.hour * 60 + it.minute }
@@ -112,7 +138,7 @@ class DayWidgetProvider : HomeWidgetProvider() {
         }
         views.setRemoteAdapter(R.id.day_list, items.build())
         views.setPendingIntentTemplate(R.id.day_list, templateIntent(context))
-        views.setScrollPosition(R.id.day_list, max(0, nowMinute / 60 - 1))
+        views.setScrollPosition(R.id.day_list, centeredScrollTarget(nowMinute, listDp, hourDp))
         return views
     }
 
@@ -204,6 +230,14 @@ class DayWidgetProvider : HomeWidgetProvider() {
                         val finished = p.entry.end <= now.toEpochMilli()
                         val alpha = if (finished) 0x55 else 0xDD
                         views.setInt(slot, "setBackgroundColor", (alpha shl 24) or (p.entry.color and 0xFFFFFF))
+                        if (finished) {
+                            // Faded box: the text follows the system theme (Android 12+).
+                            views.setColorInt(
+                                slot, "setTextColor",
+                                context.themedColor(R.color.widget_event_finished_text, night = false),
+                                context.themedColor(R.color.widget_event_finished_text, night = true),
+                            )
+                        }
                         val text = if (hour == p.titleHour) {
                             val totalDp = (p.end - p.start) * dpPerMinute
                             val time = if (totalDp >= 34f) "\n${p.entry.time}–${p.entry.endTime ?: ""}" else ""
@@ -251,6 +285,12 @@ class DayWidgetProvider : HomeWidgetProvider() {
 
     private companion object {
         const val SLOTS = 4
+        /** Used when the launcher does not report the widget's height. */
+        const val DEFAULT_HEIGHT_DP = 250f
+        /** Padding (2 × 12 dp) + header row (36 dp + 6 dp). */
+        const val CHROME_DP = 24f + 42f
+        /** All-day chips row (22 dp + 4 dp). */
+        const val ALL_DAY_ROW_DP = 26f
         val LANES = listOf(
             R.id.tl_lane_0 to listOf(R.id.tl_lane_0_0, R.id.tl_lane_0_1, R.id.tl_lane_0_2, R.id.tl_lane_0_3),
             R.id.tl_lane_1 to listOf(R.id.tl_lane_1_0, R.id.tl_lane_1_1, R.id.tl_lane_1_2, R.id.tl_lane_1_3),
@@ -293,8 +333,9 @@ object DayListRenderer {
             views.setTextViewText(place, location ?: "")
             views.setInt(bar, "setBackgroundColor", entry.color)
             val alpha = if (finished) 0x66 else 0xFF
-            views.setTextColor(title, (alpha shl 24) or 0xFFF6C2)
-            views.setTextColor(time, (alpha shl 24) or 0xFFF6C2)
+            val textColor = (alpha shl 24) or (context.getColor(R.color.widget_text) and 0xFFFFFF)
+            views.setTextColor(title, textColor)
+            views.setTextColor(time, textColor)
             val target = if (entry.openable) "event/${Uri.encode(entry.id)}" else "open"
             views.setOnClickPendingIntent(row, launchIntent(context, target))
         }

@@ -10,13 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="36dp"
-        android:background="#40FFF6C2" />
+        android:background="@color/widget_hour_line" />
     <TextView
         android:id="@+id/tl_hour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="2dp"
-        android:textColor="#99FFF6C2"
+        android:textColor="@color/widget_hour_text"
         android:textSize="11sp" />
     <LinearLayout
         android:id="@+id/tl_lane_0"

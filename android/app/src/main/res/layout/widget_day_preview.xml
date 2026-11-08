@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Journée"
-        android:textColor="#FFE600"
+        android:textColor="@color/widget_title"
         android:textSize="16sp"
         android:textStyle="bold" />
     <TextView
@@ -18,27 +18,27 @@
         android:layout_height="wrap_content"
         android:paddingTop="4dp"
         android:text="Journée · Anniversaire de Léa"
-        android:textColor="#FFF6C2"
+        android:textColor="@color/widget_text"
         android:textSize="13sp" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="4dp"
         android:text="09:00 · Réunion"
-        android:textColor="#FFF6C2"
+        android:textColor="@color/widget_text"
         android:textSize="13sp" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="4dp"
         android:text="12:30 · Déjeuner"
-        android:textColor="#FFF6C2"
+        android:textColor="@color/widget_text"
         android:textSize="13sp" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="4dp"
         android:text="18:00 · Piscine"
-        android:textColor="#FFF6C2"
+        android:textColor="@color/widget_text"
         android:textSize="13sp" />
 </LinearLayout>

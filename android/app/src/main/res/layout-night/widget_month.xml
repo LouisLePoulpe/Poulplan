@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Thème sombre du widget « Mois » : voir layout/widget_month.xml. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/month_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/widget_month_description"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
+    <ImageView
+        android:id="@+id/month_image_night"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/widget_month_description"
+        android:scaleType="fitCenter" />
+</FrameLayout>

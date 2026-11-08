@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widgets Android : thème sombre (thème du système en mode nuit). -->
+<resources>
+    <color name="widget_background">#F21E1A0E</color>
+    <color name="widget_title">#FFE600</color>
+    <color name="widget_text">#FFF6C2</color>
+    <color name="widget_text_dim">#B3FFF6C2</color>
+    <color name="widget_hour_text">#99FFF6C2</color>
+    <color name="widget_hour_line">#40FFF6C2</color>
+    <color name="widget_accent">#FFE600</color>
+    <color name="widget_button_text">#2C1E00</color>
+    <color name="widget_button_secondary">#33FFF6C2</color>
+    <color name="widget_event_finished_text">#FFFFFF</color>
+</resources>

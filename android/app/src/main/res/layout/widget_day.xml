@@ -23,16 +23,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/widget_day_title"
-                android:textColor="#FFE600"
+                android:textColor="@color/widget_title"
                 android:textSize="16sp"
                 android:textStyle="bold" />
             <TextView
                 android:id="@+id/day_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#B3FFF6C2"
+                android:textColor="@color/widget_text_dim"
                 android:textSize="12sp" />
         </LinearLayout>
+        <ImageView
+            android:id="@+id/widget_open"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/widget_open_background"
+            android:contentDescription="@string/widget_open"
+            android:padding="9dp"
+            android:src="@drawable/ic_widget_open" />
         <TextView
             android:id="@+id/widget_add"
             android:layout_width="36dp"
@@ -41,7 +50,7 @@
             android:contentDescription="@string/widget_add"
             android:gravity="center"
             android:text="+"
-            android:textColor="#2C1E00"
+            android:textColor="@color/widget_button_text"
             android:textSize="22sp"
             android:textStyle="bold" />
     </LinearLayout>

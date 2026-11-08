@@ -19,9 +19,18 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/widget_upcoming_title"
-            android:textColor="#FFE600"
+            android:textColor="@color/widget_title"
             android:textSize="16sp"
             android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/widget_open"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/widget_open_background"
+            android:contentDescription="@string/widget_open"
+            android:padding="9dp"
+            android:src="@drawable/ic_widget_open" />
         <TextView
             android:id="@+id/widget_add"
             android:layout_width="36dp"
@@ -30,7 +39,7 @@
             android:contentDescription="@string/widget_add"
             android:gravity="center"
             android:text="+"
-            android:textColor="#2C1E00"
+            android:textColor="@color/widget_button_text"
             android:textSize="22sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -39,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/widget_upcoming_empty"
-        android:textColor="#B3FFF6C2"
+        android:textColor="@color/widget_text_dim"
         android:textSize="13sp"
         android:visibility="gone" />
     <LinearLayout
@@ -66,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#FFF6C2"
+                android:textColor="@color/widget_text"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/row_0_when"
@@ -74,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#B3FFF6C2"
+                android:textColor="@color/widget_text_dim"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
@@ -102,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#FFF6C2"
+                android:textColor="@color/widget_text"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/row_1_when"
@@ -110,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#B3FFF6C2"
+                android:textColor="@color/widget_text_dim"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
@@ -138,7 +147,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#FFF6C2"
+                android:textColor="@color/widget_text"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/row_2_when"
@@ -146,7 +155,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#B3FFF6C2"
+                android:textColor="@color/widget_text_dim"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
@@ -174,7 +183,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#FFF6C2"
+                android:textColor="@color/widget_text"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/row_3_when"
@@ -182,7 +191,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#B3FFF6C2"
+                android:textColor="@color/widget_text_dim"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
@@ -210,7 +219,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#FFF6C2"
+                android:textColor="@color/widget_text"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/row_4_when"
@@ -218,7 +227,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#B3FFF6C2"
+                android:textColor="@color/widget_text_dim"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
@@ -246,7 +255,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#FFF6C2"
+                android:textColor="@color/widget_text"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/row_5_when"
@@ -254,7 +263,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#B3FFF6C2"
+                android:textColor="@color/widget_text_dim"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>

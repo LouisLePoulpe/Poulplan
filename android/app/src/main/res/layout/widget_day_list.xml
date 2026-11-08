@@ -22,16 +22,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/widget_day_title"
-                android:textColor="#FFE600"
+                android:textColor="@color/widget_title"
                 android:textSize="16sp"
                 android:textStyle="bold" />
             <TextView
                 android:id="@+id/day_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#B3FFF6C2"
+                android:textColor="@color/widget_text_dim"
                 android:textSize="12sp" />
         </LinearLayout>
+        <ImageView
+            android:id="@+id/widget_open"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/widget_open_background"
+            android:contentDescription="@string/widget_open"
+            android:padding="9dp"
+            android:src="@drawable/ic_widget_open" />
         <TextView
             android:id="@+id/widget_add"
             android:layout_width="36dp"
@@ -40,7 +49,7 @@
             android:contentDescription="@string/widget_add"
             android:gravity="center"
             android:text="+"
-            android:textColor="#2C1E00"
+            android:textColor="@color/widget_button_text"
             android:textSize="22sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -49,7 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/widget_day_empty"
-        android:textColor="#B3FFF6C2"
+        android:textColor="@color/widget_text_dim"
         android:textSize="13sp"
         android:visibility="gone" />
     <LinearLayout
@@ -66,7 +75,7 @@
             android:layout_width="52dp"
             android:layout_height="wrap_content"
             android:maxLines="2"
-            android:textColor="#FFF6C2"
+            android:textColor="@color/widget_text"
             android:textSize="12sp" />
         <FrameLayout
             android:id="@+id/day_row_0_bar"
@@ -84,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#FFF6C2"
+                android:textColor="@color/widget_text"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/day_row_0_place"
@@ -92,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#B3FFF6C2"
+                android:textColor="@color/widget_text_dim"
                 android:textSize="12sp"
                 android:visibility="gone" />
         </LinearLayout>
@@ -111,7 +120,7 @@
             android:layout_width="52dp"
             android:layout_height="wrap_content"
             android:maxLines="2"
-            android:textColor="#FFF6C2"
+            android:textColor="@color/widget_text"
             android:textSize="12sp" />
         <FrameLayout
             android:id="@+id/day_row_1_bar"
@@ -129,7 +138,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#FFF6C2"
+                android:textColor="@color/widget_text"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/day_row_1_place"
@@ -137,7 +146,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#B3FFF6C2"
+                android:textColor="@color/widget_text_dim"
                 android:textSize="12sp"
                 android:visibility="gone" />
         </LinearLayout>
@@ -156,7 +165,7 @@
             android:layout_width="52dp"
             android:layout_height="wrap_content"
             android:maxLines="2"
-            android:textColor="#FFF6C2"
+            android:textColor="@color/widget_text"
             android:textSize="12sp" />
         <FrameLayout
             android:id="@+id/day_row_2_bar"
@@ -174,7 +183,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#FFF6C2"
+                android:textColor="@color/widget_text"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/day_row_2_place"
@@ -182,7 +191,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#B3FFF6C2"
+                android:textColor="@color/widget_text_dim"
                 android:textSize="12sp"
                 android:visibility="gone" />
         </LinearLayout>
@@ -201,7 +210,7 @@
             android:layout_width="52dp"
             android:layout_height="wrap_content"
             android:maxLines="2"
-            android:textColor="#FFF6C2"
+            android:textColor="@color/widget_text"
             android:textSize="12sp" />
         <FrameLayout
             android:id="@+id/day_row_3_bar"
@@ -219,7 +228,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#FFF6C2"
+                android:textColor="@color/widget_text"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/day_row_3_place"
@@ -227,7 +236,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#B3FFF6C2"
+                android:textColor="@color/widget_text_dim"
                 android:textSize="12sp"
                 android:visibility="gone" />
         </LinearLayout>
@@ -246,7 +255,7 @@
             android:layout_width="52dp"
             android:layout_height="wrap_content"
             android:maxLines="2"
-            android:textColor="#FFF6C2"
+            android:textColor="@color/widget_text"
             android:textSize="12sp" />
         <FrameLayout
             android:id="@+id/day_row_4_bar"
@@ -264,7 +273,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#FFF6C2"
+                android:textColor="@color/widget_text"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/day_row_4_place"
@@ -272,7 +281,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#B3FFF6C2"
+                android:textColor="@color/widget_text_dim"
                 android:textSize="12sp"
                 android:visibility="gone" />
         </LinearLayout>
@@ -291,7 +300,7 @@
             android:layout_width="52dp"
             android:layout_height="wrap_content"
             android:maxLines="2"
-            android:textColor="#FFF6C2"
+            android:textColor="@color/widget_text"
             android:textSize="12sp" />
         <FrameLayout
             android:id="@+id/day_row_5_bar"
@@ -309,7 +318,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#FFF6C2"
+                android:textColor="@color/widget_text"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/day_row_5_place"
@@ -317,7 +326,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#B3FFF6C2"
+                android:textColor="@color/widget_text_dim"
                 android:textSize="12sp"
                 android:visibility="gone" />
         </LinearLayout>
@@ -336,7 +345,7 @@
             android:layout_width="52dp"
             android:layout_height="wrap_content"
             android:maxLines="2"
-            android:textColor="#FFF6C2"
+            android:textColor="@color/widget_text"
             android:textSize="12sp" />
         <FrameLayout
             android:id="@+id/day_row_6_bar"
@@ -354,7 +363,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#FFF6C2"
+                android:textColor="@color/widget_text"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/day_row_6_place"
@@ -362,7 +371,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#B3FFF6C2"
+                android:textColor="@color/widget_text_dim"
                 android:textSize="12sp"
                 android:visibility="gone" />
         </LinearLayout>
@@ -381,7 +390,7 @@
             android:layout_width="52dp"
             android:layout_height="wrap_content"
             android:maxLines="2"
-            android:textColor="#FFF6C2"
+            android:textColor="@color/widget_text"
             android:textSize="12sp" />
         <FrameLayout
             android:id="@+id/day_row_7_bar"
@@ -399,7 +408,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#FFF6C2"
+                android:textColor="@color/widget_text"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/day_row_7_place"
@@ -407,7 +416,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#B3FFF6C2"
+                android:textColor="@color/widget_text_dim"
                 android:textSize="12sp"
                 android:visibility="gone" />
         </LinearLayout>
@@ -417,7 +426,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
-        android:textColor="#B3FFF6C2"
+        android:textColor="@color/widget_text_dim"
         android:textSize="12sp"
         android:visibility="gone" />
 </LinearLayout>

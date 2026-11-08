@@ -9,4 +9,5 @@
     <string name="widget_day_empty">Rien de prévu aujourd\'hui</string>
     <string name="widget_day_description">Événements du jour de Poulplan</string>
     <string name="widget_add">Nouvel événement</string>
+    <string name="widget_open">Ouvrir Poulplan</string>
 </resources>

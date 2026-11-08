@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- « Mois » est dessiné en image, donc deux images (thème clair et sombre) :
+     ce layout montre la claire, layout-night/widget_month.xml la sombre. Le
+     choix se fait à l'affichage, le widget suit le thème du système même si
+     l'app est fermée. -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -8,4 +12,11 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/widget_month_description"
         android:scaleType="fitCenter" />
+    <ImageView
+        android:id="@+id/month_image_night"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/widget_month_description"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
 </FrameLayout>
