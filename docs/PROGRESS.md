@@ -210,6 +210,7 @@ Mini-plan : audit des licences → performances (gros volume) → accessibilité
 - Non testé : construction Flatpak, recette F-Droid réelle, lecteurs d'écran → `docs/RAPPORT_V1.md`.
 
 ## Journal
+- 2026-11-09 : 1.0.1 vérifiée par Louis (« à première vue oui ») sur Pixel et PC, taguée.
 - 2026-11-09 : 1.0.1 — demande de Louis : la notification d'un rappel disparaît d'elle-même une fois l'événement passé et peut être effacée avec les autres (avant : persistante jusqu'à « C'est noté »). Tests : fin d'événement (dont journée entière en heure locale), durée d'affichage, rappels terminés, rapports de fin dans la notification (y compris notifications des versions précédentes). Non vérifié sur appareil au moment du déploiement : disparition réelle à l'heure de fin (Pixel et KDE).
 - 2026-11-08 : v1.0.0 validée par Louis (« Oui, tague ») et taguée, CI verte. Restent avant publication : construction Flatpak, demande F-Droid, essais avec lecteur d'écran (voir `docs/RAPPORT_V1.md`).
 - 2026-11-08 : v1.0.0 préparée (performances, accessibilité, F-Droid, Flatpak, README, rapport final) ; installée Pixel + PC ; tag en attente de la validation de Louis.
