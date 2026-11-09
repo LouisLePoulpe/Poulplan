@@ -63,6 +63,11 @@
     <control>touch</control>
   </supports>
   <releases>
+    <release version="1.0.1" date="2026-11-09">
+      <description>
+        <p>Reminder notifications go away when the event is over.</p>
+      </description>
+    </release>
     <release version="1.0.0" date="2026-11-08">
       <description>
         <p>First stable version.</p>

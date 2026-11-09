@@ -24,6 +24,7 @@ class ReminderPayload {
     required this.title,
     required this.body,
     required this.notificationId,
+    this.endsAt,
   });
 
   factory ReminderPayload.decode(String text) {
@@ -33,6 +34,12 @@ class ReminderPayload {
       title: json['title'] as String,
       body: json['body'] as String,
       notificationId: json['id'] as int,
+      endsAt: json['end'] == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(
+              json['end'] as int,
+              isUtc: true,
+            ),
     );
   }
 
@@ -41,27 +48,40 @@ class ReminderPayload {
   final String body;
   final int notificationId;
 
+  /// End of the event: the notification goes away then.
+  final DateTime? endsAt;
+
+  /// How long a notification shown at [at] stays (null: the event is over).
+  Duration? lifetimeFrom(DateTime at) {
+    final end = endsAt;
+    return end == null
+        ? const Duration(days: 1)
+        : notificationLifetime(end, at);
+  }
+
   String encode() => jsonEncode({
     'eventId': eventId,
     'title': title,
     'body': body,
     'id': notificationId,
+    if (endsAt != null) 'end': endsAt!.millisecondsSinceEpoch,
   });
 }
 
-NotificationDetails _details() => NotificationDetails(
-  android: const AndroidNotificationDetails(
+/// Shown until the event is over ([lifetime]); can also be swiped away or
+/// cleared with the others.
+NotificationDetails _details(Duration lifetime) => NotificationDetails(
+  android: AndroidNotificationDetails(
     _channelId,
     _channelName,
     channelDescription: 'Rappels des événements du calendrier',
     importance: Importance.high,
     priority: Priority.high,
     category: AndroidNotificationCategory.reminder,
-    // Stays until the user acknowledges it.
-    ongoing: true,
-    autoCancel: false,
+    // Removed by the system when the event is over.
+    timeoutAfter: lifetime.inMilliseconds,
     icon: 'ic_notification',
-    actions: [
+    actions: const [
       AndroidNotificationAction(
         ackAction,
         "C'est noté",
@@ -74,10 +94,10 @@ NotificationDetails _details() => NotificationDetails(
       ),
     ],
   ),
+  // KDE/GNOME keep critical notifications on screen until closed: by the
+  // user, or by the app when the event is over (see ReminderScheduler).
   linux: const LinuxNotificationDetails(
-    // KDE/GNOME keep critical notifications until dismissed.
     urgency: LinuxNotificationUrgency.critical,
-    resident: true,
     actions: [
       LinuxNotificationAction(key: ackAction, label: "C'est noté"),
       LinuxNotificationAction(
@@ -88,21 +108,27 @@ NotificationDetails _details() => NotificationDetails(
   ),
 );
 
-/// Schedules [payload] again in [snoozeMinutes] (also from the background
-/// isolate on Android, hence a top-level function).
+/// Schedules [payload] again in [snoozeMinutes], unless the event will be
+/// over by then (also from the background isolate on Android, hence a
+/// top-level function).
 Future<void> snoozeReminder(
   FlutterLocalNotificationsPlugin plugin,
   ReminderPayload payload,
-) => plugin.zonedSchedule(
-  id: payload.notificationId | snoozeIdFlag,
-  title: payload.title,
-  body: payload.body,
-  scheduledDate: tz.TZDateTime.now(tz.UTC)
-      .add(const Duration(minutes: snoozeMinutes)),
-  notificationDetails: _details(),
-  androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-  payload: payload.encode(),
-);
+) async {
+  final at = tz.TZDateTime.now(tz.UTC)
+      .add(const Duration(minutes: snoozeMinutes));
+  final lifetime = payload.lifetimeFrom(at);
+  if (lifetime == null) return;
+  await plugin.zonedSchedule(
+    id: payload.notificationId | snoozeIdFlag,
+    title: payload.title,
+    body: payload.body,
+    scheduledDate: at,
+    notificationDetails: _details(lifetime),
+    androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    payload: payload.encode(),
+  );
+}
 
 /// Android: notification button pressed while the app is not running.
 @pragma('vm:entry-point')
@@ -223,20 +249,34 @@ class NotificationService {
     title: fire.event.title,
     body: body,
     notificationId: fire.notificationId,
+    endsAt: fire.endsAt,
   );
 
-  Future<void> _showPayload(int id, ReminderPayload payload) => _plugin.show(
-    id: id,
-    title: payload.title,
-    body: payload.body,
-    notificationDetails: _details(),
-    payload: payload.encode(),
-  );
+  /// Shows [payload] now, unless its event is already over.
+  Future<void> _showPayload(int id, ReminderPayload payload) async {
+    final lifetime = payload.lifetimeFrom(DateTime.now().toUtc());
+    if (lifetime == null) return;
+    await _plugin.show(
+      id: id,
+      title: payload.title,
+      body: payload.body,
+      notificationDetails: _details(lifetime),
+      payload: payload.encode(),
+    );
+  }
 
   /// Shows [fire] now (Linux scheduler, test notification).
   Future<void> show(ReminderFire fire, String body) async {
     if (!_ready) return;
     await _showPayload(fire.notificationId, _payload(fire, body));
+  }
+
+  /// Removes the notification of [fire] (and of its snoozed copy): its event
+  /// is over.
+  Future<void> remove(ReminderFire fire) async {
+    if (!_ready) return;
+    await _plugin.cancel(id: fire.notificationId);
+    await _plugin.cancel(id: fire.notificationId | snoozeIdFlag);
   }
 
   /// Android: makes the system alarms match [fires] exactly (snoozed
@@ -254,13 +294,15 @@ class NotificationService {
       }
     }
     for (final fire in fires) {
+      final lifetime = notificationLifetime(fire.endsAt, fire.fireAt);
+      if (lifetime == null) continue;
       final payload = _payload(fire, body(fire));
       await _plugin.zonedSchedule(
         id: fire.notificationId,
         title: payload.title,
         body: payload.body,
         scheduledDate: tz.TZDateTime.from(fire.fireAt, tz.UTC),
-        notificationDetails: _details(),
+        notificationDetails: _details(lifetime),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         payload: payload.encode(),
       );

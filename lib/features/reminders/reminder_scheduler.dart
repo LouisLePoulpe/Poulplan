@@ -79,6 +79,9 @@ class ReminderScheduler {
 
   /// [reminderKey]s already shown or handed to the system.
   Set<String> _known = {};
+
+  /// [reminderKey]s whose notification was removed (event over).
+  final _removed = <String>{};
   bool _running = false;
 
   NotificationService get _service => _ref.read(notificationServiceProvider);
@@ -182,6 +185,12 @@ class ReminderScheduler {
         await _service.show(fire, _body(fire));
         _known.add(reminderKey(fire));
         if (kDebugMode) debugPrint('Reminder shown: ${fire.event.title}');
+      }
+      // Event over: its notification goes (Android also removes it by
+      // itself; Linux has no such timeout). Also clears the notifications
+      // left by older versions, which stayed until acknowledged.
+      for (final fire in endedReminders(fires, now: now)) {
+        if (_removed.add(reminderKey(fire))) await _service.remove(fire);
       }
       if (NotificationService.systemScheduling) {
         final upcoming = upcomingReminders(

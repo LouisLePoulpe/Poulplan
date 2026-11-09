@@ -1,0 +1,1 @@
+Reminder notifications go away by themselves when the event is over and can be cleared with the others.

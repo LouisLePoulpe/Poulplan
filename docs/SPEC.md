@@ -35,7 +35,7 @@ Titre, description, catégorie et couleur personnalisées, date et heure, fuseau
 - Règle de gestion des jours fériés configurable par série.
 
 ## 6. Notifications et rappels
-- Rappels multiples, personnalisables, reportables (snooze), visibles jusqu'à validation.
+- Rappels multiples, personnalisables, reportables (snooze), visibles jusqu'à validation ou jusqu'à la fin de l'événement (retirés automatiquement ensuite, effaçables avec les autres notifications) — demande de Louis, 2026-11-09.
 - Fonctionnent sur Android et Linux même application fermée (dans les limites de l'OS).
 - Indépendants du cloud : un rappel local se déclenche sans Internet.
 

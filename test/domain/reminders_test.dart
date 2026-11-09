@@ -225,6 +225,68 @@ void main() {
     });
   });
 
+  group('end of the event (notification removed then)', () {
+    test('timed event: its end', () {
+      final fire = allReminders([
+        timed('a', DateTime.utc(2026, 3, 10, 10)),
+      ], display: paris).single;
+      expect(fire.endsAt, DateTime.utc(2026, 3, 10, 11));
+    });
+
+    test('all-day event: midnight after its last day, local time', () {
+      // 24 December in Paris ends at 25 December 00:00 CET = 23:00 UTC.
+      final fire = allReminders([
+        allDay('noel', DateTime.utc(2026, 12, 24), [0]),
+      ], display: paris).single;
+      expect(fire.endsAt, DateTime.utc(2026, 12, 24, 23));
+    });
+
+    test('how long a notification stays', () {
+      final fire = allReminders([
+        timed('a', DateTime.utc(2026, 3, 10, 10)),
+      ], display: paris).single;
+      // Shown at 09:50, the event ends at 11:00.
+      expect(
+        notificationLifetime(fire.endsAt, DateTime.utc(2026, 3, 10, 9, 50)),
+        const Duration(minutes: 70),
+      );
+      expect(
+        notificationLifetime(fire.endsAt, DateTime.utc(2026, 3, 10, 11)),
+        isNull,
+      );
+    });
+
+    test('reminders whose event is over, to remove (two days back)', () {
+      final fires = allReminders([
+        timed('over', DateTime.utc(2026, 3, 10, 7)),
+        timed('running', DateTime.utc(2026, 3, 10, 8, 30)),
+        timed('old', DateTime.utc(2026, 3, 5, 7)),
+      ], display: paris);
+      final now = DateTime.utc(2026, 3, 10, 9);
+      expect(endedReminders(fires, now: now).map((f) => f.event.id), [
+        'over',
+      ]);
+    });
+
+    test('an all-day reminder is still shown during its day', () {
+      // « Le jour même à 9 h », event on 10 March: shown at 10:00 local.
+      final fires = allReminders([
+        allDay('jour', DateTime.utc(2026, 3, 10), [0]),
+      ], display: paris);
+      final now = DateTime.utc(2026, 3, 10, 9);
+      expect(remindersToShowNow(fires, now: now, known: {}), hasLength(1));
+      // 11 March 00:30 local: the day is over.
+      expect(
+        remindersToShowNow(
+          fires,
+          now: DateTime.utc(2026, 3, 10, 23, 30),
+          known: {},
+        ),
+        isEmpty,
+      );
+    });
+  });
+
   group('describeReminder', () {
     test('timed events', () {
       expect(describeReminder(0, allDay: false), "À l'heure de début");

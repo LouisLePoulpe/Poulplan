@@ -13,16 +13,20 @@ const allDayReminderMinute = 9 * 60;
 /// A reminder to show at [fireAt] for [event] (an occurrence for series).
 @immutable
 class ReminderFire {
-  const ReminderFire({
+  ReminderFire({
     required this.event,
     required this.minutesBefore,
     required this.fireAt,
     required this.notificationId,
-  });
+    DateTime? endsAt,
+  }) : endsAt = endsAt ?? event.end;
 
   final CalendarEvent event;
   final int minutesBefore;
   final DateTime fireAt;
+
+  /// When the event is over: its notification goes away then.
+  final DateTime endsAt;
 
   /// Stable id for the platform notification (positive, 30 bits; ids with
   /// [snoozeIdFlag] are reserved for snoozed reminders).
@@ -43,6 +47,32 @@ int reminderNotificationId(String eventId, int minutesBefore) {
   final id = hash & 0x3fffffff;
   return id == 0 ? 1 : id;
 }
+
+/// The instant [event] is over: its end, or for an all-day event the local
+/// midnight after its last day.
+DateTime eventEndInstant(CalendarEvent event, tz.Location display) =>
+    event.allDay
+    ? wallTimeToUtc(display, Day.fromDateTime(event.end), 0)
+    : event.end;
+
+/// How long a notification shown at [shownAt] stays: until the event is
+/// over. Null when it is already over (nothing to show).
+Duration? notificationLifetime(DateTime endsAt, DateTime shownAt) {
+  final lifetime = endsAt.difference(shownAt);
+  return lifetime > Duration.zero ? lifetime : null;
+}
+
+/// Reminders of events that ended in the last two days, whose notification
+/// must be removed (Linux: the app closes them itself).
+List<ReminderFire> endedReminders(
+  Iterable<ReminderFire> fires, {
+  required DateTime now,
+}) => [
+  for (final fire in fires)
+    if (!fire.endsAt.isAfter(now) &&
+        now.difference(fire.endsAt) <= const Duration(days: 2))
+      fire,
+];
 
 Iterable<ReminderFire> _fires(
   Iterable<CalendarEvent> events,
@@ -65,6 +95,7 @@ Iterable<ReminderFire> _fires(
         minutesBefore: minutes,
         fireAt: fireAt,
         notificationId: reminderNotificationId(event.id, minutes),
+        endsAt: eventEndInstant(event, display),
       );
     }
   }
@@ -160,7 +191,7 @@ List<ReminderFire> remindersToShowNow(
   for (final fire in fires)
     if (!fire.fireAt.isAfter(now) &&
         now.difference(fire.fireAt) <= maxLateness &&
-        fire.event.end.isAfter(now) &&
+        fire.endsAt.isAfter(now) &&
         !known.contains(reminderKey(fire)))
       fire,
 ];

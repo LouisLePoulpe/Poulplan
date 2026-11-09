@@ -1,0 +1,1 @@
+Les notifications de rappel disparaissent d'elles-mêmes à la fin de l'événement et peuvent être effacées avec les autres.
