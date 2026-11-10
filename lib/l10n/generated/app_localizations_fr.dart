@@ -1031,4 +1031,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String colorNumber(int number) {
     return 'Couleur $number';
   }
+
+  @override
+  String get openNavigation => 'Ouvrir dans le GPS';
+
+  @override
+  String get openNavigationWeb => 'Itinéraire sur OpenStreetMap';
+
+  @override
+  String get noNavigationApp =>
+      'Aucune application de navigation installée (OsmAnd, Organic Maps…)';
 }

@@ -588,5 +588,8 @@
         "type": "int"
       }
     }
-  }
+  },
+  "openNavigation": "Ouvrir dans le GPS",
+  "openNavigationWeb": "Itinéraire sur OpenStreetMap",
+  "noNavigationApp": "Aucune application de navigation installée (OsmAnd, Organic Maps…)"
 }

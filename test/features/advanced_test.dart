@@ -246,6 +246,8 @@ void main() {
     expect(find.text('17 min · 2,5 km'), findsOneWidget);
     expect(find.text('Départ : Maison'), findsOneWidget);
     expect(find.text('Recalculer'), findsOneWidget);
+    // Opening the place in a navigation app (Linux: openstreetmap.org).
+    expect(find.text('Itinéraire sur OpenStreetMap'), findsOneWidget);
     // Typing another place: the position (and the route) no longer apply.
     await tester.enterText(
       find.widgetWithText(TextField, 'Place Bellecour'),

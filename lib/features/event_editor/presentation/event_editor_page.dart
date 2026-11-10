@@ -17,6 +17,7 @@ import '../../calendar/presentation/event_actions.dart';
 import '../../calendar/providers/calendar_providers.dart';
 import '../../categories/presentation/color_palette.dart';
 import 'quick_create.dart';
+import '../../maps/presentation/navigation_button.dart';
 import '../../maps/presentation/place_search.dart';
 import '../../maps/presentation/route_section.dart';
 import 'attachments_editor.dart';
@@ -420,6 +421,17 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
                           draft.placePoint = place.point;
                         });
                       },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 32),
+                  child: ValueListenableBuilder(
+                    valueListenable: _location,
+                    builder: (context, value, _) => NavigationButton(
+                      point: draft.placePoint,
+                      address: value.text,
+                      label: _title.text,
                     ),
                   ),
                 ),

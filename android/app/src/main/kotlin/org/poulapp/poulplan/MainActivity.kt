@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.StatFs
 import android.provider.ContactsContract
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,7 +18,8 @@ import io.flutter.plugin.common.MethodChannel
 /**
  * Fragment activity for the biometric prompt (local_auth), plus the
  * `org.poulapp.poulplan/android` channel: save a document where the user
- * chooses, open an attachment, read the contacts' birthdays, free space.
+ * chooses, open an attachment or a navigation app, read the contacts'
+ * birthdays, free space.
  */
 class MainActivity : FlutterFragmentActivity() {
     private var pendingSave: Pair<ByteArray, MethodChannel.Result>? = null
@@ -54,6 +56,17 @@ class MainActivity : FlutterFragmentActivity() {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "org.poulapp.poulplan/android")
             .setMethodCallHandler { call, result ->
                 when (call.method) {
+                    "openUri" -> {
+                        // geo: link → the navigation apps installed (OsmAnd,
+                        // Organic Maps…), the user picks one.
+                        val view = Intent(Intent.ACTION_VIEW, Uri.parse(call.argument<String>("uri")!!))
+                        try {
+                            startActivity(Intent.createChooser(view, call.argument<String>("title")))
+                            result.success(true)
+                        } catch (e: ActivityNotFoundException) {
+                            result.error("NO_APP", e.message, null)
+                        }
+                    }
                     "saveDocument" -> {
                         pendingSave = Pair(call.argument<ByteArray>("bytes")!!, result)
                         createDocument.launch(

@@ -84,6 +84,22 @@ class FileExchange {
     }
   }
 
+  /// Opens [uri] in another application: on Android a chooser (navigation
+  /// apps for a `geo:` link), on Linux the desktop's default (browser).
+  static Future<void> openUri(Uri uri, {required String title}) async {
+    if (Platform.isAndroid) {
+      await _android.invokeMethod('openUri', {'uri': '$uri', 'title': title});
+      return;
+    }
+    final container = Platform.environment['CONTAINER_ID'];
+    final result = container == null || container.isEmpty
+        ? await Process.run('xdg-open', ['$uri'])
+        : await Process.run('distrobox-host-exec', ['xdg-open', '$uri']);
+    if (result.exitCode != 0) {
+      throw PlatformException(code: 'NO_APP', message: '${result.stderr}');
+    }
+  }
+
   /// Free space where [path] is, or null when unknown.
   static Future<int?> freeBytes(String path) async {
     try {

@@ -5,6 +5,7 @@ import '../../../data/providers.dart';
 import '../../../domain/geo/routing.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../maps_providers.dart';
+import 'navigation_button.dart';
 import 'poulplan_map.dart';
 
 /// Full screen map of an event's place and remembered route.
@@ -22,6 +23,14 @@ class EventMapPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(event?.title ?? l10n.mapTitle),
+        actions: [
+          if (destination != null)
+            NavigationButton(
+              point: destination,
+              label: event?.title,
+              compact: true,
+            ),
+        ],
         bottom: route == null
             ? null
             : PreferredSize(

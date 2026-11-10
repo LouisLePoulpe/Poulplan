@@ -1868,6 +1868,24 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Couleur {number}'**
   String colorNumber(int number);
+
+  /// No description provided for @openNavigation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir dans le GPS'**
+  String get openNavigation;
+
+  /// No description provided for @openNavigationWeb.
+  ///
+  /// In fr, this message translates to:
+  /// **'Itinéraire sur OpenStreetMap'**
+  String get openNavigationWeb;
+
+  /// No description provided for @noNavigationApp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune application de navigation installée (OsmAnd, Organic Maps…)'**
+  String get noNavigationApp;
 }
 
 class _AppLocalizationsDelegate
