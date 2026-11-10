@@ -10,6 +10,8 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.TypedValue
 import android.view.View
 import android.widget.RemoteViews
@@ -57,8 +59,11 @@ class DayWidgetProvider : HomeWidgetProvider() {
         val entries = snapshot?.agenda?.get(today).orEmpty()
         val date = today.format(DateTimeFormatter.ofPattern("EEEE d MMMM", Locale.FRENCH))
             .replaceFirstChar { it.titlecase(Locale.FRENCH) }
+        var scrollTarget: Int? = null
         val views = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val listDp = listHeightDp(context, manager, id, entries.any { it.allDay })
+            val nowMinute = now.atZone(zone).toLocalTime().let { it.hour * 60 + it.minute }
+            scrollTarget = centeredScrollTarget(nowMinute, listDp, hourDp(context))
             timeline(context, entries, now, zone, listDp, nextViewTypeCount(context, id))
         } else {
             DayListRenderer.render(context, entries, now)
@@ -68,6 +73,7 @@ class DayWidgetProvider : HomeWidgetProvider() {
         views.setOnClickPendingIntent(R.id.widget_open, launchIntent(context, "open"))
         views.setOnClickPendingIntent(R.id.widget_add, launchIntent(context, "new"))
         manager.updateAppWidget(id, views)
+        scrollTarget?.let { rescroll(context, manager, id, it) }
     }
 
     /**
@@ -75,6 +81,27 @@ class DayWidgetProvider : HomeWidgetProvider() {
      * or landscape size, as reported by the launcher) minus the padding, the
      * header and, when there are any, the all-day chips.
      */
+    private fun hourDp(context: Context) =
+        context.resources.getDimension(R.dimen.widget_hour_height) /
+            context.resources.displayMetrics.density
+
+    /**
+     * The launcher builds a new list at each full update and applies the
+     * scroll before the list has its rows, which Android ignores (the list
+     * stayed on 00:00). The scroll is sent again once the list is displayed,
+     * as a partial update that keeps the views.
+     */
+    private fun rescroll(context: Context, manager: AppWidgetManager, id: Int, target: Int) {
+        val main = Handler(Looper.getMainLooper())
+        for (delay in longArrayOf(700, 2000)) {
+            main.postDelayed({
+                val partial = RemoteViews(context.packageName, R.layout.widget_day)
+                partial.setScrollPosition(R.id.day_list, target)
+                manager.partiallyUpdateAppWidget(id, partial)
+            }, delay)
+        }
+    }
+
     /**
      * 1, then 2, then 1… for each update of widget [id]. The launcher keeps
      * the list's adapter, and its scroll position, while the number of view

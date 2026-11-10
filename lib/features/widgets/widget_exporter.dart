@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
@@ -58,9 +59,13 @@ class WidgetExporter {
   static bool get supported =>
       !kIsWeb && (Platform.isAndroid || Platform.isLinux);
 
+  AppLifecycleListener? _lifecycle;
+
   void start() {
     if (!supported) return;
     _watch();
+    // Back in the app: refresh the widgets (« now » line, day change).
+    _lifecycle = AppLifecycleListener(onResume: _schedule);
   }
 
   void _watch() {
@@ -149,6 +154,7 @@ class WidgetExporter {
   }
 
   void dispose() {
+    _lifecycle?.dispose();
     for (final s in _subscriptions) {
       s.close();
     }

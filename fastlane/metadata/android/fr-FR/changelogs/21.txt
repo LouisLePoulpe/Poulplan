@@ -1,0 +1,1 @@
+Bouton « Ouvrir dans le GPS » sur les événements avec un lieu ; le widget Journée se recentre sur l'heure à chaque retour dans l'application.

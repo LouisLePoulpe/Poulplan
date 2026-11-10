@@ -1,0 +1,1 @@
+"Open in navigation app" button on events with a place; the Day widget centres on the current time each time you come back to the app.
