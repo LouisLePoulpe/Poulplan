@@ -1852,12 +1852,341 @@ i1.GeneratedColumn<int> _column_70(String aliasedName) =>
       type: i1.DriftSqlType.int,
       $customConstraints: 'NULL',
     );
+
+final class Schema7 extends i0.VersionedSchema {
+  Schema7({required super.database}) : super(version: 7);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    categories,
+    events,
+    settings,
+    birthdays,
+    savedFilters,
+    syncMeta,
+    syncConflicts,
+    attachments,
+    attachmentFiles,
+    routes,
+    mapZones,
+    eventsRange,
+    eventsSeries,
+    attachmentsEvent,
+    routesEvent,
+  ];
+  late final Shape0 categories = Shape0(
+    source: i0.VersionedTable(
+      entityName: 'categories',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_3,
+        _column_4,
+        _column_5,
+        _column_6,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape13 events = Shape13(
+    source: i0.VersionedTable(
+      entityName: 'events',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_7,
+        _column_8,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_12,
+        _column_50,
+        _column_51,
+        _column_71,
+        _column_13,
+        _column_14,
+        _column_15,
+        _column_16,
+        _column_17,
+        _column_18,
+        _column_19,
+        _column_20,
+        _column_21,
+        _column_22,
+        _column_23,
+        _column_42,
+        _column_24,
+        _column_4,
+        _column_5,
+        _column_6,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape2 settings = Shape2(
+    source: i0.VersionedTable(
+      entityName: 'settings',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY("key")'],
+      columns: [_column_25, _column_26],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape3 birthdays = Shape3(
+    source: i0.VersionedTable(
+      entityName: 'birthdays',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_27,
+        _column_28,
+        _column_29,
+        _column_4,
+        _column_5,
+        _column_6,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape4 savedFilters = Shape4(
+    source: i0.VersionedTable(
+      entityName: 'saved_filters',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_30,
+        _column_4,
+        _column_5,
+        _column_6,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape5 syncMeta = Shape5(
+    source: i0.VersionedTable(
+      entityName: 'sync_meta',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(entity, record_id)'],
+      columns: [
+        _column_31,
+        _column_32,
+        _column_33,
+        _column_34,
+        _column_35,
+        _column_36,
+        _column_37,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape6 syncConflicts = Shape6(
+    source: i0.VersionedTable(
+      entityName: 'sync_conflicts',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(entity, record_id, field)'],
+      columns: [
+        _column_31,
+        _column_32,
+        _column_38,
+        _column_39,
+        _column_40,
+        _column_41,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape8 attachments = Shape8(
+    source: i0.VersionedTable(
+      entityName: 'attachments',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_43,
+        _column_1,
+        _column_44,
+        _column_45,
+        _column_4,
+        _column_5,
+        _column_6,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape9 attachmentFiles = Shape9(
+    source: i0.VersionedTable(
+      entityName: 'attachment_files',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(attachment_id)'],
+      columns: [_column_46, _column_47, _column_48, _column_49],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape11 routes = Shape11(
+    source: i0.VersionedTable(
+      entityName: 'routes',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_43,
+        _column_52,
+        _column_53,
+        _column_54,
+        _column_55,
+        _column_56,
+        _column_57,
+        _column_58,
+        _column_59,
+        _column_60,
+        _column_61,
+        _column_62,
+        _column_4,
+        _column_5,
+        _column_6,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape12 mapZones = Shape12(
+    source: i0.VersionedTable(
+      entityName: 'map_zones',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_63,
+        _column_64,
+        _column_65,
+        _column_66,
+        _column_67,
+        _column_68,
+        _column_69,
+        _column_70,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index eventsRange = i1.Index(
+    'events_range',
+    'CREATE INDEX events_range ON events (start_utc, end_utc)',
+  );
+  final i1.Index eventsSeries = i1.Index(
+    'events_series',
+    'CREATE INDEX events_series ON events (series_id, original_start_utc)',
+  );
+  final i1.Index attachmentsEvent = i1.Index(
+    'attachments_event',
+    'CREATE INDEX attachments_event ON attachments (event_id)',
+  );
+  final i1.Index routesEvent = i1.Index(
+    'routes_event',
+    'CREATE INDEX routes_event ON routes (event_id)',
+  );
+}
+
+class Shape13 extends i0.VersionedTable {
+  Shape13({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get title =>
+      columnsByName['title']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get description =>
+      columnsByName['description']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get categoryId =>
+      columnsByName['category_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get color =>
+      columnsByName['color']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get location =>
+      columnsByName['location']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get videoLink =>
+      columnsByName['video_link']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<double> get latitude =>
+      columnsByName['latitude']! as i1.GeneratedColumn<double>;
+  i1.GeneratedColumn<double> get longitude =>
+      columnsByName['longitude']! as i1.GeneratedColumn<double>;
+  i1.GeneratedColumn<int> get showInMonth =>
+      columnsByName['show_in_month']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get busy =>
+      columnsByName['busy']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get allDay =>
+      columnsByName['all_day']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get startUtc =>
+      columnsByName['start_utc']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get endUtc =>
+      columnsByName['end_utc']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get timeZone =>
+      columnsByName['time_zone']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get rrule =>
+      columnsByName['rrule']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get holidayRule =>
+      columnsByName['holiday_rule']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get seriesId =>
+      columnsByName['series_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get originalStartUtc =>
+      columnsByName['original_start_utc']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get cancelled =>
+      columnsByName['cancelled']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get recurrenceEndUtc =>
+      columnsByName['recurrence_end_utc']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get reminders =>
+      columnsByName['reminders']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get searchText =>
+      columnsByName['search_text']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAt =>
+      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get updatedAt =>
+      columnsByName['updated_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get deletedAt =>
+      columnsByName['deleted_at']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_71(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'show_in_month',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL DEFAULT 1 CHECK (show_in_month IN (0, 1))',
+      defaultValue: const i1.CustomExpression('1'),
+    );
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
   required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
   required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
   required Future<void> Function(i1.Migrator m, Schema6 schema) from5To6,
+  required Future<void> Function(i1.Migrator m, Schema7 schema) from6To7,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -1886,6 +2215,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from5To6(migrator, schema);
         return 6;
+      case 6:
+        final schema = Schema7(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from6To7(migrator, schema);
+        return 7;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -1898,6 +2232,7 @@ i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
   required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
   required Future<void> Function(i1.Migrator m, Schema6 schema) from5To6,
+  required Future<void> Function(i1.Migrator m, Schema7 schema) from6To7,
 }) => i0.VersionedSchema.stepByStepHelper(
   step: migrationSteps(
     from1To2: from1To2,
@@ -1905,5 +2240,6 @@ i1.OnUpgrade stepByStep({
     from3To4: from3To4,
     from4To5: from4To5,
     from5To6: from5To6,
+    from6To7: from6To7,
   ),
 );

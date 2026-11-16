@@ -38,6 +38,7 @@ Future<CalendarEvent> createFromDraft(WidgetRef ref, EventDraft draft) {
         placePoint: blank.hasMatch(draft.location ?? '')
             ? null
             : draft.placePoint,
+        showInMonth: draft.showInMonth,
         busy: draft.busy,
         allDay: draft.allDay,
         start: times.start,

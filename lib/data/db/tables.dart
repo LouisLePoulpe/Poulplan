@@ -34,6 +34,9 @@ class Events extends Table {
   /// Coordinates of [location] (schema v6), when found on the map.
   RealColumn get latitude => real().nullable()();
   RealColumn get longitude => real().nullable()();
+
+  /// Shown in the month view (schema v7).
+  BoolColumn get showInMonth => boolean().withDefault(const Constant(true))();
   BoolColumn get busy => boolean().withDefault(const Constant(true))();
   BoolColumn get allDay => boolean().withDefault(const Constant(false))();
   IntColumn get startUtc => integer()();

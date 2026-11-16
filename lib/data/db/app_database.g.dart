@@ -557,6 +557,21 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _showInMonthMeta = const VerificationMeta(
+    'showInMonth',
+  );
+  @override
+  late final GeneratedColumn<bool> showInMonth = GeneratedColumn<bool>(
+    'show_in_month',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("show_in_month" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
   static const VerificationMeta _busyMeta = const VerificationMeta('busy');
   @override
   late final GeneratedColumn<bool> busy = GeneratedColumn<bool>(
@@ -751,6 +766,7 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
     videoLink,
     latitude,
     longitude,
+    showInMonth,
     busy,
     allDay,
     startUtc,
@@ -836,6 +852,15 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
       context.handle(
         _longitudeMeta,
         longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta),
+      );
+    }
+    if (data.containsKey('show_in_month')) {
+      context.handle(
+        _showInMonthMeta,
+        showInMonth.isAcceptableOrUnknown(
+          data['show_in_month']!,
+          _showInMonthMeta,
+        ),
       );
     }
     if (data.containsKey('busy')) {
@@ -998,6 +1023,10 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
         DriftSqlType.double,
         data['${effectivePrefix}longitude'],
       ),
+      showInMonth: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}show_in_month'],
+      )!,
       busy: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}busy'],
@@ -1083,6 +1112,9 @@ class EventRow extends DataClass implements Insertable<EventRow> {
   /// Coordinates of [location] (schema v6), when found on the map.
   final double? latitude;
   final double? longitude;
+
+  /// Shown in the month view (schema v7).
+  final bool showInMonth;
   final bool busy;
   final bool allDay;
   final int startUtc;
@@ -1115,6 +1147,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     this.videoLink,
     this.latitude,
     this.longitude,
+    required this.showInMonth,
     required this.busy,
     required this.allDay,
     required this.startUtc,
@@ -1156,6 +1189,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     if (!nullToAbsent || longitude != null) {
       map['longitude'] = Variable<double>(longitude);
     }
+    map['show_in_month'] = Variable<bool>(showInMonth);
     map['busy'] = Variable<bool>(busy);
     map['all_day'] = Variable<bool>(allDay);
     map['start_utc'] = Variable<int>(startUtc);
@@ -1208,6 +1242,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       longitude: longitude == null && nullToAbsent
           ? const Value.absent()
           : Value(longitude),
+      showInMonth: Value(showInMonth),
       busy: Value(busy),
       allDay: Value(allDay),
       startUtc: Value(startUtc),
@@ -1252,6 +1287,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       videoLink: serializer.fromJson<String?>(json['videoLink']),
       latitude: serializer.fromJson<double?>(json['latitude']),
       longitude: serializer.fromJson<double?>(json['longitude']),
+      showInMonth: serializer.fromJson<bool>(json['showInMonth']),
       busy: serializer.fromJson<bool>(json['busy']),
       allDay: serializer.fromJson<bool>(json['allDay']),
       startUtc: serializer.fromJson<int>(json['startUtc']),
@@ -1283,6 +1319,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       'videoLink': serializer.toJson<String?>(videoLink),
       'latitude': serializer.toJson<double?>(latitude),
       'longitude': serializer.toJson<double?>(longitude),
+      'showInMonth': serializer.toJson<bool>(showInMonth),
       'busy': serializer.toJson<bool>(busy),
       'allDay': serializer.toJson<bool>(allDay),
       'startUtc': serializer.toJson<int>(startUtc),
@@ -1312,6 +1349,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     Value<String?> videoLink = const Value.absent(),
     Value<double?> latitude = const Value.absent(),
     Value<double?> longitude = const Value.absent(),
+    bool? showInMonth,
     bool? busy,
     bool? allDay,
     int? startUtc,
@@ -1338,6 +1376,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     videoLink: videoLink.present ? videoLink.value : this.videoLink,
     latitude: latitude.present ? latitude.value : this.latitude,
     longitude: longitude.present ? longitude.value : this.longitude,
+    showInMonth: showInMonth ?? this.showInMonth,
     busy: busy ?? this.busy,
     allDay: allDay ?? this.allDay,
     startUtc: startUtc ?? this.startUtc,
@@ -1374,6 +1413,9 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       videoLink: data.videoLink.present ? data.videoLink.value : this.videoLink,
       latitude: data.latitude.present ? data.latitude.value : this.latitude,
       longitude: data.longitude.present ? data.longitude.value : this.longitude,
+      showInMonth: data.showInMonth.present
+          ? data.showInMonth.value
+          : this.showInMonth,
       busy: data.busy.present ? data.busy.value : this.busy,
       allDay: data.allDay.present ? data.allDay.value : this.allDay,
       startUtc: data.startUtc.present ? data.startUtc.value : this.startUtc,
@@ -1413,6 +1455,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
           ..write('videoLink: $videoLink, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
+          ..write('showInMonth: $showInMonth, ')
           ..write('busy: $busy, ')
           ..write('allDay: $allDay, ')
           ..write('startUtc: $startUtc, ')
@@ -1444,6 +1487,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     videoLink,
     latitude,
     longitude,
+    showInMonth,
     busy,
     allDay,
     startUtc,
@@ -1474,6 +1518,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
           other.videoLink == this.videoLink &&
           other.latitude == this.latitude &&
           other.longitude == this.longitude &&
+          other.showInMonth == this.showInMonth &&
           other.busy == this.busy &&
           other.allDay == this.allDay &&
           other.startUtc == this.startUtc &&
@@ -1502,6 +1547,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
   final Value<String?> videoLink;
   final Value<double?> latitude;
   final Value<double?> longitude;
+  final Value<bool> showInMonth;
   final Value<bool> busy;
   final Value<bool> allDay;
   final Value<int> startUtc;
@@ -1529,6 +1575,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     this.videoLink = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
+    this.showInMonth = const Value.absent(),
     this.busy = const Value.absent(),
     this.allDay = const Value.absent(),
     this.startUtc = const Value.absent(),
@@ -1557,6 +1604,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     this.videoLink = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
+    this.showInMonth = const Value.absent(),
     this.busy = const Value.absent(),
     this.allDay = const Value.absent(),
     required int startUtc,
@@ -1591,6 +1639,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     Expression<String>? videoLink,
     Expression<double>? latitude,
     Expression<double>? longitude,
+    Expression<bool>? showInMonth,
     Expression<bool>? busy,
     Expression<bool>? allDay,
     Expression<int>? startUtc,
@@ -1619,6 +1668,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
       if (videoLink != null) 'video_link': videoLink,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
+      if (showInMonth != null) 'show_in_month': showInMonth,
       if (busy != null) 'busy': busy,
       if (allDay != null) 'all_day': allDay,
       if (startUtc != null) 'start_utc': startUtc,
@@ -1649,6 +1699,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     Value<String?>? videoLink,
     Value<double?>? latitude,
     Value<double?>? longitude,
+    Value<bool>? showInMonth,
     Value<bool>? busy,
     Value<bool>? allDay,
     Value<int>? startUtc,
@@ -1677,6 +1728,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
       videoLink: videoLink ?? this.videoLink,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
+      showInMonth: showInMonth ?? this.showInMonth,
       busy: busy ?? this.busy,
       allDay: allDay ?? this.allDay,
       startUtc: startUtc ?? this.startUtc,
@@ -1726,6 +1778,9 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     }
     if (longitude.present) {
       map['longitude'] = Variable<double>(longitude.value);
+    }
+    if (showInMonth.present) {
+      map['show_in_month'] = Variable<bool>(showInMonth.value);
     }
     if (busy.present) {
       map['busy'] = Variable<bool>(busy.value);
@@ -1793,6 +1848,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
           ..write('videoLink: $videoLink, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
+          ..write('showInMonth: $showInMonth, ')
           ..write('busy: $busy, ')
           ..write('allDay: $allDay, ')
           ..write('startUtc: $startUtc, ')
@@ -6638,6 +6694,7 @@ typedef $$EventsTableCreateCompanionBuilder = EventsCompanion Function({
   Value<String?> videoLink,
   Value<double?> latitude,
   Value<double?> longitude,
+  Value<bool> showInMonth,
   Value<bool> busy,
   Value<bool> allDay,
   required int startUtc,
@@ -6666,6 +6723,7 @@ typedef $$EventsTableUpdateCompanionBuilder = EventsCompanion Function({
   Value<String?> videoLink,
   Value<double?> latitude,
   Value<double?> longitude,
+  Value<bool> showInMonth,
   Value<bool> busy,
   Value<bool> allDay,
   Value<int> startUtc,
@@ -6753,6 +6811,11 @@ class $$EventsTableFilterComposer
 
   ColumnFilters<double> get longitude => $composableBuilder(
     column: $table.longitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get showInMonth => $composableBuilder(
+    column: $table.showInMonth,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -6909,6 +6972,11 @@ class $$EventsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get showInMonth => $composableBuilder(
+    column: $table.showInMonth,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get busy => $composableBuilder(
     column: $table.busy,
     builder: (column) => ColumnOrderings(column),
@@ -7048,6 +7116,11 @@ class $$EventsTableAnnotationComposer
   GeneratedColumn<double> get longitude =>
       $composableBuilder(column: $table.longitude, builder: (column) => column);
 
+  GeneratedColumn<bool> get showInMonth => $composableBuilder(
+    column: $table.showInMonth,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<bool> get busy =>
       $composableBuilder(column: $table.busy, builder: (column) => column);
 
@@ -7165,6 +7238,7 @@ class $$EventsTableTableManager
                 Value<String?> videoLink = const Value.absent(),
                 Value<double?> latitude = const Value.absent(),
                 Value<double?> longitude = const Value.absent(),
+                Value<bool> showInMonth = const Value.absent(),
                 Value<bool> busy = const Value.absent(),
                 Value<bool> allDay = const Value.absent(),
                 Value<int> startUtc = const Value.absent(),
@@ -7192,6 +7266,7 @@ class $$EventsTableTableManager
                 videoLink: videoLink,
                 latitude: latitude,
                 longitude: longitude,
+                showInMonth: showInMonth,
                 busy: busy,
                 allDay: allDay,
                 startUtc: startUtc,
@@ -7221,6 +7296,7 @@ class $$EventsTableTableManager
                 Value<String?> videoLink = const Value.absent(),
                 Value<double?> latitude = const Value.absent(),
                 Value<double?> longitude = const Value.absent(),
+                Value<bool> showInMonth = const Value.absent(),
                 Value<bool> busy = const Value.absent(),
                 Value<bool> allDay = const Value.absent(),
                 required int startUtc,
@@ -7248,6 +7324,7 @@ class $$EventsTableTableManager
                 videoLink: videoLink,
                 latitude: latitude,
                 longitude: longitude,
+                showInMonth: showInMonth,
                 busy: busy,
                 allDay: allDay,
                 startUtc: startUtc,

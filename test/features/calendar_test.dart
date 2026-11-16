@@ -226,6 +226,57 @@ void main() {
     await unmount(tester);
   });
 
+  testWidgets('events can be left out of the month view', (tester) async {
+    await pumpApp(tester);
+    await tester.runAsync(
+      () => events.create(
+        title: 'Dodo',
+        start: DateTime.utc(2026, 11, 3, 22),
+        end: DateTime.utc(2026, 11, 4, 6),
+        timeZone: 'UTC',
+        rrule: 'FREQ=DAILY',
+        showInMonth: false,
+      ),
+    );
+    await insert(
+      tester,
+      'Dentiste',
+      DateTime.utc(2026, 11, 4, 9),
+      DateTime.utc(2026, 11, 4, 10),
+    );
+    expect(find.text('Dentiste'), findsOneWidget);
+    expect(find.text('Dodo'), findsNothing);
+    await selectView(tester, 'Semaine');
+    expect(find.text('Dodo'), findsWidgets);
+    await unmount(tester);
+  });
+
+  testWidgets('the editor sets « shown in the month view »', (tester) async {
+    await pumpApp(tester);
+    await insert(
+      tester,
+      'Sieste',
+      DateTime.utc(2026, 11, 4, 13),
+      DateTime.utc(2026, 11, 4, 14),
+    );
+    await tester.tap(find.text('Sieste'));
+    await tester.pumpAndSettle();
+    final option = find.text('Afficher dans la vue Mois');
+    await tester.dragUntilVisible(
+      option,
+      find.byType(ListView).last,
+      const Offset(0, -300),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(option);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Enregistrer'));
+    await tester.pumpAndSettle();
+    expect(find.text('Sieste'), findsNothing);
+    expect((await allEvents(tester)).single.showInMonth, isFalse);
+    await unmount(tester);
+  });
+
   testWidgets('full editor creates a multi-day all-day event', (tester) async {
     await pumpApp(tester);
     await tester.tap(find.byTooltip('Nouvel événement'));

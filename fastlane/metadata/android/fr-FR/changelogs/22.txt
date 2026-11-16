@@ -1,0 +1,1 @@
+Option « Afficher dans la vue Mois » : masquer du mois une répétition très fréquente (ex. « Dodo ») sans la retirer des autres vues.

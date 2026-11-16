@@ -465,6 +465,14 @@ class _EventEditorPageState extends ConsumerState<EventEditorPage> {
                     ),
                   ],
                 ),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  secondary: const Icon(Icons.calendar_view_month),
+                  title: Text(l10n.showInMonth),
+                  subtitle: Text(l10n.showInMonthSubtitle),
+                  value: draft.showInMonth,
+                  onChanged: (v) => setState(() => draft.showInMonth = v),
+                ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: _description,

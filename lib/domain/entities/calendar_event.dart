@@ -29,6 +29,7 @@ class CalendarEvent {
     this.location,
     this.videoLink,
     this.placePoint,
+    this.showInMonth = true,
     this.busy = true,
     this.allDay = false,
     required this.start,
@@ -57,6 +58,9 @@ class CalendarEvent {
 
   /// Coordinates of [location], when it was found on the map.
   final GeoPoint? placePoint;
+
+  /// Shown in the month view (hidden there for busy everyday series).
+  final bool showInMonth;
 
   /// Free/busy status: `true` means busy.
   final bool busy;
@@ -102,6 +106,7 @@ class CalendarEvent {
     String? Function()? location,
     String? Function()? videoLink,
     GeoPoint? Function()? placePoint,
+    bool? showInMonth,
     bool? busy,
     bool? allDay,
     DateTime? start,
@@ -125,6 +130,7 @@ class CalendarEvent {
       location: location != null ? location() : this.location,
       videoLink: videoLink != null ? videoLink() : this.videoLink,
       placePoint: placePoint != null ? placePoint() : this.placePoint,
+      showInMonth: showInMonth ?? this.showInMonth,
       busy: busy ?? this.busy,
       allDay: allDay ?? this.allDay,
       start: start ?? this.start,
@@ -155,6 +161,7 @@ class CalendarEvent {
       other.location == location &&
       other.videoLink == videoLink &&
       other.placePoint == placePoint &&
+      other.showInMonth == showInMonth &&
       other.busy == busy &&
       other.allDay == allDay &&
       other.start == start &&

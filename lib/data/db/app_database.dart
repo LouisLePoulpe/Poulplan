@@ -34,7 +34,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -74,6 +74,9 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(routes);
         await m.createIndex(routesEvent);
         await m.createTable(mapZones);
+      }
+      if (from < 7) {
+        await m.addColumn(events, events.showInMonth);
       }
     },
     beforeOpen: (details) async {

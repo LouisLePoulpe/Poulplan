@@ -263,9 +263,7 @@ void main() {
         timed('old', DateTime.utc(2026, 3, 5, 7)),
       ], display: paris);
       final now = DateTime.utc(2026, 3, 10, 9);
-      expect(endedReminders(fires, now: now).map((f) => f.event.id), [
-        'over',
-      ]);
+      expect(endedReminders(fires, now: now).map((f) => f.event.id), ['over']);
     });
 
     test('an all-day reminder is still shown during its day', () {

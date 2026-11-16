@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'generated/schema.dart';
 
 import 'generated/schema_v1.dart' as v1;
-import 'generated/schema_v6.dart' as v6;
+import 'generated/schema_v7.dart' as v7;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -60,7 +60,7 @@ void main() {
         updatedAt: 2,
         deletedAt: null,
       );
-      const expected = v6.EventsData(
+      const expected = v7.EventsData(
         id: 'e1',
         title: 'Fête de Noël',
         description: "À l'école",
@@ -70,6 +70,7 @@ void main() {
         videoLink: null,
         latitude: null,
         longitude: null,
+        showInMonth: 1,
         busy: 1,
         allDay: 0,
         startUtc: 1000,
@@ -90,9 +91,9 @@ void main() {
 
       await verifier.testWithDataIntegrity(
         oldVersion: 1,
-        newVersion: 6,
+        newVersion: 7,
         createOld: v1.DatabaseAtV1.new,
-        createNew: v6.DatabaseAtV6.new,
+        createNew: v7.DatabaseAtV7.new,
         openTestedDatabase: AppDatabase.new,
         createItems: (batch, oldDb) => batch.insert(oldDb.events, old),
         validateItems: (newDb) async {

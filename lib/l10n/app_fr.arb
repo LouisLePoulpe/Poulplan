@@ -591,5 +591,7 @@
   },
   "openNavigation": "Ouvrir dans le GPS",
   "openNavigationWeb": "Itinéraire sur OpenStreetMap",
-  "noNavigationApp": "Aucune application de navigation installée (OsmAnd, Organic Maps…)"
+  "noNavigationApp": "Aucune application de navigation installée (OsmAnd, Organic Maps…)",
+  "showInMonth": "Afficher dans la vue Mois",
+  "showInMonthSubtitle": "Décocher pour une répétition très fréquente (ex. « Dodo ») : l'événement reste visible dans les vues Jour, Semaine et Agenda"
 }

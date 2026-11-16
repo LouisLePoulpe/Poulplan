@@ -103,6 +103,7 @@ class _EventCodec extends EntityCodec {
         'title': '',
         'description': '',
         'busy': true,
+        'showInMonth': true,
         'allDay': false,
         'startUtc': 0,
         'endUtc': 0,

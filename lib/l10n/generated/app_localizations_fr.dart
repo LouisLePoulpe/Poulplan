@@ -1041,4 +1041,11 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get noNavigationApp =>
       'Aucune application de navigation installée (OsmAnd, Organic Maps…)';
+
+  @override
+  String get showInMonth => 'Afficher dans la vue Mois';
+
+  @override
+  String get showInMonthSubtitle =>
+      'Décocher pour une répétition très fréquente (ex. « Dodo ») : l\'événement reste visible dans les vues Jour, Semaine et Agenda';
 }

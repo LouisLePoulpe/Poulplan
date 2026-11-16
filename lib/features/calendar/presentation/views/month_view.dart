@@ -29,11 +29,25 @@ class MonthView extends ConsumerWidget {
     final firstDay = ref.watch(
       settingsProvider.select((s) => s.firstDayOfWeek),
     );
-    final eventsByDay =
-        ref
-            .watch(eventsByDayProvider((first: days.first, last: days.last)))
-            .value ??
-        const {};
+    // Events set not to clutter the month view are left out (they stay in
+    // the day, week and agenda views).
+    final eventsByDay = {
+      for (final MapEntry(:key, :value)
+          in (ref
+                      .watch(
+                        eventsByDayProvider((
+                          first: days.first,
+                          last: days.last,
+                        )),
+                      )
+                      .value ??
+                  const <Day, List<CalendarEvent>>{})
+              .entries)
+        key: [
+          for (final e in value)
+            if (e.showInMonth) e,
+        ],
+    };
     final weekdayFormat = DateFormat.E(localeOf(context));
     final theme = Theme.of(context);
 

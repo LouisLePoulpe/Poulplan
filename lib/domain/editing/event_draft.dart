@@ -20,6 +20,7 @@ class EventDraft {
     this.location,
     this.videoLink,
     this.placePoint,
+    this.showInMonth = true,
     this.busy = true,
     this.allDay = false,
     required this.startDay,
@@ -68,6 +69,7 @@ class EventDraft {
       location: event.location,
       videoLink: event.videoLink,
       placePoint: event.placePoint,
+      showInMonth: event.showInMonth,
       busy: event.busy,
       allDay: event.allDay,
       startDay: Day.fromDateTime(event.start),
@@ -106,6 +108,9 @@ class EventDraft {
 
   /// Coordinates of [location], cleared when the location text changes.
   GeoPoint? placePoint;
+
+  /// See [CalendarEvent.showInMonth].
+  bool showInMonth;
   bool busy;
   bool allDay;
   Day startDay;
@@ -163,6 +168,7 @@ class EventDraft {
       location: () => _blankToNull(location),
       videoLink: () => _blankToNull(videoLink),
       placePoint: () => _blankToNull(location) == null ? null : placePoint,
+      showInMonth: showInMonth,
       busy: busy,
       allDay: allDay,
       start: times.start,

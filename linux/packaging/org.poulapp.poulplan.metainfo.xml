@@ -63,6 +63,11 @@
     <control>touch</control>
   </supports>
   <releases>
+    <release version="1.1.0" date="2026-11-16">
+      <description>
+        <p>Events can be left out of the month view.</p>
+      </description>
+    </release>
     <release version="1.0.2" date="2026-11-10">
       <description>
         <p>Open the place of an event on OpenStreetMap.</p>

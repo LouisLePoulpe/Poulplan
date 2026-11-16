@@ -1,0 +1,1 @@
+"Show in month view" option: hide a very frequent recurring event from the month view while keeping it in the other views.

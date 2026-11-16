@@ -18,9 +18,12 @@ void main() {
     events = EventRepository(db);
     await db.transaction(() async {
       for (var i = 0; i < 5000; i++) {
-        final start = DateTime.utc(2025, 1, 1, 8).add(
-          Duration(hours: i * 5 + (i % 7)),
-        );
+        final start = DateTime.utc(
+          2025,
+          1,
+          1,
+          8,
+        ).add(Duration(hours: i * 5 + (i % 7)));
         await events.create(
           title: 'Événement $i ${i.isEven ? 'réunion' : 'sport'}',
           location: 'Salle ${i % 40}',
@@ -75,7 +78,8 @@ void main() {
   test('search over every event stays quick', () async {
     var found = 0;
     final elapsed = await time(() async {
-      found = (await events.search(SearchQuery(text: 'reunion salle 12'))).length;
+      found = (await events.search(SearchQuery(text: 'reunion salle 12')))
+          .length;
     });
     // ignore: avoid_print
     print('search: $found results in ${elapsed.inMilliseconds} ms');

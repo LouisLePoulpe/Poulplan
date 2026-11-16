@@ -1886,6 +1886,18 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Aucune application de navigation installée (OsmAnd, Organic Maps…)'**
   String get noNavigationApp;
+
+  /// No description provided for @showInMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher dans la vue Mois'**
+  String get showInMonth;
+
+  /// No description provided for @showInMonthSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Décocher pour une répétition très fréquente (ex. « Dodo ») : l\'événement reste visible dans les vues Jour, Semaine et Agenda'**
+  String get showInMonthSubtitle;
 }
 
 class _AppLocalizationsDelegate
