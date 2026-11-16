@@ -14,6 +14,9 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          # Même version que le poste de développement et la recette F-Droid :
+          # une nouvelle version de Flutter ne doit pas changer la construction sans prévenir.
+          flutter-version: 3.47.7
           cache: true
 
       # Tant que le projet Flutter n'est pas initialisé (pas de pubspec.yaml), on ne fait rien.
@@ -48,6 +51,9 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          # Même version que le poste de développement et la recette F-Droid :
+          # une nouvelle version de Flutter ne doit pas changer la construction sans prévenir.
+          flutter-version: 3.47.7
           cache: true
       - name: Build Linux (si le projet existe)
         run: |
@@ -72,6 +78,9 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          # Même version que le poste de développement et la recette F-Droid :
+          # une nouvelle version de Flutter ne doit pas changer la construction sans prévenir.
+          flutter-version: 3.47.7
           cache: true
       # Le téléchargement de CMake par Gradle échoue parfois (archive
       # corrompue) : pré-installation avec nouvelles tentatives.
