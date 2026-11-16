@@ -210,6 +210,7 @@ Mini-plan : audit des licences → performances (gros volume) → accessibilité
 - Non testé : construction Flatpak, recette F-Droid réelle, lecteurs d'écran → `docs/RAPPORT_V1.md`.
 
 ## Journal
+- 2026-11-16 : CI en échec sur la 1.1.0 (le tag `v1.1.0` est parti avant le résultat) : la CI prenait la dernière version stable de Flutter, qui déprécie `material.dart` → Flutter figé en 3.47.7 dans `.github/workflows/ci.yml` (commit « chore(ci): Flutter figé en 3.47.7 »), CI verte (analyse, tests, constructions Linux et Android). Le code de l'application du tag v1.1.0 est le même. Migration vers `material_ui` à prévoir lors d'une montée de version de Flutter.
 - 2026-11-16 : 1.1.0 validée par Louis (« c'est parfait ») et taguée.
 - 2026-11-16 : 1.1.0 — demande de Louis : option « Afficher dans la vue Mois » par événement (schéma v7, colonne `show_in_month`, synchronisée ; valeur par défaut « oui » pour les données des anciennes versions) ; les événements masqués ne prennent plus de place dans le mois ni dans les « +N », restent dans Jour, Semaine, Agenda. Tests : vue Mois, interrupteur de l'éditeur, migration v1 → v7. Installée Pixel + PC.
 - 2026-11-10 : 1.0.2 vérifiée par Louis (« ça a l'air de fonctionner » : bouton GPS) et taguée.
