@@ -1,26 +1,99 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
+/// Zone read at startup (overridden in `main()`).
+final initialDeviceTimeZoneProvider = Provider<String>((ref) => 'UTC');
+
+/// The device's current zone, kept up to date while the app runs: a phone
+/// crossing time zones keeps the app alive in the background, so reading the
+/// zone once at startup is not enough (see [DeviceTimeZoneWatcher]).
+class DeviceTimeZoneNotifier extends Notifier<String> {
+  @override
+  String build() => ref.read(initialDeviceTimeZoneProvider);
+
+  /// Re-reads the device's zone and, if it changed, switches the display zone
+  /// of the whole app. Returns whether it changed. A failed detection keeps
+  /// the current zone.
+  Future<bool> refresh({
+    Future<String?> Function() detect = detectDeviceTimeZone,
+  }) async {
+    final zone = await detect();
+    if (zone == null || zone == state) return false;
+    if (tz.timeZoneDatabase.locations[zone] == null) return false;
+    tz.setLocalLocation(tz.getLocation(zone));
+    state = zone;
+    return true;
+  }
+}
+
+final deviceZoneProvider = NotifierProvider<DeviceTimeZoneNotifier, String>(
+  DeviceTimeZoneNotifier.new,
+);
+
 /// IANA identifier of the device's time zone (e.g. `Europe/Paris`).
 ///
-/// Overridden in `main()` with the value read at startup.
-final deviceTimeZoneProvider = Provider<String>((ref) => 'UTC');
+/// Everything that displays or plans times depends on this provider, so a
+/// change of zone refreshes the views, the reminders and the widgets. Tests
+/// override it with a fixed value.
+final deviceTimeZoneProvider = Provider<String>(
+  (ref) => ref.watch(deviceZoneProvider),
+);
+
+/// Re-reads the device's zone when the app comes back to the foreground and
+/// every minute while it runs (desktop sessions and open apps get no event
+/// when the zone changes).
+class DeviceTimeZoneWatcher {
+  DeviceTimeZoneWatcher(this._ref);
+
+  final Ref _ref;
+  AppLifecycleListener? _lifecycle;
+  Timer? _timer;
+
+  void start() {
+    _lifecycle ??= AppLifecycleListener(onResume: check);
+    _timer ??= Timer.periodic(const Duration(minutes: 1), (_) => check());
+  }
+
+  Future<void> check() async {
+    try {
+      await _ref.read(deviceZoneProvider.notifier).refresh();
+    } catch (error) {
+      debugPrint('Time zone check failed: $error');
+    }
+  }
+
+  void dispose() {
+    _lifecycle?.dispose();
+    _timer?.cancel();
+  }
+}
+
+final deviceTimeZoneWatcherProvider = Provider<DeviceTimeZoneWatcher>((ref) {
+  final watcher = DeviceTimeZoneWatcher(ref);
+  ref.onDispose(watcher.dispose);
+  return watcher;
+});
 
 /// Loads the time zone database and returns the device's IANA zone.
 Future<String> initTimeZones() async {
   tzdata.initializeTimeZones();
-  final zone = await _detectZone();
+  // Unknown zone: keep UTC rather than not starting.
+  final zone = await detectDeviceTimeZone() ?? 'UTC';
   tz.setLocalLocation(tz.getLocation(zone));
   return zone;
 }
 
-Future<String> _detectZone() async {
+/// The device's IANA zone right now, or null if it cannot be determined.
+/// Needs [tzdata.initializeTimeZones] to have run.
+Future<String?> detectDeviceTimeZone() async {
   try {
     final zone = (await FlutterTimezone.getLocalTimezone()).identifier;
     // Containers may report a stale zone (e.g. Etc/UTC from /etc/timezone
@@ -49,8 +122,7 @@ Future<String> _detectZone() async {
     );
     if (zone != null) return zone;
   }
-  // Unknown zone: keep UTC rather than not starting.
-  return 'UTC';
+  return null;
 }
 
 /// Whether [zone] gives the same UTC offsets as the system's local time,

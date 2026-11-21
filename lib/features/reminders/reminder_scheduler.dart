@@ -74,6 +74,7 @@ class ReminderScheduler {
   Timer? _debounce;
   Timer? _ticker;
   Timer? _window;
+  ProviderSubscription<tz.Location>? _zone;
   List<CalendarEvent> _latest = const [];
   bool _loaded = false;
 
@@ -94,6 +95,12 @@ class ReminderScheduler {
     _known = await _loadKnown();
     _subscribe();
     _window = Timer.periodic(_resubscribe, (_) => _subscribe());
+    // The device changed time zone: the window of days, the all-day
+    // reminders and the times written in the notifications must follow.
+    _zone = _ref.container.listen(displayLocationProvider, (_, _) {
+      _loaded = false;
+      _subscribe();
+    });
     if (!NotificationService.systemScheduling) {
       _ticker = Timer.periodic(_tick, (_) => _update());
     }
@@ -254,6 +261,7 @@ class ReminderScheduler {
     _debounce?.cancel();
     _ticker?.cancel();
     _window?.cancel();
+    _zone?.close();
   }
 }
 

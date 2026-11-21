@@ -13,8 +13,12 @@ import '../../../domain/holidays/school_holidays.dart';
 
 enum CalendarViewType { day, week, month, year, agenda }
 
-/// Today, overridable in tests.
-final todayProvider = Provider<Day>((ref) => Day.today());
+/// Today in the display zone (recomputed when the device changes zone),
+/// overridable in tests.
+final todayProvider = Provider<Day>((ref) {
+  final location = ref.watch(displayLocationProvider);
+  return Day.fromDateTime(tz.TZDateTime.from(DateTime.now().toUtc(), location));
+});
 
 /// Zone used to display events (the device's zone).
 final displayLocationProvider = Provider<tz.Location>((ref) {

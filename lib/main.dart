@@ -29,7 +29,7 @@ Future<void> main() async {
     overrides: [
       databaseProvider.overrideWithValue(database),
       hlcClockProvider.overrideWithValue(clock),
-      deviceTimeZoneProvider.overrideWithValue(timeZone),
+      initialDeviceTimeZoneProvider.overrideWithValue(timeZone),
       initialLockStateProvider.overrideWithValue(
         await loadLockState(SettingsRepository(database)),
       ),
@@ -37,6 +37,7 @@ Future<void> main() async {
     ],
   );
   registerDebugExtensions(container);
+  container.read(deviceTimeZoneWatcherProvider).start();
   final settings = await container
       .read(settingsRepositoryProvider)
       .watch()
